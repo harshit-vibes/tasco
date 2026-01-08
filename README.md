@@ -184,3 +184,89 @@
 5. **People-dependent → System-driven**: Reducing reliance on individual expertise
 6. **Cost Optimization**: Clear ROI targets (50% reduction common)
 7. **Vietnamese Context**: Local ERPs (Bravo), apps (Zalo), language support needed
+
+---
+
+## Lyzr Solution Fit
+
+> Analysis of which challenges can be solved using [Lyzr](https://lyzr.ai) AI agent platform
+
+### Fit Summary
+
+| Fit Level | Count | Description |
+|-----------|-------|-------------|
+| ✅ Perfect Fit | 5 | Core Lyzr use cases |
+| ✅ Good Fit | 8 | Strong alignment with agent capabilities |
+| ⚠️ Partial Fit | 5 | Needs custom integrations |
+| ❌ Not a Fit | 3 | Outside Lyzr's scope |
+
+### ✅ Perfect Fit (5)
+
+| Challenge | Business Unit | Lyzr Solution |
+|-----------|---------------|---------------|
+| Compliance Document Governance | Tasco Group | RAG + Knowledge Base + Responsible AI |
+| AI E-Learning Factory | Tasco Insurance | Knowledge Base + Agent for training Q&A |
+| Sales Order Automation | Inochi | Agent for multi-channel parsing + Data Connectors |
+| B2B Sales Pipeline | DNP Holding | Agent + Workflow for pipeline management |
+| AI Accounting & Reconciliation | Tasco Insurance | Agent + Workflow for transaction analysis |
+
+### ✅ Good Fit (8)
+
+| Challenge | Business Unit | Lyzr Solution |
+|-----------|---------------|---------------|
+| Finance Consolidation | Tasco Group | Multi-agent workflow + RAG |
+| Customer Lifecycle Management | Tasco Auto | Agent + Knowledge Base |
+| Service Center Quality | Carpla | Knowledge Base for multi-brand issues |
+| AI Sales & Pricing | Tasco Insurance | Agent for risk assessment + Workflow |
+| AI Risk & Profitability Radar | Tasco Insurance | Agent + Data Connectors |
+| Moto Liability Insurance | Tasco Insurance | Voice Agent + Workflow |
+| AI Underwriting Model | Tasco Insurance | Agent + Knowledge Base |
+| Material Lifecycle Management | Thang Long | Agent + Workflow + Data Connectors |
+
+### ⚠️ Partial Fit (5)
+
+| Challenge | Business Unit | Gap | Lyzr Role |
+|-----------|---------------|-----|-----------|
+| Inventory Optimization | Tasco Auto | Needs ML models | Decision support agent |
+| One-Way Rental Rebalancing | Carpla | Needs optimization | Fleet decision support |
+| Asset Damage Assessment | Tasco Insurance | Needs computer vision | Claims workflow |
+| Smart Leakage Analysis | DNP Water | Needs IoT/ML | Alert management agent |
+| Smart Energy Orchestration | DNP Energy | Needs energy ML | Decision support |
+
+### ❌ Not a Fit (3)
+
+| Challenge | Business Unit | Reason |
+|-----------|---------------|--------|
+| Computer Vision Inventory | DNP/CMC | Pure computer vision |
+| Underground Elevation Scanner | DNP Water | Hardware solution (GPR) |
+| GIS Data Standardization | DNP Water | Data engineering |
+
+### Recommended Priority for Lyzr
+
+**Tier 1: Quick Wins (4-6 weeks)**
+- Compliance Document Governance
+- AI E-Learning Factory
+- Sales Order Automation
+
+**Tier 2: High Impact (6-8 weeks)**
+- B2B Sales Pipeline
+- Material Lifecycle Management
+- Moto Liability Insurance (Voice)
+
+**Tier 3: Integration Projects (8-12 weeks)**
+- Customer Lifecycle Management
+- Finance Consolidation
+- Insurance AI Suite (Underwriting + Pricing)
+
+### Lyzr Capabilities Mapping
+
+| Lyzr Capability | Applicable Challenges |
+|-----------------|----------------------|
+| **RAG / Knowledge Base** | Compliance, E-Learning, Service Center, Underwriting |
+| **Multi-Agent Orchestration** | Finance, Material Management, Claims |
+| **Workflows** | Sales Pipeline, Order Automation, Accounting |
+| **Voice Agents** | Moto Liability Insurance, Customer Lifecycle |
+| **Data Connectors** | Order Automation, Finance, Inventory |
+| **Responsible AI** | Compliance, Insurance decisions |
+
+*Full analysis: [lyzr-fit.md](lyzr-fit.md)*
