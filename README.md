@@ -6,31 +6,31 @@
 
 ## Master Challenge Table
 
-| # | Challenge | Business Unit | Lyzr | Why | Demo Concept |
-|---|-----------|---------------|------|-----|--------------|
-| 1 | Compliance Document Governance | Tasco Group | ✅ | LLM: RAG Q&A | RAG chatbot with legal/compliance docs |
-| 2 | Finance Consolidation | Tasco Group | ❌ | Data aggregation/ETL | - |
-| 3 | Inventory Optimization | Tasco Auto | ❌ | ML: Demand forecasting | - |
-| 4 | Customer Lifecycle Management | Tasco Auto | ❌ | Data: CDP/unification | - |
-| 5 | One-Way Rental Rebalancing | Carpla | ❌ | ML: Optimization | - |
-| 6 | Service Center Quality | Carpla | ✅ | LLM: Technical KB Q&A | Multi-brand technical support agent |
-| 7 | Asset Damage Assessment | Tasco Insurance | ❌ | Vision: Image analysis | - |
-| 8 | AI Sales & Pricing | Tasco Insurance | ❌ | ML: Risk scoring | - |
-| 9 | AI E-Learning Factory | Tasco Insurance | ✅ | LLM: Training KB Q&A | Training Q&A agent with quiz generation |
-| 10 | AI Risk & Profitability Radar | Tasco Insurance | ❌ | ML: Analytics | - |
-| 11 | AI Accounting & Reconciliation | Tasco Insurance | ❌ | ML: Anomaly detection | - |
-| 12 | Moto Liability Insurance | Tasco Insurance | ❌ | Platform: Digital sales | - |
-| 13 | AI Underwriting Model | Tasco Insurance | ❌ | ML: Risk scoring | - |
-| 14 | B2B Sales Pipeline | DNP Holding | ❌ | Workflow: CRM | - |
-| 15 | Computer Vision Inventory | DNP/CMC | ❌ | Vision: Object counting | - |
-| 16 | Sales Order Automation | Inochi | ✅ | LLM: Document parsing | Order parsing from email/PDF/Zalo |
-| 17 | Smart Leakage Analysis | DNP Water | ❌ | ML: IoT + anomaly | - |
-| 18 | GIS Data Standardization | DNP Water | ❌ | Data engineering | - |
-| 19 | Underground Elevation Scanner | DNP Water | ❌ | Hardware | - |
-| 20 | Smart Energy Orchestration | DNP Energy | ❌ | ML: Optimization | - |
-| 21 | Material Lifecycle Management | Thang Long | ❌ | ML: Predictability | - |
+| # | Challenge | Business Unit | Lyzr | Core Problem | LLM Pivot (How to make it Lyzr-fit) |
+|---|-----------|---------------|------|--------------|-------------------------------------|
+| 1 | Compliance Document Governance | Tasco Group | ✅ | LLM: RAG Q&A | *Already LLM-centric* |
+| 2 | Finance Consolidation | Tasco Group | ❌ | Data aggregation/ETL | Add: Financial report Q&A agent explaining variances |
+| 3 | Inventory Optimization | Tasco Auto | ❌ | ML: Demand forecasting | Add: Sales rep assistant for stock availability queries |
+| 4 | Customer Lifecycle Management | Tasco Auto | ❌ | Data: CDP/unification | Add: Customer service chatbot with product KB |
+| 5 | One-Way Rental Rebalancing | Carpla | ❌ | ML: Optimization | Add: Fleet manager assistant for policy/SOP queries |
+| 6 | Service Center Quality | Carpla | ✅ | LLM: Technical KB Q&A | *Already LLM-centric* |
+| 7 | Asset Damage Assessment | Tasco Insurance | ❌ | Vision: Image analysis | Add: Claims policy Q&A + damage report generator |
+| 8 | AI Sales & Pricing | Tasco Insurance | ❌ | ML: Risk scoring | Add: Pricing guidelines assistant for sales team |
+| 9 | AI E-Learning Factory | Tasco Insurance | ✅ | LLM: Training KB Q&A | *Already LLM-centric* |
+| 10 | AI Risk & Profitability Radar | Tasco Insurance | ❌ | ML: Analytics | Add: Risk report explainer / insights Q&A |
+| 11 | AI Accounting & Reconciliation | Tasco Insurance | ❌ | ML: Anomaly detection | Add: Accounting policy Q&A for staff queries |
+| 12 | Moto Liability Insurance | Tasco Insurance | ❌ | Platform: Digital sales | Add: Policy inquiry chatbot / renewal assistant |
+| 13 | AI Underwriting Model | Tasco Insurance | ❌ | ML: Risk scoring | Add: Underwriting guidelines Q&A for agents |
+| 14 | B2B Sales Pipeline | DNP Holding | ❌ | Workflow: CRM | Add: Sales playbook assistant / stakeholder briefing generator |
+| 15 | Computer Vision Inventory | DNP/CMC | ❌ | Vision: Object counting | Add: Inventory query assistant / stock report generator |
+| 16 | Sales Order Automation | Inochi | ✅ | LLM: Document parsing | *Already LLM-centric* |
+| 17 | Smart Leakage Analysis | DNP Water | ❌ | ML: IoT + anomaly | Add: Maintenance procedure Q&A / leak response guide |
+| 18 | GIS Data Standardization | DNP Water | ❌ | Data engineering | Add: Network documentation Q&A assistant |
+| 19 | Underground Elevation Scanner | DNP Water | ❌ | Hardware | N/A - Pure hardware solution |
+| 20 | Smart Energy Orchestration | DNP Energy | ❌ | ML: Optimization | Add: Energy policy Q&A / tariff guidelines assistant |
+| 21 | Material Lifecycle Management | Thang Long | ❌ | ML: Predictability | Add: Project specs Q&A / material documentation assistant |
 
-**Lyzr Fit Criteria:** 100% LLM-centric activity (not ML, Vision, Data Engineering, or Platforms)
+**Lyzr Fit Criteria:** 100% LLM-centric activity (RAG, KB Q&A, document parsing, conversational agents)
 
 ---
 
@@ -52,12 +52,12 @@
 
 ## Lyzr Fit Challenges (4)
 
-| Challenge | Business Unit | What to Demo |
-|-----------|---------------|--------------|
-| Compliance Document Governance | Tasco Group | RAG agent answering legal/policy questions from uploaded docs |
-| Service Center Quality | Carpla | Technical support agent with multi-brand repair guides KB |
-| AI E-Learning Factory | Tasco Insurance | Training bot with insurance product KB + auto quiz |
-| Sales Order Automation | Inochi | Agent parsing orders from sample emails/PDFs/Zalo messages |
+| Challenge | Business Unit | Demo |
+|-----------|---------------|------|
+| Compliance Document Governance | Tasco Group | RAG agent answering legal/policy questions |
+| Service Center Quality | Carpla | Technical support agent with repair guides KB |
+| AI E-Learning Factory | Tasco Insurance | Training bot with product KB + quiz |
+| Sales Order Automation | Inochi | Order parsing from email/PDF/Zalo |
 
 ---
 
@@ -66,16 +66,11 @@
 | Metric | Value |
 |--------|-------|
 | Total challenges | 21 |
-| Lyzr fit (LLM-centric) | 4 (19%) |
-| ML/Predictability | 9 (43%) |
-| Vision | 2 (10%) |
-| Data/Platform/Hardware | 6 (28%) |
+| Lyzr fit (as-is) | 4 (19%) |
+| Can pivot to LLM | 16 (76%) |
+| Cannot pivot | 1 (hardware) |
 
-**Challenge breakdown by type:**
-- **LLM-centric (Lyzr fit):** RAG, document parsing, KB Q&A
-- **ML-centric:** Demand forecasting, risk scoring, anomaly detection, optimization
-- **Vision:** Damage assessment, inventory counting
-- **Other:** Data engineering, platforms, hardware
+**With LLM pivot, potential Lyzr involvement: 20 of 21 challenges (95%)**
 
 ---
 
