@@ -1,77 +1,127 @@
-# Tasco Innovation Day - Challenge Index
+# Tasco Innovation Day Demos
 
-> 21 AI/ML challenges across 8 Tasco Group business units
+> Bun + Next.js 15 monorepo with 21 AI demo applications for Tasco Group
 
----
+## Quick Start
 
-## Master Challenge Table
+```bash
+# Install dependencies
+bun install
 
-| # | Challenge | Business Unit | Lyzr | Core Problem | LLM Pivot (How to make it Lyzr-fit) |
-|---|-----------|---------------|------|--------------|-------------------------------------|
-| 1 | Compliance Document Governance | Tasco Group | ✅ | LLM: RAG Q&A | *Already LLM-centric* |
-| 2 | Finance Consolidation | Tasco Group | ❌ | Data aggregation/ETL | Add: Financial report Q&A agent explaining variances |
-| 3 | Inventory Optimization | Tasco Auto | ❌ | ML: Demand forecasting | Add: Sales rep assistant for stock availability queries |
-| 4 | Customer Lifecycle Management | Tasco Auto | ❌ | Data: CDP/unification | Add: Customer service chatbot with product KB |
-| 5 | One-Way Rental Rebalancing | Carpla | ❌ | ML: Optimization | Add: Fleet manager assistant for policy/SOP queries |
-| 6 | Service Center Quality | Carpla | ✅ | LLM: Technical KB Q&A | *Already LLM-centric* |
-| 7 | Asset Damage Assessment | Tasco Insurance | ❌ | Vision: Image analysis | Add: Claims policy Q&A + damage report generator |
-| 8 | AI Sales & Pricing | Tasco Insurance | ❌ | ML: Risk scoring | Add: Pricing guidelines assistant for sales team |
-| 9 | AI E-Learning Factory | Tasco Insurance | ✅ | LLM: Training KB Q&A | *Already LLM-centric* |
-| 10 | AI Risk & Profitability Radar | Tasco Insurance | ❌ | ML: Analytics | Add: Risk report explainer / insights Q&A |
-| 11 | AI Accounting & Reconciliation | Tasco Insurance | ❌ | ML: Anomaly detection | Add: Accounting policy Q&A for staff queries |
-| 12 | Moto Liability Insurance | Tasco Insurance | ❌ | Platform: Digital sales | Add: Policy inquiry chatbot / renewal assistant |
-| 13 | AI Underwriting Model | Tasco Insurance | ❌ | ML: Risk scoring | Add: Underwriting guidelines Q&A for agents |
-| 14 | B2B Sales Pipeline | DNP Holding | ❌ | Workflow: CRM | Add: Sales playbook assistant / stakeholder briefing generator |
-| 15 | Computer Vision Inventory | DNP/CMC | ❌ | Vision: Object counting | Add: Inventory query assistant / stock report generator |
-| 16 | Sales Order Automation | Inochi | ✅ | LLM: Document parsing | *Already LLM-centric* |
-| 17 | Smart Leakage Analysis | DNP Water | ❌ | ML: IoT + anomaly | Add: Maintenance procedure Q&A / leak response guide |
-| 18 | GIS Data Standardization | DNP Water | ❌ | Data engineering | Add: Network documentation Q&A assistant |
-| 19 | Underground Elevation Scanner | DNP Water | ❌ | Hardware | N/A - Pure hardware solution |
-| 20 | Smart Energy Orchestration | DNP Energy | ❌ | ML: Optimization | Add: Energy policy Q&A / tariff guidelines assistant |
-| 21 | Material Lifecycle Management | Thang Long | ❌ | ML: Predictability | Add: Project specs Q&A / material documentation assistant |
+# Run a specific app
+bun run dev --filter=@tasco/tasco-group-compliance-qa
 
-**Lyzr Fit Criteria:** 100% LLM-centric activity (RAG, KB Q&A, document parsing, conversational agents)
+# Run with DynamoDB Local
+docker-compose up -d dynamodb-local
+bun run dev --filter=@tasco/tasco-group-compliance-qa
+```
 
----
+## Priority Strategy
 
-## Business Units
+| Tier | Business Units | Focus | Apps |
+|------|----------------|-------|------|
+| **Tier 1** | Tasco Group HQ | Win this account | 2 |
+| **Tier 2** | Tasco Auto, Carpla, Insurance, Inochi | 1 demo each | 4 |
+| **Tier 3** | Remaining challenges | Scaffolded | 10 |
+| **Tier 4** | DNP Water, DNP Energy, Thang Long | No active dev | 5 |
 
-| Business Unit | File | Total | Lyzr ✅ | Coverage |
-|---------------|------|-------|---------|----------|
-| Tasco Group HQ | [tasco-group.md](tasco-group.md) | 2 | 1 | 50% |
-| Tasco Auto | [tasco-auto.md](tasco-auto.md) | 2 | 0 | 0% |
-| Carpla | [carpla.md](carpla.md) | 2 | 1 | 50% |
-| Tasco Insurance | [tasco-insure.md](tasco-insure.md) | 7 | 1 | 14% |
-| DNP Holding & CMC | [dnp-cmc.md](dnp-cmc.md) | 2 | 0 | 0% |
-| Inochi/Thanh Phu | [inochi.md](inochi.md) | 1 | 1 | 100% |
-| DNP Water & Energy | [dnp-water.md](dnp-water.md) | 4 | 0 | 0% |
-| Thang Long Corp | [thang-long.md](thang-long.md) | 1 | 0 | 0% |
-| **Total** | | **21** | **4** | **19%** |
+## Tech Stack
 
----
+| Layer | Choice |
+|-------|--------|
+| Runtime | Bun |
+| Framework | Next.js 15 (App Router) |
+| UI | shadcn/ui + Tailwind CSS |
+| State | Zustand |
+| Database | DynamoDB (Local for dev, AWS for prod) |
+| AI | Lyzr SDK |
+| Hosting | AWS Amplify |
 
-## Lyzr Fit Challenges (4)
+## Structure
 
-| Challenge | Business Unit | Demo |
-|-----------|---------------|------|
-| Compliance Document Governance | Tasco Group | RAG agent answering legal/policy questions |
-| Service Center Quality | Carpla | Technical support agent with repair guides KB |
-| AI E-Learning Factory | Tasco Insurance | Training bot with product KB + quiz |
-| Sales Order Automation | Inochi | Order parsing from email/PDF/Zalo |
+```
+tasco/
+├── apps/                    # 21 demo applications
+│   ├── tasco-group/         # Tier 1 - Top Priority
+│   │   ├── compliance-qa/
+│   │   └── finance-consolidation/
+│   ├── tasco-auto/          # Tier 2
+│   ├── carpla/              # Tier 2
+│   ├── tasco-insurance/     # Tier 2
+│   ├── inochi/              # Tier 2
+│   ├── dnp-holding/         # Tier 3
+│   ├── dnp-water/           # Tier 4
+│   ├── dnp-energy/          # Tier 4
+│   └── thang-long/          # Tier 4
+├── packages/                # Shared packages
+│   ├── ui/                  # shadcn components
+│   ├── db/                  # DynamoDB client
+│   ├── lyzr/                # Lyzr SDK wrapper
+│   └── config/              # Shared configs
+├── docker/                  # Docker setup
+└── docs/                    # Challenge documentation
+```
 
----
+## Apps by Business Unit
 
-## Summary
+### Tier 1 - Tasco Group HQ (2 apps)
 
-| Metric | Value |
-|--------|-------|
-| Total challenges | 21 |
-| Lyzr fit (as-is) | 4 (19%) |
-| Can pivot to LLM | 16 (76%) |
-| Cannot pivot | 1 (hardware) |
+| App | Challenge | Type |
+|-----|-----------|------|
+| compliance-qa | Compliance Document Governance | LLM |
+| finance-consolidation | Finance Consolidation | Pivot |
 
-**With LLM pivot, potential Lyzr involvement: 20 of 21 challenges (95%)**
+### Tier 2 - Secondary Priority (4 apps)
 
----
+| Business Unit | App | Challenge | Type |
+|---------------|-----|-----------|------|
+| tasco-auto | customer-lifecycle | Customer Lifecycle Management | Pivot |
+| carpla | service-center | Service Center Quality | LLM |
+| tasco-insurance | e-learning | AI E-Learning Factory | LLM |
+| inochi | sales-order | Sales Order Automation | LLM |
 
-*Detailed analysis: [lyzr-fit.md](lyzr-fit.md)*
+### Tier 3 & 4 - Scaffolded (15 apps)
+
+See [docs/README.md](docs/README.md) for full challenge list.
+
+## Local Development
+
+```bash
+# 1. Install dependencies
+bun install
+
+# 2. Start DynamoDB Local
+docker compose up -d dynamodb-local dynamodb-admin
+
+# 3. Run an app
+bun run dev --filter=@tasco/tasco-group-compliance-qa
+
+# DynamoDB Admin UI
+open http://localhost:8001
+```
+
+## Production (AWS)
+
+```bash
+# 1. Setup AWS infrastructure (DynamoDB tables + IAM)
+./scripts/setup-aws.sh
+
+# 2. Deploy all priority apps to Amplify
+./scripts/deploy-priority-apps.sh
+
+# Or deploy a single app
+./scripts/create-amplify-app.sh compliance-qa tasco-group/compliance-qa
+```
+
+| Branch | Environment |
+|--------|-------------|
+| `dev` | Local Docker only |
+| `prod` | AWS Amplify (auto-deploy) |
+
+See [SETUP.md](SETUP.md) for detailed instructions.
+
+## Documentation
+
+- [Challenge Index](docs/README.md) - All 21 challenges
+- [Lyzr Fit Analysis](docs/lyzr-fit.md) - LLM vs non-LLM classification
+- [Challenge Details](docs/challenges/) - Individual problem statements

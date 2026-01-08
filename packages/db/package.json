@@ -1,0 +1,19 @@
+{
+  "name": "@tasco/db",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.712.0",
+    "@aws-sdk/lib-dynamodb": "^3.712.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

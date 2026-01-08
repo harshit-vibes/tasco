@@ -1,0 +1,49 @@
+services:
+  # DynamoDB Local for development
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: tasco-dynamodb
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:8000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # DynamoDB Admin UI (optional, for debugging)
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    container_name: tasco-dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb-local:8000
+      - AWS_REGION=local
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+
+  # Initialize DynamoDB tables
+  dynamodb-init:
+    image: amazon/aws-cli:latest
+    container_name: tasco-dynamodb-init
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+    environment:
+      - AWS_REGION=local
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+    volumes:
+      - ./docker/dynamodb:/scripts
+    entrypoint: ["/bin/bash", "/scripts/init-tables.sh"]
+
+volumes:
+  dynamodb-data:
+    driver: local

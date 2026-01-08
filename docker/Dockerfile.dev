@@ -1,0 +1,22 @@
+FROM oven/bun:1.1.42-alpine
+
+WORKDIR /app
+
+# Install git for potential submodule needs
+RUN apk add --no-cache git
+
+# Copy package files
+COPY package.json bun.lockb* ./
+COPY packages/ ./packages/
+
+# Install dependencies
+RUN bun install
+
+# Copy the rest of the application
+COPY . .
+
+# Expose Next.js port
+EXPOSE 3000
+
+# Default command (can be overridden in docker-compose)
+CMD ["bun", "run", "dev"]

@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Install Bun
+        - curl -fsSL https://bun.sh/install | bash
+        - export BUN_INSTALL="$HOME/.bun"
+        - export PATH="$BUN_INSTALL/bin:$PATH"
+        # Install dependencies from root
+        - bun install
+    build:
+      commands:
+        # Build the specific app (set APP_NAME in Amplify env vars)
+        # Example: APP_NAME=@tasco/tasco-group-compliance-qa
+        - bun run build --filter=${APP_NAME}
+  artifacts:
+    baseDirectory: apps/${APP_PATH}/.next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - apps/**/.next/cache/**/*
+      - packages/**/node_modules/**/*
