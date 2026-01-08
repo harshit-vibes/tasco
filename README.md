@@ -4,6 +4,54 @@
 
 ---
 
+## Master Challenge Table
+
+| # | Challenge | Business Unit | Lyzr? | Complexity | Demo Concept |
+|---|-----------|---------------|-------|------------|--------------|
+| 1 | Compliance Document Governance | Tasco Group | ✅ Yes | Low | RAG chatbot querying sample legal/compliance docs with hallucination guardrails |
+| 2 | Finance Consolidation | Tasco Group | ✅ Yes | Medium | Multi-agent workflow aggregating financial data from multiple Excel templates |
+| 3 | Inventory Optimization | Tasco Auto | ❌ No | High | *Needs ML models for demand forecasting* |
+| 4 | Customer Lifecycle Management | Tasco Auto | ✅ Yes | Medium | Customer service agent with product KB + conversation history |
+| 5 | One-Way Rental Rebalancing | Carpla | ❌ No | High | *Needs optimization algorithms* |
+| 6 | Service Center Quality | Carpla | ✅ Yes | Medium | Multi-brand technical support agent with repair guides KB |
+| 7 | Asset Damage Assessment | Tasco Insurance | ❌ No | High | *Needs computer vision integration* |
+| 8 | AI Sales & Pricing | Tasco Insurance | ✅ Yes | Medium | Risk assessment agent with pricing rules KB + customer scoring |
+| 9 | AI E-Learning Factory | Tasco Insurance | ✅ Yes | Low | Training Q&A agent with insurance product KB + quiz generation |
+| 10 | AI Risk & Profitability Radar | Tasco Insurance | ✅ Yes | Medium | Analytics agent generating risk reports from sample policy data |
+| 11 | AI Accounting & Reconciliation | Tasco Insurance | ✅ Yes | Medium | Transaction analysis workflow with anomaly flagging |
+| 12 | Moto Liability Insurance | Tasco Insurance | ✅ Yes | Medium | Voice agent for policy inquiries + renewal workflow |
+| 13 | AI Underwriting Model | Tasco Insurance | ✅ Yes | Medium | Underwriting assistant with rules KB + decision workflow |
+| 14 | B2B Sales Pipeline | DNP Holding | ✅ Yes | Low | Sales assistant agent tracking project stages + stakeholder alerts |
+| 15 | Computer Vision Inventory | DNP/CMC | ❌ No | N/A | *Outside scope - pure computer vision* |
+| 16 | Sales Order Automation | Inochi | ✅ Yes | Low | Order parsing agent extracting data from email/PDF samples |
+| 17 | Smart Leakage Analysis | DNP Water | ❌ No | High | *Needs IoT + anomaly detection ML* |
+| 18 | GIS Data Standardization | DNP Water | ❌ No | N/A | *Outside scope - data engineering* |
+| 19 | Underground Elevation Scanner | DNP Water | ❌ No | N/A | *Outside scope - hardware solution* |
+| 20 | Smart Energy Orchestration | DNP Energy | ❌ No | High | *Needs energy optimization ML* |
+| 21 | Material Lifecycle Management | Thang Long | ✅ Yes | Medium | Project assistant with material tracking + approval workflow |
+
+### Summary Stats
+
+| Metric | Count |
+|--------|-------|
+| Total Challenges | 21 |
+| ✅ Lyzr Can Solve | 13 (62%) |
+| ❌ Lyzr Cannot Solve | 8 (38%) |
+| Low Complexity | 4 |
+| Medium Complexity | 9 |
+| High/N/A (Out of Scope) | 8 |
+
+### Complexity Guide
+
+| Level | Timeline | Description |
+|-------|----------|-------------|
+| **Low** | 2-4 weeks | Standard RAG/KB + single agent |
+| **Medium** | 4-8 weeks | Multi-agent workflow + integrations |
+| **High** | 8+ weeks | Needs custom ML or external systems |
+| **N/A** | - | Outside Lyzr platform scope |
+
+---
+
 ## Overview
 
 | # | Business Unit | File | Challenges |
