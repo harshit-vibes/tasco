@@ -1,402 +1,84 @@
 # Tasco Innovation Day - Challenge Index
 
-> Summary of all challenges across Tasco Group business units
+> 21 AI/ML challenges across 8 Tasco Group business units
 
 ---
 
 ## Master Challenge Table
 
-| # | Challenge | Business Unit | Lyzr? | Complexity | Demo Concept |
-|---|-----------|---------------|-------|------------|--------------|
-| 1 | Compliance Document Governance | Tasco Group | ✅ Yes | Low | RAG chatbot querying sample legal/compliance docs with hallucination guardrails |
-| 2 | Finance Consolidation | Tasco Group | ✅ Yes | Medium | Multi-agent workflow aggregating financial data from multiple Excel templates |
-| 3 | Inventory Optimization | Tasco Auto | ❌ No | High | *Needs ML models for demand forecasting* |
-| 4 | Customer Lifecycle Management | Tasco Auto | ✅ Yes | Medium | Customer service agent with product KB + conversation history |
-| 5 | One-Way Rental Rebalancing | Carpla | ❌ No | High | *Needs optimization algorithms* |
-| 6 | Service Center Quality | Carpla | ✅ Yes | Medium | Multi-brand technical support agent with repair guides KB |
-| 7 | Asset Damage Assessment | Tasco Insurance | ❌ No | High | *Needs computer vision integration* |
-| 8 | AI Sales & Pricing | Tasco Insurance | ✅ Yes | Medium | Risk assessment agent with pricing rules KB + customer scoring |
-| 9 | AI E-Learning Factory | Tasco Insurance | ✅ Yes | Low | Training Q&A agent with insurance product KB + quiz generation |
-| 10 | AI Risk & Profitability Radar | Tasco Insurance | ✅ Yes | Medium | Analytics agent generating risk reports from sample policy data |
-| 11 | AI Accounting & Reconciliation | Tasco Insurance | ✅ Yes | Medium | Transaction analysis workflow with anomaly flagging |
-| 12 | Moto Liability Insurance | Tasco Insurance | ✅ Yes | Medium | Voice agent for policy inquiries + renewal workflow |
-| 13 | AI Underwriting Model | Tasco Insurance | ✅ Yes | Medium | Underwriting assistant with rules KB + decision workflow |
-| 14 | B2B Sales Pipeline | DNP Holding | ✅ Yes | Low | Sales assistant agent tracking project stages + stakeholder alerts |
-| 15 | Computer Vision Inventory | DNP/CMC | ❌ No | N/A | *Outside scope - pure computer vision* |
-| 16 | Sales Order Automation | Inochi | ✅ Yes | Low | Order parsing agent extracting data from email/PDF samples |
-| 17 | Smart Leakage Analysis | DNP Water | ❌ No | High | *Needs IoT + anomaly detection ML* |
-| 18 | GIS Data Standardization | DNP Water | ❌ No | N/A | *Outside scope - data engineering* |
-| 19 | Underground Elevation Scanner | DNP Water | ❌ No | N/A | *Outside scope - hardware solution* |
-| 20 | Smart Energy Orchestration | DNP Energy | ❌ No | High | *Needs energy optimization ML* |
-| 21 | Material Lifecycle Management | Thang Long | ✅ Yes | Medium | Project assistant with material tracking + approval workflow |
+| # | Challenge | Business Unit | Lyzr | Complexity | Demo Concept |
+|---|-----------|---------------|------|------------|--------------|
+| 1 | Compliance Document Governance | Tasco Group | ✅ | Low | RAG chatbot with legal/compliance docs |
+| 2 | Finance Consolidation | Tasco Group | ✅ | Medium | Multi-agent workflow for financial aggregation |
+| 3 | Inventory Optimization | Tasco Auto | ❌ | High | *Needs ML for demand forecasting* |
+| 4 | Customer Lifecycle Management | Tasco Auto | ✅ | Medium | Customer service agent with product KB |
+| 5 | One-Way Rental Rebalancing | Carpla | ❌ | High | *Needs optimization algorithms* |
+| 6 | Service Center Quality | Carpla | ✅ | Medium | Multi-brand technical support agent |
+| 7 | Asset Damage Assessment | Tasco Insurance | ❌ | High | *Needs computer vision* |
+| 8 | AI Sales & Pricing | Tasco Insurance | ✅ | Medium | Risk assessment agent with pricing rules |
+| 9 | AI E-Learning Factory | Tasco Insurance | ✅ | Low | Training Q&A agent with quiz generation |
+| 10 | AI Risk & Profitability Radar | Tasco Insurance | ✅ | Medium | Analytics agent for risk reports |
+| 11 | AI Accounting & Reconciliation | Tasco Insurance | ✅ | Medium | Transaction analysis with anomaly flagging |
+| 12 | Moto Liability Insurance | Tasco Insurance | ✅ | Medium | Voice agent for policy inquiries |
+| 13 | AI Underwriting Model | Tasco Insurance | ✅ | Medium | Underwriting assistant with decision workflow |
+| 14 | B2B Sales Pipeline | DNP Holding | ✅ | Low | Sales assistant tracking project stages |
+| 15 | Computer Vision Inventory | DNP/CMC | ❌ | N/A | *Outside scope - pure CV* |
+| 16 | Sales Order Automation | Inochi | ✅ | Low | Order parsing from email/PDF/Zalo |
+| 17 | Smart Leakage Analysis | DNP Water | ❌ | High | *Needs IoT + anomaly detection* |
+| 18 | GIS Data Standardization | DNP Water | ❌ | N/A | *Outside scope - data engineering* |
+| 19 | Underground Elevation Scanner | DNP Water | ❌ | N/A | *Outside scope - hardware* |
+| 20 | Smart Energy Orchestration | DNP Energy | ❌ | High | *Needs energy optimization ML* |
+| 21 | Material Lifecycle Management | Thang Long | ✅ | Medium | Project assistant with approval workflow |
 
-### Summary Stats
-
-| Metric | Count |
-|--------|-------|
-| Total Challenges | 21 |
-| ✅ Lyzr Can Solve | 13 (62%) |
-| ❌ Lyzr Cannot Solve | 8 (38%) |
-| Low Complexity | 4 |
-| Medium Complexity | 9 |
-| High/N/A (Out of Scope) | 8 |
-
-### Complexity Guide
-
-| Level | Timeline | Description |
-|-------|----------|-------------|
-| **Low** | 2-4 weeks | Standard RAG/KB + single agent |
-| **Medium** | 4-8 weeks | Multi-agent workflow + integrations |
-| **High** | 8+ weeks | Needs custom ML or external systems |
-| **N/A** | - | Outside Lyzr platform scope |
+**Complexity:** Low (2-4 wks) · Medium (4-8 wks) · High (8+ wks) · N/A (out of scope)
 
 ---
 
-## Overview
+## Business Units
 
-| # | Business Unit | File | Challenges |
-|---|---------------|------|------------|
-| 1 | Tasco Group HQ | [tasco-group.md](tasco-group.md) | 2 |
-| 2 | Tasco Auto | [tasco-auto.md](tasco-auto.md) | 2 |
-| 3 | Carpla | [carpla.md](carpla.md) | 2 |
-| 4 | Tasco Insurance | [tasco-insure.md](tasco-insure.md) | 7 |
-| 5 | DNP Holding & CMC | [dnp-cmc.md](dnp-cmc.md) | 2 |
-| 6 | Inochi/Thanh Phu | [inochi.md](inochi.md) | 1 |
-| 7 | DNP Water & Energy | [dnp-water.md](dnp-water.md) | 4 |
-| 8 | Thang Long Corp | [thang-long.md](thang-long.md) | 1 |
-| | **Total** | | **21** |
-
----
-
-## Challenges by Category
-
-### Document & Compliance
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Compliance Document Governance | Tasco Group HQ | AI chatbot for 100+ subsidiaries to query legal/compliance docs | Consistent, hallucination-free responses |
-| AI Accounting & Reconciliation | Tasco Insurance | Process millions of insurance-specific transactions | Automated anomaly detection |
-
-### Finance & Accounting
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Finance Consolidation | Tasco Group HQ | Consolidate financials across 100+ companies with different standards | Unified reporting |
-| AI Risk & Profitability Radar | Tasco Insurance | Visibility into risk exposure and profitability across products | Analytics dashboard |
-
-### Inventory & Supply Chain
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Inventory Optimization | Tasco Auto | Predict demand for 30+ car models across 100+ showrooms | 0% missed sales, <3 month cycle |
-| Computer Vision Inventory | DNP/CMC | Count 5M sqm tiles, identify pipe SKUs | 50% staff reduction, faster than 15 days |
-| Material Lifecycle Management | Thang Long | End-to-end material planning for 20 construction projects | Real-time visibility, predictive planning |
-| Supply Chain Forecasting | Carpla | Multi-brand spare parts across 70 service centers | Right parts, right place |
-
-### Sales & CRM
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Customer Lifecycle Management | Tasco Auto | CDP/CRM for car buyers through ownership lifecycle | Unified customer view |
-| B2B Sales Pipeline | DNP Holding | Manage 100+ sales reps, 2-year construction sales cycle | Real-time pipeline visibility |
-| Sales Order Automation | Inochi/Thanh Phu | Parse orders from email, Zalo, PDF into Bravo ERP | 50% time/resource reduction |
-| AI Sales & Pricing | Tasco Insurance | Risk-based pricing for motor vehicle insurance | Reduce 10% loss ratio gap |
-
-### Operations & Fleet
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| One-Way Car Rental Rebalancing | Carpla | Optimize fleet distribution for VTC Go app | Cost-effective repositioning |
-| Service Center Quality | Carpla | Standardize quality across 70 multi-brand service centers | Consistent service delivery |
-
-### Insurance-Specific
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Asset Damage Assessment & Claims | Tasco Insurance | AI for claims processing, fraud detection | Faster processing, fraud prevention |
-| AI E-Learning Factory | Tasco Insurance | Training platform for 1,000+ personnel, 30+ branches | Scalable, consistent training |
-| Moto Liability Insurance | Tasco Insurance | Move 1M policies from offline to online | 100% online, reduce 60-70% cost of sales |
-| AI Underwriting Model | Tasco Insurance | Risk-based underwriting decisions | Automated risk scoring |
-
-### Water & Energy
-
-| Challenge | Business Unit | Description | Target |
-|-----------|---------------|-------------|--------|
-| Smart Leakage Analysis | DNP Water | AI leak detection for water distribution networks | 15% → <10% loss ratio, real-time detection |
-| GIS Data Standardization | DNP Water | Clean and complete water network GIS data | 3-4/10 → 8/10 quality |
-| Underground Elevation Scanner | DNP Water | Handheld device for pipe depth detection | Cost-effective, non-invasive |
-| Smart Energy Orchestration | DNP Energy | Optimize energy storage and distribution | 50% cost reduction, $7M savings |
+| Business Unit | File | Total | Lyzr ✅ | Coverage |
+|---------------|------|-------|---------|----------|
+| Tasco Group HQ | [tasco-group.md](tasco-group.md) | 2 | 2 | 100% |
+| Tasco Auto | [tasco-auto.md](tasco-auto.md) | 2 | 1 | 50% |
+| Carpla | [carpla.md](carpla.md) | 2 | 1 | 50% |
+| Tasco Insurance | [tasco-insure.md](tasco-insure.md) | 7 | 6 | 86% ⭐ |
+| DNP Holding & CMC | [dnp-cmc.md](dnp-cmc.md) | 2 | 1 | 50% |
+| Inochi/Thanh Phu | [inochi.md](inochi.md) | 1 | 1 | 100% |
+| DNP Water & Energy | [dnp-water.md](dnp-water.md) | 4 | 0 | 0% |
+| Thang Long Corp | [thang-long.md](thang-long.md) | 1 | 1 | 100% |
+| **Total** | | **21** | **13** | **62%** |
 
 ---
 
-## Challenges by Technology
+## Quick Start Demos
 
-### AI/ML
+**Top 4 Low-Complexity POCs:**
 
-| Challenge | Business Unit | Technology Need |
-|-----------|---------------|-----------------|
-| Compliance Document Governance | Tasco Group | RAG, LLM, hallucination prevention |
-| Inventory Optimization | Tasco Auto | Demand forecasting, predictive analytics |
-| AI Sales & Pricing | Tasco Insurance | Risk scoring, customer segmentation |
-| Smart Leakage Analysis | DNP Water | Anomaly detection, digital twin |
-| Material Lifecycle Management | Thang Long | Predictive analytics, pattern recognition |
-
-### Computer Vision
-
-| Challenge | Business Unit | Technology Need |
-|-----------|---------------|-----------------|
-| Computer Vision Inventory | DNP/CMC | Object counting, SKU recognition |
-| Asset Damage Assessment | Tasco Insurance | Damage detection, fraud prevention |
-| One-Way Rental (Visual AI) | Carpla | Before/after car condition assessment |
-
-### Data Integration
-
-| Challenge | Business Unit | Technology Need |
-|-----------|---------------|-----------------|
-| Finance Consolidation | Tasco Group | Multi-system data aggregation |
-| Customer Lifecycle Management | Tasco Auto | CDP platform, data unification |
-| Sales Order Automation | Inochi | OCR, multi-channel parsing, ERP integration |
-| GIS Data Standardization | DNP Water | Data cleaning, gap filling |
-
-### IoT & Real-time
-
-| Challenge | Business Unit | Technology Need |
-|-----------|---------------|-----------------|
-| Smart Leakage Analysis | DNP Water | Sensor data analysis, real-time alerts |
-| Smart Energy Orchestration | DNP Energy | Energy monitoring, load balancing |
-| Material Lifecycle Management | Thang Long | Real-time site updates, inventory tracking |
-
-### Platforms & Workflows
-
-| Challenge | Business Unit | Technology Need |
-|-----------|---------------|-----------------|
-| B2B Sales Pipeline | DNP Holding | CRM system, pipeline management |
-| AI E-Learning Factory | Tasco Insurance | LMS platform, knowledge base |
-| Moto Liability Insurance | Tasco Insurance | Digital sales platform, frictionless UX |
+| Challenge | Business Unit | What to Demo |
+|-----------|---------------|--------------|
+| Compliance Document Governance | Tasco Group | RAG agent answering legal/policy questions from uploaded docs |
+| AI E-Learning Factory | Tasco Insurance | Training bot with insurance product KB + auto quiz |
+| B2B Sales Pipeline | DNP Holding | Sales assistant tracking construction project stages |
+| Sales Order Automation | Inochi | Agent parsing orders from sample emails/PDFs |
 
 ---
 
-## Priority Matrix
-
-### High Impact + Urgent
-
-| Challenge | Business Unit | Why |
-|-----------|---------------|-----|
-| Inventory Optimization | Tasco Auto | CEO priority, immediate revenue impact |
-| Smart Leakage Analysis | DNP Water | 15% → 10% = significant cost savings |
-| One-Way Rental Rebalancing | Carpla | Strategic differentiator for market leadership |
-
-### High Impact + Medium Urgency
-
-| Challenge | Business Unit | Why |
-|-----------|---------------|-----|
-| Computer Vision Inventory | DNP/CMC | 50% cost reduction target, 15-day cycle |
-| Asset Damage Assessment | Tasco Insurance | Volume overwhelm, fraud prevention |
-| Sales Order Automation | Inochi | 50% efficiency target, clear ROI |
-
-### Scale Opportunities
-
-| Challenge | Business Unit | Why |
-|-----------|---------------|-----|
-| AI E-Learning Factory | Tasco Insurance | 1,000+ personnel, 30+ branches |
-| Service Center Quality | Carpla | 70 locations, multi-brand complexity |
-| B2B Sales Pipeline | DNP Holding | 100+ sales reps, 2-year cycles |
-
----
-
-## Success Metrics Summary
-
-| Category | Metric | Target |
-|----------|--------|--------|
-| **Cost Reduction** | Inventory staff (DNP/CMC) | 50% reduction |
-| | Energy costs (DNP Energy) | 50% reduction ($7M) |
-| | Insurance sales cost | Reduce 60-70% offline cost |
-| **Efficiency** | Sales order processing (Inochi) | 50% time savings |
-| | Claims processing (Insurance) | 1 day vs 1 month |
-| | Inventory reconciliation (CMC) | <15 days |
-| **Quality** | Water loss ratio (DNP Water) | 15% → <10% |
-| | GIS data quality (DNP Water) | 3-4/10 → 8/10 |
-| | Insurance loss ratio | Reduce 10% gap to market |
-| **Coverage** | Inventory cycle (Tasco Auto) | <3 months |
-| | Missed sales (Tasco Auto) | 0% |
-| | Online insurance sales | <5% → majority |
-
----
-
-## Common Themes
-
-1. **Manual → Automated**: Most challenges involve replacing manual processes with AI
-2. **Fragmented → Unified**: Data scattered across Excel, email, chat needs consolidation
-3. **Delayed → Real-time**: Updates taking days/weeks need to be instant
-4. **Reactive → Predictive**: Moving from historical analysis to forecasting
-5. **People-dependent → System-driven**: Reducing reliance on individual expertise
-6. **Cost Optimization**: Clear ROI targets (50% reduction common)
-7. **Vietnamese Context**: Local ERPs (Bravo), apps (Zalo), language support needed
-
----
-
-## Lyzr Solution Fit
-
-> Analysis of which challenges can be solved using [Lyzr](https://lyzr.ai) AI agent platform
-
-### Fit Summary
-
-| Fit Level | Count | Description |
-|-----------|-------|-------------|
-| ✅ Perfect Fit | 5 | Core Lyzr use cases |
-| ✅ Good Fit | 8 | Strong alignment with agent capabilities |
-| ⚠️ Partial Fit | 5 | Needs custom integrations |
-| ❌ Not a Fit | 3 | Outside Lyzr's scope |
-
-### Coverage by Business Unit
-
-| Business Unit | Total | ✅ Perfect | ✅ Good | ⚠️ Partial | ❌ No Fit | Coverage |
-|---------------|-------|-----------|---------|-----------|----------|----------|
-| Tasco Group HQ | 2 | 1 | 1 | 0 | 0 | **100%** |
-| Tasco Auto | 2 | 0 | 1 | 1 | 0 | **50%** |
-| Carpla | 2 | 0 | 1 | 1 | 0 | **50%** |
-| Tasco Insurance | 7 | 2 | 4 | 1 | 0 | **86%** |
-| DNP Holding & CMC | 2 | 1 | 0 | 0 | 1 | **50%** |
-| Inochi/Thanh Phu | 1 | 1 | 0 | 0 | 0 | **100%** |
-| DNP Water & Energy | 4 | 0 | 0 | 2 | 2 | **0%** |
-| Thang Long Corp | 1 | 1 | 0 | 0 | 0 | **100%** |
-| **Total** | **21** | **5** | **8** | **5** | **3** | **62%** |
-
-> **Coverage** = (Perfect + Good) / Total challenges
-
-### Business Unit Details
-
-**Tasco Group HQ** (2/2 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| Compliance Document Governance | ✅ Perfect | RAG + Knowledge Base + Responsible AI |
-| Finance Consolidation | ✅ Good | Multi-agent workflow + RAG |
-
-**Tasco Auto** (1/2 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| Customer Lifecycle Management | ✅ Good | Agent + Knowledge Base |
-| Inventory Optimization | ⚠️ Partial | Decision support (needs ML models) |
-
-**Carpla** (1/2 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| Service Center Quality | ✅ Good | Knowledge Base for multi-brand issues |
-| One-Way Rental Rebalancing | ⚠️ Partial | Decision support (needs optimization) |
-
-**Tasco Insurance** (6/7 covered) ⭐ Best coverage
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| AI E-Learning Factory | ✅ Perfect | Knowledge Base + Agent |
-| AI Accounting & Reconciliation | ✅ Perfect | Agent + Workflow |
-| AI Sales & Pricing | ✅ Good | Agent for risk assessment |
-| AI Risk & Profitability Radar | ✅ Good | Agent + Data Connectors |
-| Moto Liability Insurance | ✅ Good | Voice Agent + Workflow |
-| AI Underwriting Model | ✅ Good | Agent + Knowledge Base |
-| Asset Damage Assessment | ⚠️ Partial | Claims workflow (needs CV) |
-
-**DNP Holding & CMC** (1/2 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| B2B Sales Pipeline | ✅ Perfect | Agent + Workflow |
-| Computer Vision Inventory | ❌ No Fit | Pure computer vision |
-
-**Inochi/Thanh Phu** (1/1 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| Sales Order Automation | ✅ Perfect | Multi-channel parsing + Data Connectors |
-
-**DNP Water & Energy** (0/4 covered) ⚠️ Weakest fit
-| Challenge | Fit | Reason |
-|-----------|-----|--------|
-| Smart Leakage Analysis | ⚠️ Partial | Needs IoT/ML integration |
-| Smart Energy Orchestration | ⚠️ Partial | Needs energy optimization |
-| GIS Data Standardization | ❌ No Fit | Data engineering |
-| Underground Elevation Scanner | ❌ No Fit | Hardware (GPR device) |
-
-**Thang Long Corp** (1/1 covered)
-| Challenge | Fit | Lyzr Solution |
-|-----------|-----|---------------|
-| Material Lifecycle Management | ✅ Good | Agent + Workflow + Data Connectors |
-
-### Strategic Summary
+## Summary
 
 | Metric | Value |
 |--------|-------|
-| Business units with 100% coverage | 3 (Tasco Group, Inochi, Thang Long) |
-| Business units with 50%+ coverage | 6 of 8 (75%) |
-| Total challenges addressable | 13 of 21 (62%) |
-| Business units fully excluded | 0 |
-| Strongest fit | Tasco Insurance (6/7 challenges) |
-| Weakest fit | DNP Water & Energy (0/4 core fit) |
+| Total challenges | 21 |
+| Lyzr can solve | 13 (62%) |
+| Business units covered | 7 of 8 |
+| Low complexity (quick wins) | 4 |
+| Medium complexity | 9 |
 
-### ✅ Perfect Fit (5)
+**Common patterns across challenges:**
+- Manual → Automated (Excel/email to AI)
+- Fragmented → Unified (scattered data to single view)
+- Delayed → Real-time (days/weeks to instant)
+- Vietnamese context (Bravo ERP, Zalo, local language)
 
-| Challenge | Business Unit | Lyzr Solution |
-|-----------|---------------|---------------|
-| Compliance Document Governance | Tasco Group | RAG + Knowledge Base + Responsible AI |
-| AI E-Learning Factory | Tasco Insurance | Knowledge Base + Agent for training Q&A |
-| Sales Order Automation | Inochi | Agent for multi-channel parsing + Data Connectors |
-| B2B Sales Pipeline | DNP Holding | Agent + Workflow for pipeline management |
-| AI Accounting & Reconciliation | Tasco Insurance | Agent + Workflow for transaction analysis |
+---
 
-### ✅ Good Fit (8)
-
-| Challenge | Business Unit | Lyzr Solution |
-|-----------|---------------|---------------|
-| Finance Consolidation | Tasco Group | Multi-agent workflow + RAG |
-| Customer Lifecycle Management | Tasco Auto | Agent + Knowledge Base |
-| Service Center Quality | Carpla | Knowledge Base for multi-brand issues |
-| AI Sales & Pricing | Tasco Insurance | Agent for risk assessment + Workflow |
-| AI Risk & Profitability Radar | Tasco Insurance | Agent + Data Connectors |
-| Moto Liability Insurance | Tasco Insurance | Voice Agent + Workflow |
-| AI Underwriting Model | Tasco Insurance | Agent + Knowledge Base |
-| Material Lifecycle Management | Thang Long | Agent + Workflow + Data Connectors |
-
-### ⚠️ Partial Fit (5)
-
-| Challenge | Business Unit | Gap | Lyzr Role |
-|-----------|---------------|-----|-----------|
-| Inventory Optimization | Tasco Auto | Needs ML models | Decision support agent |
-| One-Way Rental Rebalancing | Carpla | Needs optimization | Fleet decision support |
-| Asset Damage Assessment | Tasco Insurance | Needs computer vision | Claims workflow |
-| Smart Leakage Analysis | DNP Water | Needs IoT/ML | Alert management agent |
-| Smart Energy Orchestration | DNP Energy | Needs energy ML | Decision support |
-
-### ❌ Not a Fit (3)
-
-| Challenge | Business Unit | Reason |
-|-----------|---------------|--------|
-| Computer Vision Inventory | DNP/CMC | Pure computer vision |
-| Underground Elevation Scanner | DNP Water | Hardware solution (GPR) |
-| GIS Data Standardization | DNP Water | Data engineering |
-
-### Recommended Priority for Lyzr
-
-**Tier 1: Quick Wins (4-6 weeks)**
-- Compliance Document Governance
-- AI E-Learning Factory
-- Sales Order Automation
-
-**Tier 2: High Impact (6-8 weeks)**
-- B2B Sales Pipeline
-- Material Lifecycle Management
-- Moto Liability Insurance (Voice)
-
-**Tier 3: Integration Projects (8-12 weeks)**
-- Customer Lifecycle Management
-- Finance Consolidation
-- Insurance AI Suite (Underwriting + Pricing)
-
-### Lyzr Capabilities Mapping
-
-| Lyzr Capability | Applicable Challenges |
-|-----------------|----------------------|
-| **RAG / Knowledge Base** | Compliance, E-Learning, Service Center, Underwriting |
-| **Multi-Agent Orchestration** | Finance, Material Management, Claims |
-| **Workflows** | Sales Pipeline, Order Automation, Accounting |
-| **Voice Agents** | Moto Liability Insurance, Customer Lifecycle |
-| **Data Connectors** | Order Automation, Finance, Inventory |
-| **Responsible AI** | Compliance, Insurance decisions |
-
-*Full analysis: [lyzr-fit.md](lyzr-fit.md)*
+*Detailed Lyzr fit analysis: [lyzr-fit.md](lyzr-fit.md)*
