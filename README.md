@@ -200,6 +200,88 @@
 | ⚠️ Partial Fit | 5 | Needs custom integrations |
 | ❌ Not a Fit | 3 | Outside Lyzr's scope |
 
+### Coverage by Business Unit
+
+| Business Unit | Total | ✅ Perfect | ✅ Good | ⚠️ Partial | ❌ No Fit | Coverage |
+|---------------|-------|-----------|---------|-----------|----------|----------|
+| Tasco Group HQ | 2 | 1 | 1 | 0 | 0 | **100%** |
+| Tasco Auto | 2 | 0 | 1 | 1 | 0 | **50%** |
+| Carpla | 2 | 0 | 1 | 1 | 0 | **50%** |
+| Tasco Insurance | 7 | 2 | 4 | 1 | 0 | **86%** |
+| DNP Holding & CMC | 2 | 1 | 0 | 0 | 1 | **50%** |
+| Inochi/Thanh Phu | 1 | 1 | 0 | 0 | 0 | **100%** |
+| DNP Water & Energy | 4 | 0 | 0 | 2 | 2 | **0%** |
+| Thang Long Corp | 1 | 1 | 0 | 0 | 0 | **100%** |
+| **Total** | **21** | **5** | **8** | **5** | **3** | **62%** |
+
+> **Coverage** = (Perfect + Good) / Total challenges
+
+### Business Unit Details
+
+**Tasco Group HQ** (2/2 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| Compliance Document Governance | ✅ Perfect | RAG + Knowledge Base + Responsible AI |
+| Finance Consolidation | ✅ Good | Multi-agent workflow + RAG |
+
+**Tasco Auto** (1/2 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| Customer Lifecycle Management | ✅ Good | Agent + Knowledge Base |
+| Inventory Optimization | ⚠️ Partial | Decision support (needs ML models) |
+
+**Carpla** (1/2 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| Service Center Quality | ✅ Good | Knowledge Base for multi-brand issues |
+| One-Way Rental Rebalancing | ⚠️ Partial | Decision support (needs optimization) |
+
+**Tasco Insurance** (6/7 covered) ⭐ Best coverage
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| AI E-Learning Factory | ✅ Perfect | Knowledge Base + Agent |
+| AI Accounting & Reconciliation | ✅ Perfect | Agent + Workflow |
+| AI Sales & Pricing | ✅ Good | Agent for risk assessment |
+| AI Risk & Profitability Radar | ✅ Good | Agent + Data Connectors |
+| Moto Liability Insurance | ✅ Good | Voice Agent + Workflow |
+| AI Underwriting Model | ✅ Good | Agent + Knowledge Base |
+| Asset Damage Assessment | ⚠️ Partial | Claims workflow (needs CV) |
+
+**DNP Holding & CMC** (1/2 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| B2B Sales Pipeline | ✅ Perfect | Agent + Workflow |
+| Computer Vision Inventory | ❌ No Fit | Pure computer vision |
+
+**Inochi/Thanh Phu** (1/1 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| Sales Order Automation | ✅ Perfect | Multi-channel parsing + Data Connectors |
+
+**DNP Water & Energy** (0/4 covered) ⚠️ Weakest fit
+| Challenge | Fit | Reason |
+|-----------|-----|--------|
+| Smart Leakage Analysis | ⚠️ Partial | Needs IoT/ML integration |
+| Smart Energy Orchestration | ⚠️ Partial | Needs energy optimization |
+| GIS Data Standardization | ❌ No Fit | Data engineering |
+| Underground Elevation Scanner | ❌ No Fit | Hardware (GPR device) |
+
+**Thang Long Corp** (1/1 covered)
+| Challenge | Fit | Lyzr Solution |
+|-----------|-----|---------------|
+| Material Lifecycle Management | ✅ Good | Agent + Workflow + Data Connectors |
+
+### Strategic Summary
+
+| Metric | Value |
+|--------|-------|
+| Business units with 100% coverage | 3 (Tasco Group, Inochi, Thang Long) |
+| Business units with 50%+ coverage | 6 of 8 (75%) |
+| Total challenges addressable | 13 of 21 (62%) |
+| Business units fully excluded | 0 |
+| Strongest fit | Tasco Insurance (6/7 challenges) |
+| Weakest fit | DNP Water & Energy (0/4 core fit) |
+
 ### ✅ Perfect Fit (5)
 
 | Challenge | Business Unit | Lyzr Solution |
