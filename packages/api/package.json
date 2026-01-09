@@ -1,0 +1,22 @@
+{
+  "name": "@tasco/api",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./handlers": "./src/handlers/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "peerDependencies": {
+    "next": "^15.0.0"
+  },
+  "dependencies": {
+    "@tasco/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.2"
+  }
+}

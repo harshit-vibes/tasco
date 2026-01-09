@@ -1,6 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "NEXT_PUBLIC_LYZR_API_KEY",
+    "NEXT_PUBLIC_LYZR_AGENT_ID",
+    "NEXT_PUBLIC_RAG_URL",
+    "NEXT_PUBLIC_LYZR_BASE_URL",
+    "NEXT_PUBLIC_AWS_REGION",
+    "NEXT_PUBLIC_AWS_ACCESS_KEY_ID",
+    "NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY",
+    "NEXT_PUBLIC_APP_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

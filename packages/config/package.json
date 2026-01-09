@@ -5,6 +5,8 @@
   "exports": {
     "./tailwind": "./tailwind/tailwind.config.ts",
     "./typescript/base": "./typescript/base.json",
-    "./typescript/nextjs": "./typescript/nextjs.json"
+    "./typescript/nextjs": "./typescript/nextjs.json",
+    "./postcss": "./postcss/postcss.config.js",
+    "./next": "./next/next.config.ts"
   }
 }

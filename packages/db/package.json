@@ -4,13 +4,19 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./chat": "./src/chat/index.ts",
+    "./entities": "./src/entities/index.ts",
+    "./s3": "./src/s3/index.ts"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:init": "bun run src/scripts/init-tables.ts",
+    "db:seed-entities": "bun run src/scripts/seed-entities.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.712.0",
+    "@aws-sdk/client-s3": "^3.712.0",
     "@aws-sdk/lib-dynamodb": "^3.712.0"
   },
   "devDependencies": {

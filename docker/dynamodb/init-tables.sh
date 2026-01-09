@@ -7,10 +7,10 @@ sleep 5
 
 echo "Creating tables..."
 
-# Sessions table - for chat sessions
+# Conversations table - for chat conversations
 aws dynamodb create-table \
   --endpoint-url $ENDPOINT \
-  --table-name Sessions \
+  --table-name tasco-conversations \
   --attribute-definitions \
     AttributeName=pk,AttributeType=S \
     AttributeName=sk,AttributeType=S \
@@ -18,22 +18,22 @@ aws dynamodb create-table \
     AttributeName=pk,KeyType=HASH \
     AttributeName=sk,KeyType=RANGE \
   --billing-mode PAY_PER_REQUEST \
-  2>/dev/null || echo "Sessions table already exists"
+  2>/dev/null || echo "tasco-conversations table already exists"
 
 # Messages table - for chat messages
 aws dynamodb create-table \
   --endpoint-url $ENDPOINT \
-  --table-name Messages \
+  --table-name tasco-messages \
   --attribute-definitions \
-    AttributeName=sessionId,AttributeType=S \
-    AttributeName=timestamp,AttributeType=N \
+    AttributeName=pk,AttributeType=S \
+    AttributeName=sk,AttributeType=S \
   --key-schema \
-    AttributeName=sessionId,KeyType=HASH \
-    AttributeName=timestamp,KeyType=RANGE \
+    AttributeName=pk,KeyType=HASH \
+    AttributeName=sk,KeyType=RANGE \
   --billing-mode PAY_PER_REQUEST \
-  2>/dev/null || echo "Messages table already exists"
+  2>/dev/null || echo "tasco-messages table already exists"
 
-# Documents table - for knowledge base documents
+# Documents table - for knowledge base documents (legacy)
 aws dynamodb create-table \
   --endpoint-url $ENDPOINT \
   --table-name Documents \

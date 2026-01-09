@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deploy all Tier 1 & 2 priority apps to AWS Amplify
+# Deploy all 8 apps to AWS Amplify
 # Usage: ./scripts/deploy-priority-apps.sh [region]
 
 set -e
@@ -9,7 +9,7 @@ REGION="${1:-ap-southeast-1}"
 SCRIPT_DIR="$(dirname "$0")"
 
 echo "=========================================="
-echo "Deploying Priority Apps to AWS Amplify"
+echo "Deploying 8 Apps to AWS Amplify"
 echo "Region: $REGION"
 echo "=========================================="
 
@@ -23,24 +23,33 @@ echo "=========================================="
 echo "Step 2: Creating Amplify Apps"
 echo "=========================================="
 
-# Tier 1 - Tasco Group HQ (Top Priority)
-echo ""
-echo "--- Tier 1: Tasco Group HQ ---"
-"$SCRIPT_DIR/create-amplify-app.sh" "compliance-qa" "tasco-group/compliance-qa" "$REGION"
-"$SCRIPT_DIR/create-amplify-app.sh" "finance-consolidation" "tasco-group/finance-consolidation" "$REGION"
+# All 8 apps (flat structure)
+APPS=(
+  "compliance-qa"
+  "customer-lifecycle"
+  "sales-pricing"
+  "e-learning"
+  "risk-radar"
+  "sales-order"
+  "data-sync"
+  "promotion-control"
+)
 
-# Tier 2 - Secondary Priority
-echo ""
-echo "--- Tier 2: Secondary Priority ---"
-"$SCRIPT_DIR/create-amplify-app.sh" "customer-lifecycle" "tasco-auto/customer-lifecycle" "$REGION"
-"$SCRIPT_DIR/create-amplify-app.sh" "service-center" "carpla/service-center" "$REGION"
-"$SCRIPT_DIR/create-amplify-app.sh" "e-learning" "tasco-insurance/e-learning" "$REGION"
-"$SCRIPT_DIR/create-amplify-app.sh" "sales-order" "inochi/sales-order" "$REGION"
+for APP in "${APPS[@]}"; do
+  echo ""
+  echo "--- Deploying: $APP ---"
+  "$SCRIPT_DIR/create-amplify-app.sh" "$APP" "apps/$APP" "$REGION"
+done
 
 echo ""
 echo "=========================================="
-echo "All Priority Apps Deployed!"
+echo "All 8 Apps Deployed!"
 echo "=========================================="
+echo ""
+echo "Apps deployed:"
+for APP in "${APPS[@]}"; do
+  echo "  - $APP"
+done
 echo ""
 echo "Next Steps:"
 echo "1. Go to AWS Amplify Console"

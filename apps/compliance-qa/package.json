@@ -1,0 +1,21 @@
+{
+  "name": "@tasco/compliance-qa",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tasco/api": "workspace:*",
+    "@tasco/db": "workspace:*",
+    "@tasco/lyzr": "workspace:*",
+    "@tasco/rag": "workspace:*",
+    "@tasco/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@tasco/config": "workspace:*"
+  }
+}
