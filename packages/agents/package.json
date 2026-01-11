@@ -1,0 +1,54 @@
+{
+  "name": "@tasco/agents",
+  "version": "1.0.0",
+  "description": "Centralized Lyzr agent management for Tasco apps",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./registry": {
+      "import": "./src/registry.ts",
+      "types": "./src/registry.ts"
+    },
+    "./knowledge-bases": {
+      "import": "./src/knowledge-bases.ts",
+      "types": "./src/knowledge-bases.ts"
+    },
+    "./types": {
+      "import": "./src/types.ts",
+      "types": "./src/types.ts"
+    },
+    "./config/*": {
+      "import": "./dist/config/*.js",
+      "types": "./dist/config/*.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "types": "./dist/hooks/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "setup-all": "bun run scripts/setup-all.ts",
+    "sync-registry": "bun run scripts/sync-registry.ts",
+    "validate": "bun run scripts/validate.ts",
+    "list-agents": "bun run scripts/list-agents.ts",
+    "list-kbs": "bun run scripts/list-kbs.ts",
+    "setup-kbs": "bun run scripts/setup-kbs.ts"
+  },
+  "dependencies": {
+    "@tasco/api": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

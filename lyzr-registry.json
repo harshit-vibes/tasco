@@ -1,0 +1,247 @@
+{
+  "$schema": "./lyzr-registry.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-10",
+  "apiUrl": "https://agent-prod.studio.lyzr.ai",
+  "agents": {
+    "compliance-qa": {
+      "main": {
+        "id": "696108ed5e0239738a838cd8",
+        "name": "Compliance Super AI",
+        "role": "orchestrator",
+        "model": "gpt-4o-mini",
+        "description": "Main orchestrator that routes queries to expert sub-agents",
+        "connectedKBs": [],
+        "subAgents": [
+          "legal-expert",
+          "internal-expert"
+        ],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      },
+      "legal-expert": {
+        "id": "69613776c57d451439d4c8f4",
+        "name": "Tasco Legal Framework Expert",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Specializes in Vietnamese laws, decrees, and circulars",
+        "connectedKBs": [
+          "legal-kb"
+        ],
+        "envVar": "NEXT_PUBLIC_LYZR_LEGAL_AGENT_ID"
+      },
+      "internal-expert": {
+        "id": "69613777c57d451439d4c8f5",
+        "name": "Tasco Internal Policy Expert",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Specializes in Tasco Group internal policies and procedures",
+        "connectedKBs": [
+          "internal-kb"
+        ],
+        "envVar": "NEXT_PUBLIC_LYZR_INTERNAL_AGENT_ID"
+      },
+      "validation": {
+        "id": "696108f75e0239738a838cdf",
+        "name": "Compliance Validation Agent",
+        "role": "validator",
+        "model": "gpt-4o-mini",
+        "description": "Scores and validates response quality",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_VALIDATION_AGENT_ID"
+      }
+    },
+    "e-learning": {
+      "course-outline": {
+        "id": "6960efc45e0239738a838056",
+        "name": "Course Outline Generator",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Generates course structure and outline from topic",
+        "connectedKBs": [],
+        "envVar": "LYZR_COURSE_OUTLINE_AGENT_ID"
+      },
+      "module-content": {
+        "id": "6960efcf5e0239738a838072",
+        "name": "Module Content Generator",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Generates detailed module content",
+        "connectedKBs": [],
+        "envVar": "LYZR_MODULE_CONTENT_AGENT_ID"
+      },
+      "lesson-generator": {
+        "id": "6960f136c57d451439d4b4a1",
+        "name": "Lesson Generator",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Generates individual lesson content",
+        "connectedKBs": [],
+        "envVar": "LYZR_LESSON_GENERATOR_AGENT_ID"
+      },
+      "quiz-generator": {
+        "id": "6960f1445e0239738a8383b9",
+        "name": "Quiz Generator",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Generates quiz questions for lessons",
+        "connectedKBs": [],
+        "envVar": "LYZR_QUIZ_GENERATOR_AGENT_ID"
+      },
+      "main": {
+        "id": "6961ba6bd09b5523633454d5",
+        "name": "E-Learning Chat Assistant",
+        "role": "main",
+        "model": "gpt-4o-mini",
+        "description": "Main chat agent for learner assistance",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      },
+      "validation": {
+        "id": "6961ba6bd09b5523633454d6",
+        "name": "E-Learning Validation Agent",
+        "role": "validator",
+        "model": "gpt-4o-mini",
+        "description": "Validates chat responses",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_VALIDATION_AGENT_ID"
+      }
+    },
+    "sales-order": {
+      "extraction": {
+        "id": "69613126c57d451439d4c4e4",
+        "name": "Vietnamese Order Data Extractor",
+        "role": "expert",
+        "model": "gpt-4o-mini",
+        "description": "Extracts structured order data from Vietnamese OCR text",
+        "connectedKBs": [],
+        "envVar": "EXTRACTION_AGENT_ID"
+      },
+      "validation": {
+        "id": "69613126c57d451439d4c4e5",
+        "name": "Order Validation Specialist",
+        "role": "validator",
+        "model": "gpt-4o-mini",
+        "description": "Validates extracted order data for completeness and accuracy",
+        "connectedKBs": [],
+        "envVar": "VALIDATION_AGENT_ID"
+      }
+    },
+    "customer-lifecycle": {
+      "main": {
+        "id": "69625ab1d09b552363346dd5",
+        "name": "Customer Lifecycle Assistant",
+        "role": "main",
+        "model": "gpt-4o-mini",
+        "description": "AI assistant for customer lifecycle management at Tasco Auto",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      }
+    },
+    "sales-pricing": {
+      "main": {
+        "id": "69625ab2d09b552363346dd6",
+        "name": "Pricing Assistant",
+        "role": "main",
+        "model": "gpt-4o-mini",
+        "description": "AI assistant for insurance pricing and quotes at Tasco Insurance",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      }
+    },
+    "risk-radar": {
+      "main": {
+        "id": "69625ab2d09b552363346dd7",
+        "name": "Risk Analysis Assistant",
+        "role": "main",
+        "model": "gpt-4o-mini",
+        "description": "AI assistant for risk and profitability analysis at Tasco Insurance",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      }
+    },
+    "data-sync": {
+      "main": {
+        "id": "69625ab3d09b552363346dd8",
+        "name": "Data Sync Assistant",
+        "role": "main",
+        "model": "gpt-4o-mini",
+        "description": "AI assistant for data synchronization at Inochi",
+        "connectedKBs": [],
+        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+      }
+    },
+    "promotion-control": {
+      "_status": "no-chat",
+      "_note": "App has no chat feature - uses conflict detection algorithms"
+    }
+  },
+  "knowledgeBases": {
+    "internal-kb": {
+      "id": "6960a63fee18986913060bc0",
+      "name": "compliance-qa-internal",
+      "app": "compliance-qa",
+      "description": "Tasco Group internal policies, charters, meeting minutes, contracts",
+      "documentFilter": {
+        "excludeCategory": "_LEGAL"
+      },
+      "connectedAgents": [
+        "internal-expert"
+      ],
+      "envVar": "LYZR_KB_ID",
+      "documentCount": 8
+    },
+    "legal-kb": {
+      "id": "69613775979041509ac8ee82",
+      "name": "compliance-qa-legal",
+      "app": "compliance-qa",
+      "description": "Vietnamese laws, decrees, circulars, and regulatory documents",
+      "documentFilter": {
+        "category": "_LEGAL",
+        "entityId": "_LEGAL"
+      },
+      "connectedAgents": [
+        "legal-expert"
+      ],
+      "envVar": "LYZR_LEGAL_KB_ID",
+      "documentCount": 6
+    }
+  },
+  "documentCategories": {
+    "_LEGAL": {
+      "description": "Vietnamese laws, decrees, circulars",
+      "entityId": "_LEGAL",
+      "targetKB": "legal-kb"
+    },
+    "Charter": {
+      "description": "Company charters and bylaws",
+      "targetKB": "internal-kb"
+    },
+    "Minutes": {
+      "description": "Meeting minutes and board resolutions",
+      "targetKB": "internal-kb"
+    },
+    "Contract": {
+      "description": "Contracts and agreements",
+      "targetKB": "internal-kb"
+    },
+    "Policy": {
+      "description": "Internal policies and procedures",
+      "targetKB": "internal-kb"
+    }
+  },
+  "scripts": {
+    "compliance-qa": {
+      "setup-agents": "bun run setup-agents",
+      "connect-agents": "bun run connect-agents",
+      "update-orchestrator": "bun run update-orchestrator",
+      "sync-documents": "bun run sync-documents",
+      "seed-legal-docs": "bun run seed-legal-docs"
+    },
+    "e-learning": {
+      "seed-courses": "bun run seed-courses"
+    },
+    "sales-order": {
+      "setup-agents": "bun run setup-agents"
+    }
+  }
+}

@@ -6,14 +6,26 @@
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-agents": "bun scripts/setup-agents.ts",
+    "connect-agents": "bun scripts/connect-agents.ts",
+    "update-orchestrator": "bun scripts/update-orchestrator.ts",
+    "seed-legal-docs": "bun scripts/seed-legal-docs.ts",
+    "sync-documents": "bun scripts/sync-documents.ts",
+    "seed-guide": "bun scripts/seed-guide.ts"
   },
   "dependencies": {
+    "@tasco/agents": "workspace:*",
     "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
+    "@tasco/export": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
     "@tasco/rag": "workspace:*",
-    "@tasco/ui": "workspace:*"
+    "@tasco/ui": "workspace:*",
+    "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
+    "sonner": "^2.0.7"
   },
   "devDependencies": {
     "@tasco/config": "workspace:*"
