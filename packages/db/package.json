@@ -17,7 +17,8 @@
     "db:seed-sales-orders": "bun run src/scripts/seed-sales-orders.ts",
     "db:seed-users": "bun run src/scripts/seed-users.ts",
     "db:extract-users": "bun run src/scripts/extract-users.ts",
-    "db:seed-promotions": "bun run src/scripts/seed-promotions.ts"
+    "db:seed-promotions": "bun run src/scripts/seed-promotions.ts",
+    "db:seed-guides": "bun run src/scripts/seed-guides.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.712.0",

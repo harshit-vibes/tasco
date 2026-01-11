@@ -15,7 +15,13 @@ export type GuideIcon =
   | "users"         // Multi-entity/Teams
   | "globe"         // Multi-language
   | "check"         // Validation/Quality
-  | "brain";        // AI Intelligence
+  | "brain"         // AI Intelligence
+  | "target"        // Problem/Goal
+  | "lightbulb"     // Solution
+  | "layers"        // Infrastructure
+  | "cpu"           // Backend
+  | "layout"        // Frontend
+  | "bot";          // Agent
 
 export type GuideIconColor =
   | "primary"
@@ -36,6 +42,33 @@ export interface GuideSlide {
   highlight?: string;         // Optional badge (e.g., "NEW", "AI-Powered")
 }
 
+// One-pager section for comprehensive app overview
+export interface OnePagerSection {
+  title: string;
+  icon: GuideIcon;
+  iconColor: GuideIconColor;
+  content: string;            // Markdown content
+  bulletPoints?: string[];    // Key highlights as bullet points
+}
+
+// Complete one-pager structure for app demos
+export interface AppOnePager {
+  // Problem & Solution
+  problemStatement: OnePagerSection;
+  lyzrSolution: OnePagerSection;
+
+  // Demo Coverage
+  demoCoverage: OnePagerSection;
+
+  // Technical Architecture
+  frontendExperience: OnePagerSection;
+  backendInfra: OnePagerSection;
+  agenticInfra: OnePagerSection;
+
+  // Optional: Future roadmap
+  futureEnhancements?: OnePagerSection;
+}
+
 export interface AppGuide {
   // Identity
   id: string;
@@ -46,8 +79,11 @@ export interface AppGuide {
   appName: string;
   appTagline: string;
 
-  // Carousel content
+  // Carousel content (quick feature highlights)
   slides: GuideSlide[];
+
+  // One-pager content (comprehensive overview)
+  onePager?: AppOnePager;
 
   // Call to action
   ctaText?: string;
@@ -63,6 +99,7 @@ export interface CreateAppGuideInput {
   appName: string;
   appTagline: string;
   slides: GuideSlide[];
+  onePager?: AppOnePager;
   ctaText?: string;
   enabled?: boolean;
 }
@@ -92,6 +129,7 @@ export async function getAppGuide(appId: string, language: string = "en"): Promi
     appName: result.Item.appName,
     appTagline: result.Item.appTagline,
     slides: result.Item.slides || [],
+    onePager: result.Item.onePager,
     ctaText: result.Item.ctaText,
     enabled: result.Item.enabled,
     updatedAt: result.Item.updatedAt,
@@ -119,6 +157,7 @@ export async function getAppGuides(appId: string): Promise<AppGuide[]> {
     appName: item.appName,
     appTagline: item.appTagline,
     slides: item.slides || [],
+    onePager: item.onePager,
     ctaText: item.ctaText,
     enabled: item.enabled,
     updatedAt: item.updatedAt,
@@ -139,6 +178,7 @@ export async function putAppGuide(input: CreateAppGuideInput): Promise<AppGuide>
     appName: input.appName,
     appTagline: input.appTagline,
     slides: input.slides.sort((a, b) => a.order - b.order),
+    onePager: input.onePager,
     ctaText: input.ctaText,
     enabled: input.enabled ?? true,
     updatedAt: now,

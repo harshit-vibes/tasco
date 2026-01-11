@@ -365,6 +365,8 @@ export {
   type GuideIcon,
   type GuideIconColor,
   type GuideSlide,
+  type OnePagerSection,
+  type AppOnePager,
   type AppGuide,
   type CreateAppGuideInput,
   // Guide operations
