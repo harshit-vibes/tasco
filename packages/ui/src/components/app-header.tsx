@@ -4,7 +4,14 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 import { EntitySelector, Entity } from "./entity-selector";
 import { Button } from "./button";
-import { Settings, Bell, User, HelpCircle } from "lucide-react";
+import { Settings, Bell, User, HelpCircle, Globe, Check } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { LanguageSwitcher } from "@tasco/i18n";
 
 export interface AppHeaderProps {
   appName: string;
@@ -66,6 +73,15 @@ export function AppHeader({
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <HelpCircle className="h-4 w-4" />
         </Button>
+
+        <LanguageSwitcher
+          variant="icon"
+          Button={Button as any}
+          DropdownMenu={DropdownMenu as any}
+          DropdownMenuTrigger={DropdownMenuTrigger as any}
+          DropdownMenuContent={DropdownMenuContent as any}
+          DropdownMenuItem={DropdownMenuItem as any}
+        />
 
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <Bell className="h-4 w-4" />

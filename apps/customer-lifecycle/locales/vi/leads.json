@@ -1,0 +1,55 @@
+{
+  "title": "Quản Lý Khách Hàng Tiềm Năng",
+  "description": "Quản lý và nuôi dưỡng kênh bán hàng của bạn",
+  "priority": {
+    "all": "Tất Cả Mức Độ",
+    "hot": "Nóng",
+    "warm": "Ấm",
+    "cold": "Lạnh"
+  },
+  "status": {
+    "all": "Tất Cả Trạng Thái",
+    "new": "Mới",
+    "contacted": "Đã Liên Hệ",
+    "qualified": "Đã Đánh Giá",
+    "nurturing": "Đang Nuôi Dưỡng",
+    "converted": "Đã Chuyển Đổi",
+    "lost": "Đã Mất"
+  },
+  "source": {
+    "all": "Tất Cả Nguồn",
+    "website": "Website",
+    "referral": "Giới Thiệu",
+    "walk-in": "Đến Trực Tiếp",
+    "event": "Sự Kiện",
+    "social": "Mạng Xã Hội",
+    "other": "Khác"
+  },
+  "sort": {
+    "score": "Điểm",
+    "createdAt": "Ngày Tạo",
+    "name": "Tên",
+    "lastContactedAt": "Liên Hệ Cuối"
+  },
+  "labels": {
+    "score": "Điểm",
+    "priority": "Mức Độ",
+    "status": "Trạng Thái",
+    "source": "Nguồn",
+    "created_at": "Ngày Tạo",
+    "last_contacted": "Liên Hệ Cuối",
+    "assigned_to": "Phân Công Cho",
+    "interest": "Quan Tâm",
+    "brands": "Thương Hiệu",
+    "vehicle_types": "Loại Xe",
+    "budget": "Ngân Sách",
+    "timeline": "Thời Gian"
+  },
+  "actions": {
+    "create_lead": "Tạo Khách Hàng Tiềm Năng",
+    "contact": "Liên Hệ",
+    "qualify": "Đánh Giá",
+    "convert": "Chuyển Đổi",
+    "mark_lost": "Đánh Dấu Đã Mất"
+  }
+}

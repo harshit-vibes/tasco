@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "help": "Help",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "entitySelector": {
+    "placeholder": "Select company...",
+    "allCompanies": "All Companies",
+    "searchPlaceholder": "Search companies...",
+    "noResults": "No companies found"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all",
+    "new": "New"
+  },
+  "profile": {
+    "myAccount": "My Account",
+    "preferences": "Preferences",
+    "apiKeys": "API Keys",
+    "signOut": "Sign Out"
+  },
+  "language": {
+    "title": "Language",
+    "switchTo": "Switch to {{language}}"
+  }
+}

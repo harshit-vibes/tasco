@@ -1,0 +1,61 @@
+{
+  "appTitle": "Sales & Pricing",
+  "appDescription": "AI-powered sales and pricing cockpit for Tasco Insurance",
+  "nav": {
+    "dashboard": "Dashboard",
+    "newQuote": "New Quote",
+    "pricingRules": "Pricing Rules",
+    "riskAssessment": "Risk Assessment",
+    "quoteHistory": "Quote History",
+    "analytics": "Analytics",
+    "aiAssistant": "AI Assistant",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "AI-powered sales and pricing cockpit overview",
+    "quotesToday": "Quotes Today",
+    "conversionRate": "Conversion Rate",
+    "avgPremium": "Avg Premium",
+    "pendingReview": "Pending Review",
+    "recentQuotes": "Recent Quotes",
+    "aiInsights": "AI Insights"
+  },
+  "quote": {
+    "title": "Generate Quote",
+    "subtitle": "AI-powered instant insurance quote calculation",
+    "vehicleInfo": "Vehicle Information",
+    "customerInfo": "Customer Information",
+    "quoteResult": "Quote Result",
+    "basePremium": "Base Premium",
+    "finalPremium": "Final Premium",
+    "riskScore": "Risk Score",
+    "submitForApproval": "Submit for Approval",
+    "saveAsDraft": "Save as Draft"
+  },
+  "chat": {
+    "title": "Pricing Assistant",
+    "subtitle": "AI-powered pricing guidance",
+    "placeholder": "Ask about pricing rules, risk factors, or premium calculations...",
+    "suggestedQuestions": "Suggested Questions"
+  },
+  "risk": {
+    "title": "Risk Assessment",
+    "subtitle": "Understand risk factors used in AI-powered pricing decisions",
+    "lowRisk": "Low Risk",
+    "standardRisk": "Standard Risk",
+    "highRisk": "High Risk"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Performance metrics and pricing insights"
+  },
+  "common": {
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "noData": "No data available"
+  }
+}

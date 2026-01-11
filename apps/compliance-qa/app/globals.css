@@ -1,1 +1,275 @@
-@import "@tasco/ui/globals.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   TASCO COMPLIANCE - Legal Precision Theme
+   Navy + Gold color palette for professional
+   legal/compliance application aesthetic
+   ============================================ */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  :root {
+    /* Primary: Navy Blue - Authority, Trust, Professionalism */
+    --primary: 222 47% 20%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Secondary: Slate - Neutrality, Balance */
+    --secondary: 215 16% 93%;
+    --secondary-foreground: 222 47% 20%;
+
+    /* Accent: Gold - Excellence, Achievement, Premium */
+    --accent-gold: 45 93% 47%;
+    --accent: 210 16% 93%;
+    --accent-foreground: 222 47% 20%;
+
+    /* Muted */
+    --muted: 210 16% 93%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Backgrounds */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 15%;
+
+    /* Borders */
+    --border: 210 16% 90%;
+    --input: 210 16% 90%;
+    --ring: 222 47% 20%;
+
+    /* Semantic Colors */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Chart Colors - Navy/Gold theme */
+    --chart-1: 222 47% 20%;
+    --chart-2: 45 93% 47%;
+    --chart-3: 152 60% 36%;
+    --chart-4: 215 16% 47%;
+    --chart-5: 38 92% 50%;
+
+    /* Sidebar - Dark Navy Theme */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 18%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 222 47% 18%;
+    --sidebar-ring: 45 93% 47%;
+
+    /* Border radius */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode - Deeper navy */
+    --primary: 45 93% 47%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 47% 18%;
+    --secondary-foreground: 210 20% 90%;
+
+    --accent: 222 47% 18%;
+    --accent-foreground: 210 20% 90%;
+
+    --muted: 222 47% 15%;
+    --muted-foreground: 210 20% 60%;
+
+    --background: 222 47% 8%;
+    --foreground: 210 20% 95%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 20% 95%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 20% 95%;
+
+    --border: 222 47% 18%;
+    --input: 222 47% 18%;
+    --ring: 45 93% 47%;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 47% 12%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 222 47% 15%;
+  }
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+@layer base {
+  body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+}
+
+/* ============================================
+   Component Overrides
+   ============================================ */
+
+@layer components {
+  /* Cards with navy hover accent */
+  .card {
+    @apply transition-all duration-200;
+  }
+
+  .card:hover {
+    border-color: hsl(222 47% 20% / 0.3);
+    box-shadow: 0 4px 12px hsl(222 47% 20% / 0.08);
+  }
+
+  /* Gold accent button */
+  .btn-gold {
+    @apply bg-[hsl(45,93%,47%)] text-[hsl(222,47%,11%)] font-semibold;
+    @apply hover:bg-[hsl(45,93%,42%)] transition-colors;
+  }
+
+  /* Navy badge */
+  .badge-navy {
+    @apply bg-[hsl(222,47%,20%)] text-white;
+  }
+
+  /* Gold badge */
+  .badge-gold {
+    @apply bg-[hsl(45,93%,47%)] text-[hsl(222,47%,11%)] font-medium;
+  }
+
+  /* Section labels for sidebar */
+  .sidebar-section-label {
+    @apply text-[10px] font-semibold uppercase tracking-wider;
+    @apply text-[hsl(210,20%,60%)] px-3 py-2;
+  }
+
+  /* Sidebar brand header */
+  .sidebar-brand {
+    @apply px-4 py-5 border-b border-[hsl(222,47%,18%)];
+  }
+
+  .sidebar-brand-title {
+    @apply text-lg font-bold text-white tracking-tight;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  .sidebar-brand-subtitle {
+    @apply text-xs text-[hsl(210,20%,60%)] mt-0.5;
+  }
+
+  /* Active sidebar item with gold accent */
+  .sidebar-item-active {
+    @apply bg-[hsl(222,47%,18%)] border-l-2 border-[hsl(45,93%,47%)];
+  }
+
+  /* Page header with underline */
+  .page-header {
+    @apply pb-4 border-b border-[hsl(210,16%,90%)];
+  }
+
+  .page-header h1 {
+    @apply text-[hsl(222,47%,15%)];
+  }
+
+  /* Stat card styling */
+  .stat-card {
+    @apply bg-white rounded-lg border border-[hsl(210,16%,90%)] p-6;
+    @apply hover:border-[hsl(222,47%,20%)/0.3] hover:shadow-md transition-all;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold text-[hsl(222,47%,15%)];
+    font-family: "Source Serif 4", Georgia, serif;
+  }
+
+  .stat-label {
+    @apply text-sm text-[hsl(215,16%,47%)] mt-1;
+  }
+
+  /* Document category badges with legal colors */
+  .category-badge {
+    @apply px-2.5 py-1 rounded-md text-xs font-medium;
+  }
+
+  .category-badge-laws {
+    @apply bg-[hsl(222,47%,95%)] text-[hsl(222,47%,30%)];
+  }
+
+  .category-badge-contracts {
+    @apply bg-[hsl(45,93%,92%)] text-[hsl(45,93%,30%)];
+  }
+
+  .category-badge-policies {
+    @apply bg-[hsl(152,60%,92%)] text-[hsl(152,60%,25%)];
+  }
+}
+
+/* ============================================
+   Utilities
+   ============================================ */
+
+@layer utilities {
+  /* Gold text accent */
+  .text-gold {
+    color: hsl(45 93% 47%);
+  }
+
+  /* Navy text */
+  .text-navy {
+    color: hsl(222 47% 20%);
+  }
+
+  /* Navy background */
+  .bg-navy {
+    background-color: hsl(222 47% 20%);
+  }
+
+  /* Gold background */
+  .bg-gold {
+    background-color: hsl(45 93% 47%);
+  }
+
+  /* Gradient backgrounds */
+  .bg-navy-gradient {
+    background: linear-gradient(180deg, hsl(222 47% 15%) 0%, hsl(222 47% 11%) 100%);
+  }
+
+  /* Legal document styling */
+  .legal-text {
+    @apply leading-relaxed text-[hsl(222,47%,25%)];
+  }
+
+  /* Citation highlight */
+  .citation-highlight {
+    @apply bg-[hsl(45,93%,92%)] px-1 rounded text-[hsl(222,47%,20%)] font-medium;
+  }
+}

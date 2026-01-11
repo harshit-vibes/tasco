@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "help": "Trợ giúp",
+    "notifications": "Thông báo",
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất"
+  },
+  "entitySelector": {
+    "placeholder": "Chọn công ty...",
+    "allCompanies": "Tất cả công ty",
+    "searchPlaceholder": "Tìm kiếm công ty...",
+    "noResults": "Không tìm thấy công ty"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "empty": "Không có thông báo",
+    "markAllRead": "Đánh dấu đã đọc tất cả",
+    "viewAll": "Xem tất cả",
+    "new": "Mới"
+  },
+  "profile": {
+    "myAccount": "Tài khoản của tôi",
+    "preferences": "Tùy chọn",
+    "apiKeys": "Khóa API",
+    "signOut": "Đăng xuất"
+  },
+  "language": {
+    "title": "Ngôn ngữ",
+    "switchTo": "Chuyển sang {{language}}"
+  }
+}

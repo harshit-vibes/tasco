@@ -1,0 +1,69 @@
+{
+  "container": {
+    "defaultTitle": "Trợ lý AI",
+    "defaultDescription": "Hãy hỏi bất kỳ điều gì và tôi sẽ giúp bạn tìm câu trả lời.",
+    "suggestedQuestionsLabel": "Câu hỏi gợi ý",
+    "disclaimer": "Tìm kiếm được hỗ trợ bởi AI. Luôn xác minh thông tin quan trọng với nguồn chính thức."
+  },
+  "input": {
+    "placeholder": "Nhập tin nhắn của bạn...",
+    "send": "Gửi",
+    "sending": "Đang gửi...",
+    "stop": "Dừng",
+    "attachFile": "Đính kèm tệp",
+    "voiceInput": "Nhập bằng giọng nói"
+  },
+  "history": {
+    "title": "Lịch sử trò chuyện",
+    "empty": "Chưa có cuộc trò chuyện nào",
+    "emptyHint": "Bắt đầu cuộc trò chuyện mới để xem lịch sử ở đây",
+    "newChat": "Trò chuyện mới",
+    "deleteConversation": "Xóa cuộc trò chuyện",
+    "clearHistory": "Xóa tất cả lịch sử",
+    "searchPlaceholder": "Tìm kiếm cuộc trò chuyện..."
+  },
+  "message": {
+    "you": "Bạn",
+    "assistant": "Trợ lý",
+    "copiedToClipboard": "Đã sao chép",
+    "copyToClipboard": "Sao chép",
+    "regenerate": "Tạo lại",
+    "thinking": "Đang suy nghĩ...",
+    "typing": "Đang nhập...",
+    "sources": "Nguồn",
+    "viewSource": "Xem nguồn",
+    "citations": "Trích dẫn"
+  },
+  "delete": {
+    "title": "Xóa cuộc trò chuyện?",
+    "description": "Hành động này sẽ xóa vĩnh viễn cuộc trò chuyện và tất cả tin nhắn. Không thể hoàn tác.",
+    "confirm": "Xóa",
+    "cancel": "Hủy",
+    "success": "Đã xóa cuộc trò chuyện",
+    "error": "Không thể xóa cuộc trò chuyện"
+  },
+  "errors": {
+    "sendFailed": "Không thể gửi tin nhắn",
+    "loadFailed": "Không thể tải cuộc trò chuyện",
+    "noAgentConfigured": "Chưa cấu hình trợ lý AI",
+    "agentUnavailable": "Trợ lý AI tạm thời không khả dụng",
+    "rateLimited": "Quá nhiều yêu cầu. Vui lòng đợi một chút.",
+    "contextTooLong": "Tin nhắn quá dài. Vui lòng rút ngắn."
+  },
+  "validation": {
+    "verified": "Đã xác minh",
+    "unverified": "Chưa xác minh",
+    "validating": "Đang xác minh...",
+    "validationPassed": "Xác minh thành công",
+    "validationFailed": "Xác minh thất bại"
+  },
+  "review": {
+    "needsReview": "Cần xem xét",
+    "approve": "Phê duyệt",
+    "requestRevision": "Yêu cầu sửa đổi",
+    "reject": "Từ chối",
+    "approved": "Phản hồi đã được phê duyệt",
+    "rejected": "Phản hồi đã bị từ chối",
+    "revisionRequested": "Đã yêu cầu sửa đổi"
+  }
+}

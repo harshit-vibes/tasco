@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
     "@tasco/ui": "workspace:*"
   },

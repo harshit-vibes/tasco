@@ -1,0 +1,280 @@
+{
+  "appTitle": "Risk Radar",
+  "appDescription": "AI-powered risk and profitability monitoring for Tasco Insurance",
+  "appSubtitle": "Real-time Risk Intelligence",
+
+  "nav": {
+    "dashboard": "Dashboard",
+    "alerts": "Alerts",
+    "analysis": "Analysis",
+    "assistant": "AI Assistant",
+    "settings": "Settings"
+  },
+
+  "dashboard": {
+    "title": "Risk Overview",
+    "subtitle": "Real-time monitoring across all insurance products",
+    "welcome": "Welcome back",
+    "lastUpdated": "Last updated",
+    "viewAll": "View All",
+    "noData": "No data available",
+
+    "metrics": {
+      "lossRatio": "Loss Ratio",
+      "lossRatioDesc": "Claims paid vs premiums earned",
+      "lossRatioTooltip": "The ratio of claims paid to premiums earned. Lower is better. Target: under 65%",
+      "combinedRatio": "Combined Ratio",
+      "combinedRatioDesc": "Total cost of insurance operations",
+      "combinedRatioTooltip": "Claims + expenses as percentage of premiums. Under 100% means profitable operations",
+      "premiums": "Premiums Earned",
+      "premiumsDesc": "Total premiums collected this period",
+      "premiumsTooltip": "Total insurance premiums collected from policyholders this period",
+      "claims": "Claims Paid",
+      "claimsDesc": "Total claims settled this period",
+      "claimsTooltip": "Total amount paid out to settle insurance claims. Monitor for sudden spikes",
+      "policies": "Active Policies",
+      "policiesDesc": "Currently active insurance policies",
+      "profitMargin": "Profit Margin",
+      "profitMarginDesc": "Net profit percentage",
+      "riskExposure": "Risk Exposure",
+      "riskExposureDesc": "Total coverage liability",
+      "target": "Target"
+    },
+
+    "trends": {
+      "title": "Performance Trends",
+      "subtitle": "Historical analysis and projections",
+      "period": "Period",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "vsLastPeriod": "vs last period",
+      "improving": "Improving",
+      "declining": "Declining",
+      "stable": "Stable"
+    },
+
+    "alerts": {
+      "title": "Recent Alerts",
+      "subtitle": "Anomalies requiring attention",
+      "viewAll": "View all alerts",
+      "noAlerts": "No alerts at this time",
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info",
+      "new": "New",
+      "acknowledged": "Acknowledged",
+      "investigating": "Investigating",
+      "resolved": "Resolved"
+    },
+
+    "products": {
+      "title": "By Product Line",
+      "subtitle": "Performance breakdown by insurance type",
+      "motor": "Motor Insurance",
+      "health": "Health Insurance",
+      "property": "Property Insurance",
+      "life": "Life Insurance",
+      "liability": "Liability Insurance",
+      "marine": "Marine Insurance",
+      "all": "All Products"
+    }
+  },
+
+  "alerts": {
+    "title": "Risk Alerts",
+    "subtitle": "Anomaly detection and early warning system",
+    "filters": "Filters",
+    "clearFilters": "Clear filters",
+    "search": "Search alerts...",
+    "sortBy": "Sort by",
+    "newest": "Newest first",
+    "oldest": "Oldest first",
+    "severity": "Severity",
+    "highestSeverity": "Highest severity",
+    "totalAlerts": "Total Alerts",
+    "openAlerts": "Open",
+    "criticalAlerts": "Critical",
+
+    "types": {
+      "all": "All Types",
+      "loss_ratio_spike": "Loss Ratio Spike",
+      "claim_surge": "Claim Surge",
+      "premium_drop": "Premium Drop",
+      "profitability_decline": "Profitability Decline",
+      "concentration_risk": "Concentration Risk",
+      "fraud_suspected": "Fraud Suspected",
+      "threshold_breach": "Threshold Breach"
+    },
+
+    "status": {
+      "all": "All Status",
+      "new": "New",
+      "acknowledged": "Acknowledged",
+      "investigating": "Investigating",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    },
+
+    "actions": {
+      "acknowledge": "Acknowledge",
+      "investigate": "Start Investigation",
+      "resolve": "Mark Resolved",
+      "dismiss": "Dismiss",
+      "assignTo": "Assign to",
+      "viewDetails": "View Details"
+    },
+
+    "card": {
+      "detected": "Detected",
+      "metric": "Metric",
+      "current": "Current Value",
+      "expected": "Expected",
+      "deviation": "Deviation",
+      "affectedPeriod": "Affected Period"
+    },
+
+    "empty": {
+      "title": "No alerts found",
+      "description": "There are no alerts matching your current filters",
+      "allClear": "All systems operating normally"
+    }
+  },
+
+  "analysis": {
+    "title": "Risk Analysis",
+    "subtitle": "Deep dive into performance metrics",
+
+    "sections": {
+      "overview": "Overview",
+      "trends": "Trends",
+      "comparison": "Comparison",
+      "breakdown": "Breakdown"
+    },
+
+    "filters": {
+      "entity": "Entity",
+      "product": "Product",
+      "period": "Period",
+      "region": "Region",
+      "compare": "Compare with"
+    },
+
+    "charts": {
+      "lossRatioTrend": "Loss Ratio Trend",
+      "premiumVsClaims": "Premiums vs Claims",
+      "productPerformance": "Product Performance",
+      "regionBreakdown": "Regional Breakdown"
+    },
+
+    "metrics": {
+      "averageLossRatio": "Avg Loss Ratio",
+      "totalPremiums": "Total Premiums",
+      "totalClaims": "Total Claims",
+      "claimsCount": "Claims Count",
+      "avgClaimSize": "Avg Claim Size",
+      "policyCount": "Policy Count"
+    }
+  },
+
+  "assistant": {
+    "title": "AI Risk Assistant",
+    "subtitle": "Ask questions about risk data and get instant insights",
+    "placeholder": "Ask about loss ratios, claims trends, profitability...",
+    "thinking": "Analyzing risk data...",
+
+    "suggestions": {
+      "title": "Suggested Questions",
+      "items": [
+        "What is our current loss ratio by region?",
+        "Show me claims anomalies from last week",
+        "Why did profitability drop in Q3?",
+        "What are the top risk factors this month?",
+        "Compare motor vs health insurance performance"
+      ]
+    },
+
+    "empty": {
+      "title": "Start a conversation",
+      "description": "Ask questions about your risk data in natural language"
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your Risk Radar experience",
+
+    "general": {
+      "title": "General",
+      "language": "Language",
+      "theme": "Theme",
+      "dark": "Dark",
+      "light": "Light"
+    },
+
+    "api": {
+      "title": "API Configuration",
+      "apiKey": "Lyzr API Key",
+      "apiKeyDesc": "Your API key for AI assistant features",
+      "save": "Save Configuration"
+    }
+  },
+
+  "guide": {
+    "welcome": {
+      "title": "Welcome to Risk Radar",
+      "description": "Your AI-powered command center for insurance risk monitoring"
+    },
+    "dashboard": {
+      "title": "Real-Time Dashboard",
+      "description": "Monitor key risk metrics at a glance — loss ratios, premiums, claims, and profitability"
+    },
+    "alerts": {
+      "title": "Smart Alert System",
+      "description": "AI-powered anomaly detection alerts you to potential issues before they escalate"
+    },
+    "analysis": {
+      "title": "Deep Analysis",
+      "description": "Dive deep into your data with interactive charts and trend analysis"
+    },
+    "assistant": {
+      "title": "AI Assistant",
+      "description": "Ask questions in plain language and get instant insights from your data"
+    }
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "refresh": "Refresh",
+    "viewMore": "View More",
+    "noResults": "No results found"
+  },
+
+  "time": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "lastWeek": "Last Week",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "thisQuarter": "This Quarter",
+    "lastQuarter": "Last Quarter"
+  },
+
+  "entities": {
+    "select": "Select Entity",
+    "all": "All Entities",
+    "tascoInsurance": "Tasco Insurance",
+    "tascoLife": "Tasco Life",
+    "tascoGeneral": "Tasco General"
+  }
+}

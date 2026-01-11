@@ -6,12 +6,16 @@
     "dev": "next dev --port 3002",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed-guide": "bun run scripts/seed-guide.ts"
   },
   "dependencies": {
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
-    "@tasco/ui": "workspace:*"
+    "@tasco/ui": "workspace:*",
+    "sonner": "^1.7.1"
   },
   "devDependencies": {
     "@tasco/config": "workspace:*"

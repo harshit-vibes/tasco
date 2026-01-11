@@ -1,0 +1,69 @@
+{
+  "container": {
+    "defaultTitle": "AI Assistant",
+    "defaultDescription": "Ask me anything and I'll help you find answers.",
+    "suggestedQuestionsLabel": "Suggested questions",
+    "disclaimer": "AI-powered search. Always verify critical information with official sources."
+  },
+  "input": {
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "sending": "Sending...",
+    "stop": "Stop",
+    "attachFile": "Attach file",
+    "voiceInput": "Voice input"
+  },
+  "history": {
+    "title": "Chat History",
+    "empty": "No conversations yet",
+    "emptyHint": "Start a new chat to see your history here",
+    "newChat": "New Chat",
+    "deleteConversation": "Delete conversation",
+    "clearHistory": "Clear all history",
+    "searchPlaceholder": "Search conversations..."
+  },
+  "message": {
+    "you": "You",
+    "assistant": "Assistant",
+    "copiedToClipboard": "Copied to clipboard",
+    "copyToClipboard": "Copy to clipboard",
+    "regenerate": "Regenerate",
+    "thinking": "Thinking...",
+    "typing": "Typing...",
+    "sources": "Sources",
+    "viewSource": "View source",
+    "citations": "Citations"
+  },
+  "delete": {
+    "title": "Delete conversation?",
+    "description": "This will permanently delete this conversation and all its messages. This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "success": "Conversation deleted",
+    "error": "Failed to delete conversation"
+  },
+  "errors": {
+    "sendFailed": "Failed to send message",
+    "loadFailed": "Failed to load conversation",
+    "noAgentConfigured": "No AI agent configured",
+    "agentUnavailable": "AI agent is temporarily unavailable",
+    "rateLimited": "Too many requests. Please wait a moment.",
+    "contextTooLong": "Message too long. Please shorten your input."
+  },
+  "validation": {
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "validating": "Validating...",
+    "validationPassed": "Validation passed",
+    "validationFailed": "Validation failed"
+  },
+  "review": {
+    "needsReview": "Needs Review",
+    "approve": "Approve",
+    "requestRevision": "Request Revision",
+    "reject": "Reject",
+    "approved": "Response approved",
+    "rejected": "Response rejected",
+    "revisionRequested": "Revision requested"
+  }
+}

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@tasco/ui", "@tasco/db", "@tasco/lyzr"],
+  transpilePackages: ["@tasco/ui", "@tasco/db", "@tasco/lyzr", "@tasco/i18n"],
 };
 
 export default nextConfig;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from "@tasco/ui";
 import { Bot, ExternalLink, Loader2 } from "@tasco/ui/icons";
+import { useTranslation } from "@tasco/i18n";
 
 interface Agent {
   _id: string;
@@ -14,6 +15,7 @@ interface Agent {
 }
 
 export default function AgentsPage() {
+  const { t } = useTranslation("compliance");
   const agentId = process.env.NEXT_PUBLIC_LYZR_AGENT_ID;
   const [agent, setAgent] = useState<Agent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,9 +51,9 @@ export default function AgentsPage() {
   return (
     <div className="flex h-full flex-col p-6 overflow-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Agents</h1>
+        <h1 className="text-2xl font-bold">{t("agents.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          Configure AI agents for your Compliance QA system
+          {t("agents.description")}
         </p>
       </div>
 
@@ -111,9 +113,9 @@ export default function AgentsPage() {
               <div className="mx-auto h-12 w-12 rounded-xl bg-muted flex items-center justify-center mb-4">
                 <Bot className="h-6 w-6 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No Agent Configured</h3>
+              <h3 className="text-lg font-semibold mb-2">{t("agents.noAgentConfigured")}</h3>
               <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
-                Configure a Lyzr agent to enable AI-powered compliance Q&A capabilities.
+                {t("agents.configureHint")}
               </p>
               <p className="text-xs text-muted-foreground">
                 Set <code className="bg-muted px-1.5 py-0.5 rounded">NEXT_PUBLIC_LYZR_AGENT_ID</code> in your environment.

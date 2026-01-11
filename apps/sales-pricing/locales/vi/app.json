@@ -1,0 +1,61 @@
+{
+  "appTitle": "Bán hàng & Định giá",
+  "appDescription": "Buồng lái bán hàng và định giá được hỗ trợ bởi AI cho Tasco Insurance",
+  "nav": {
+    "dashboard": "Bảng điều khiển",
+    "newQuote": "Báo giá mới",
+    "pricingRules": "Quy tắc định giá",
+    "riskAssessment": "Đánh giá rủi ro",
+    "quoteHistory": "Lịch sử báo giá",
+    "analytics": "Phân tích",
+    "aiAssistant": "Trợ lý AI",
+    "settings": "Cài đặt"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "subtitle": "Tổng quan buồng lái bán hàng và định giá được hỗ trợ bởi AI",
+    "quotesToday": "Báo giá hôm nay",
+    "conversionRate": "Tỷ lệ chuyển đổi",
+    "avgPremium": "Phí bảo hiểm TB",
+    "pendingReview": "Chờ xem xét",
+    "recentQuotes": "Báo giá gần đây",
+    "aiInsights": "Thông tin AI"
+  },
+  "quote": {
+    "title": "Tạo báo giá",
+    "subtitle": "Tính toán báo giá bảo hiểm tức thì được hỗ trợ bởi AI",
+    "vehicleInfo": "Thông tin phương tiện",
+    "customerInfo": "Thông tin khách hàng",
+    "quoteResult": "Kết quả báo giá",
+    "basePremium": "Phí bảo hiểm cơ bản",
+    "finalPremium": "Phí bảo hiểm cuối cùng",
+    "riskScore": "Điểm rủi ro",
+    "submitForApproval": "Gửi phê duyệt",
+    "saveAsDraft": "Lưu nháp"
+  },
+  "chat": {
+    "title": "Trợ lý định giá",
+    "subtitle": "Hướng dẫn định giá được hỗ trợ bởi AI",
+    "placeholder": "Hỏi về quy tắc định giá, yếu tố rủi ro, hoặc tính phí bảo hiểm...",
+    "suggestedQuestions": "Câu hỏi gợi ý"
+  },
+  "risk": {
+    "title": "Đánh giá rủi ro",
+    "subtitle": "Hiểu các yếu tố rủi ro được sử dụng trong quyết định định giá bằng AI",
+    "lowRisk": "Rủi ro thấp",
+    "standardRisk": "Rủi ro tiêu chuẩn",
+    "highRisk": "Rủi ro cao"
+  },
+  "analytics": {
+    "title": "Phân tích",
+    "subtitle": "Các chỉ số hiệu suất và thông tin định giá"
+  },
+  "common": {
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "viewAll": "Xem tất cả",
+    "loading": "Đang tải...",
+    "noData": "Không có dữ liệu"
+  }
+}

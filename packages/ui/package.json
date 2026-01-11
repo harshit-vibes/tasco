@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@tasco/db": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",
@@ -38,6 +39,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
+    "mammoth": "^1.8.0",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
     "tailwind-merge": "^2.6.0",

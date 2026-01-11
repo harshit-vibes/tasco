@@ -23,13 +23,15 @@ export async function handleGetMessages(request: NextRequest) {
 
     const rawMessages = await getLatestMessages(conversationId, limit);
 
-    // Extract enhancedCitations from metadata for each message
+    // Extract enhancedCitations and validation from metadata for each message
     const messages = rawMessages.map((msg) => {
       const enhancedCitations = msg.metadata?.enhancedCitations;
-      if (enhancedCitations) {
-        return { ...msg, enhancedCitations };
-      }
-      return msg;
+      const validation = msg.metadata?.validation;
+      return {
+        ...msg,
+        ...(enhancedCitations ? { enhancedCitations } : {}),
+        ...(validation ? { validation } : {}),
+      };
     });
 
     return NextResponse.json({
@@ -52,7 +54,7 @@ export async function handleGetMessages(request: NextRequest) {
 export async function handleCreateMessage(request: NextRequest) {
   try {
     const body = await request.json();
-    const { conversationId, role, content, citations, enhancedCitations, metadata, appId, entityId } = body;
+    const { conversationId, role, content, citations, enhancedCitations, validation, metadata, appId, entityId } = body;
 
     if (!conversationId || !role || !content) {
       return NextResponse.json(
@@ -61,10 +63,11 @@ export async function handleCreateMessage(request: NextRequest) {
       );
     }
 
-    // Build metadata with enhanced citations if present
+    // Build metadata with enhanced citations and validation if present
     const messageMetadata = {
       ...metadata,
       ...(enhancedCitations ? { enhancedCitations } : {}),
+      ...(validation ? { validation } : {}),
     };
 
     const message = await createMessage({
@@ -75,10 +78,12 @@ export async function handleCreateMessage(request: NextRequest) {
       metadata: Object.keys(messageMetadata).length > 0 ? messageMetadata : undefined,
     });
 
-    // Add enhancedCitations to the response message for immediate use
-    const responseMessage = enhancedCitations
-      ? { ...message, enhancedCitations }
-      : message;
+    // Add enhancedCitations and validation to the response message for immediate use
+    const responseMessage = {
+      ...message,
+      ...(enhancedCitations ? { enhancedCitations } : {}),
+      ...(validation ? { validation } : {}),
+    };
 
     // Increment message count if appId and entityId provided
     if (appId && entityId) {

@@ -1,0 +1,29 @@
+{
+  "navigation": {
+    "home": "Trang chủ",
+    "dashboard": "Bảng điều khiển",
+    "chat": "Trò chuyện",
+    "documents": "Tài liệu",
+    "knowledgeBase": "Cơ sở kiến thức",
+    "entities": "Đơn vị",
+    "agents": "Trợ lý AI",
+    "settings": "Cài đặt",
+    "help": "Trợ giúp",
+    "logout": "Đăng xuất"
+  },
+  "sections": {
+    "main": "Chính",
+    "management": "Quản lý",
+    "configuration": "Cấu hình",
+    "system": "Hệ thống"
+  },
+  "collapse": {
+    "expand": "Mở rộng thanh bên",
+    "collapse": "Thu gọn thanh bên"
+  },
+  "chatHistory": {
+    "title": "Trò chuyện gần đây",
+    "viewAll": "Xem tất cả",
+    "newChat": "Trò chuyện mới"
+  }
+}

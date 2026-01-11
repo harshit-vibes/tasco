@@ -1,0 +1,51 @@
+{
+  "title": "Khách Hàng 360",
+  "description": "Theo dõi vòng đời đầy đủ và thông tin chi tiết về khách hàng",
+  "segment": {
+    "all": "Tất Cả Phân Khúc",
+    "vip": "VIP",
+    "regular": "Thường",
+    "at-risk": "Có Nguy Cơ",
+    "new": "Mới"
+  },
+  "stage": {
+    "all": "Tất Cả Giai Đoạn",
+    "prospect": "Tiềm Năng",
+    "active": "Hoạt Động",
+    "loyal": "Trung Thành",
+    "at-risk": "Có Nguy Cơ",
+    "churned": "Đã Rời Bỏ"
+  },
+  "sort": {
+    "lifetimeValue": "Giá Trị Trọn Đời",
+    "lastActivityAt": "Hoạt Động Cuối",
+    "createdAt": "Ngày Tham Gia",
+    "name": "Tên"
+  },
+  "labels": {
+    "segment": "Phân Khúc",
+    "stage": "Giai Đoạn",
+    "lifetime_value": "Giá Trị Trọn Đời",
+    "total_purchases": "Tổng Mua Hàng",
+    "average_order_value": "Giá Trị Đơn Hàng Trung Bình",
+    "churn_risk": "Nguy Cơ Rời Bỏ",
+    "satisfaction_score": "Điểm Hài Lòng",
+    "last_activity": "Hoạt Động Cuối",
+    "first_purchase": "Mua Hàng Đầu Tiên",
+    "last_purchase": "Mua Hàng Cuối",
+    "preferred_brands": "Thương Hiệu Ưa Thích",
+    "communication_channels": "Kênh Liên Lạc",
+    "service_interests": "Dịch Vụ Quan Tâm"
+  },
+  "actions": {
+    "view_profile": "Xem Hồ Sơ",
+    "contact": "Liên Hệ",
+    "add_interaction": "Thêm Tương Tác",
+    "view_purchases": "Xem Mua Hàng"
+  },
+  "insights": {
+    "recommended_actions": "Hành Động Đề Xuất",
+    "at_risk_warning": "Khách hàng này có nguy cơ rời bỏ",
+    "vip_badge": "Khách Hàng VIP"
+  }
+}

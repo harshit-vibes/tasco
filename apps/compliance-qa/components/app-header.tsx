@@ -19,11 +19,13 @@ import {
   DialogTitle,
   Input,
   ScrollArea,
+  GuideCarousel,
+  GuideTrigger,
+  useAppGuide,
 } from "@tasco/ui";
 import {
   ArrowLeft,
   Bell,
-  HelpCircle,
   Settings,
   LogOut,
   User,
@@ -34,8 +36,12 @@ import {
   MessageSquare,
   Trash2,
   Clock,
+  Bot,
+  Database,
+  ExternalLink,
 } from "@tasco/ui/icons";
 import { useSettings, useChatContext } from "@tasco/lyzr";
+import { LanguageSwitcher } from "@tasco/i18n";
 import {
   type Notification,
   getNotifications,
@@ -60,6 +66,9 @@ export function AppHeader() {
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [showApiKey, setShowApiKey] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // App guide (feature showcase)
+  const { guide, isOpen: isGuideOpen, setIsOpen: setIsGuideOpen, openGuide } = useAppGuide("compliance-qa");
 
   // Subscribe to notification changes
   useEffect(() => {
@@ -89,6 +98,7 @@ export function AppHeader() {
         addNotification({
           id: `notif-${Date.now()}-${conv.id}`,
           type: "created",
+          category: "conversation",
           title: conv.title || "New conversation",
           timestamp: new Date(),
           read: false,
@@ -102,6 +112,7 @@ export function AppHeader() {
         addNotification({
           id: `notif-${Date.now()}-deleted-${id}`,
           type: "deleted",
+          category: "conversation",
           title: "Conversation deleted",
           timestamp: new Date(),
           read: false,
@@ -163,15 +174,20 @@ export function AppHeader() {
 
         {/* Right side - Help, Notifications, Profile */}
         <div className="flex items-center gap-1">
-          {/* Help */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 text-muted-foreground hover:text-foreground"
-            onClick={() => window.open("https://docs.lyzr.ai", "_blank")}
-          >
-            <HelpCircle className="h-4 w-4" />
-          </Button>
+          {/* Help / Feature Guide */}
+          {guide && (
+            <GuideTrigger onClick={openGuide} />
+          )}
+
+          {/* Language Switcher */}
+          <LanguageSwitcher
+            variant="icon"
+            Button={Button as any}
+            DropdownMenu={DropdownMenu as any}
+            DropdownMenuTrigger={DropdownMenuTrigger as any}
+            DropdownMenuContent={DropdownMenuContent as any}
+            DropdownMenuItem={DropdownMenuItem as any}
+          />
 
           {/* Notifications */}
           <DropdownMenu onOpenChange={(open) => open && markAllAsRead()}>
@@ -290,72 +306,121 @@ export function AppHeader() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Key className="h-5 w-5" />
-              Lyzr API Key
+              <Settings className="h-5 w-5" />
+              Settings
             </DialogTitle>
             <DialogDescription>
-              Configure your Lyzr API key for RAG and AI features.
+              Configure your application settings and navigate to external resources.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            {hasEnvKey ? (
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground">
-                  API key configured via environment variable
-                </p>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type={showApiKey ? "text" : "password"}
-                    value={displayKey}
-                    readOnly
-                    className="font-mono text-sm bg-muted"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
+          <div className="space-y-6 py-4">
+            {/* Navigation Links */}
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Quick Links
+              </p>
+              <div className="space-y-1">
+                <a
+                  href="https://studio.lyzr.ai/agent-create/695ffecf566bcffb7aebab78"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Bot className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Agent Builder</p>
+                      <p className="text-xs text-muted-foreground">Configure AI agent in Lyzr Studio</p>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                </a>
+                <a
+                  href="https://studio.lyzr.ai/knowledge-base/6960a63fee18986913060bc0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-green-500/10 flex items-center justify-center">
+                      <Database className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Knowledge Base</p>
+                      <p className="text-xs text-muted-foreground">Manage RAG knowledge base</p>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                </a>
               </div>
-            ) : (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Input
-                    type={showApiKey ? "text" : "password"}
-                    placeholder="sk-..."
-                    value={apiKeyInput}
-                    onChange={(e) => setApiKeyInput(e.target.value)}
-                    className="font-mono text-sm"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
+            </div>
+
+            {/* API Key Section */}
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                API Configuration
+              </p>
+              {hasEnvKey ? (
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    API key configured via environment variable
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type={showApiKey ? "text" : "password"}
+                      value={displayKey}
+                      readOnly
+                      className="font-mono text-sm bg-muted"
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                    >
+                      {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Get your API key from{" "}
-                  <a
-                    href="https://studio.lyzr.ai"
-                    target="_blank"
-                    rel="noopener"
-                    className="text-primary underline"
-                  >
-                    Lyzr Studio
-                  </a>
-                </p>
-              </div>
-            )}
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type={showApiKey ? "text" : "password"}
+                      placeholder="sk-..."
+                      value={apiKeyInput}
+                      onChange={(e) => setApiKeyInput(e.target.value)}
+                      className="font-mono text-sm"
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                    >
+                      {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Get your API key from{" "}
+                    <a
+                      href="https://studio.lyzr.ai"
+                      target="_blank"
+                      rel="noopener"
+                      className="text-primary underline"
+                    >
+                      Lyzr Studio
+                    </a>
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-              Cancel
+              Close
             </Button>
             {!hasEnvKey && (
               <Button onClick={handleSaveApiKey} disabled={!apiKeyInput || saved}>
@@ -372,6 +437,15 @@ export function AppHeader() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Feature Guide Carousel (DB-driven) */}
+      {guide && (
+        <GuideCarousel
+          guide={guide}
+          open={isGuideOpen}
+          onOpenChange={setIsGuideOpen}
+        />
+      )}
     </>
   );
 }

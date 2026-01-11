@@ -84,6 +84,8 @@ export interface Message {
   role: "user" | "assistant" | "system";
   content: string;
   citations?: Citation[];
+  /** Enhanced citations with document linking and metadata */
+  enhancedCitations?: EnhancedCitation[];
   createdAt: string;
   metadata?: Record<string, unknown>;
 }

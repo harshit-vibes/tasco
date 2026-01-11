@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "@tasco/i18n";
 import { Button } from "./button";
 import { cn } from "../lib/utils";
 import { Settings, Shield } from "lucide-react";
@@ -40,8 +41,9 @@ export function AppSidebar({
   children,
   navigation = [],
   onSettingsClick,
-  settingsHref = "/settings",
+  settingsHref,
 }: AppSidebarProps) {
+  const { t } = useTranslation("sidebar");
   const pathname = usePathname();
 
   return (
@@ -98,29 +100,31 @@ export function AppSidebar({
         </div>
       )}
 
-      {/* Footer: Settings */}
-      <div className="mt-auto p-4 border-t border-slate-200/60 dark:border-slate-800/60">
-        {settingsHref ? (
-          <Link href={settingsHref}>
+      {/* Footer: Settings (only shown if settings prop provided) */}
+      {(settingsHref || onSettingsClick) && (
+        <div className="mt-auto p-4 border-t border-slate-200/60 dark:border-slate-800/60">
+          {settingsHref ? (
+            <Link href={settingsHref}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+              >
+                <Settings className="h-4 w-4" />
+                <span>{t("navigation.settings")}</span>
+              </Button>
+            </Link>
+          ) : onSettingsClick ? (
             <Button
               variant="ghost"
+              onClick={onSettingsClick}
               className="w-full justify-start gap-2.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
             >
               <Settings className="h-4 w-4" />
-              <span>Settings</span>
+              <span>{t("navigation.settings")}</span>
             </Button>
-          </Link>
-        ) : onSettingsClick ? (
-          <Button
-            variant="ghost"
-            onClick={onSettingsClick}
-            className="w-full justify-start gap-2.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
-          >
-            <Settings className="h-4 w-4" />
-            <span>Settings</span>
-          </Button>
-        ) : null}
-      </div>
+          ) : null}
+        </div>
+      )}
     </aside>
   );
 }

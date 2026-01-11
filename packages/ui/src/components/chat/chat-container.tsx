@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { useTranslation } from "@tasco/i18n";
 import { ChatMessage, type Message, type Citation } from "./chat-message";
 import { ChatInput } from "./chat-input";
 import { Bot, Sparkles } from "lucide-react";
+import type { EnhancedCitation } from "@tasco/db";
 
 export interface ChatContainerProps {
   /** Messages to display */
@@ -24,8 +26,12 @@ export interface ChatContainerProps {
   emptyIcon?: React.ReactNode;
   /** Input placeholder */
   inputPlaceholder?: string;
-  /** Handler for citation clicks */
+  /** Handler for citation clicks (legacy) */
   onCitationClick?: (citation: Citation) => void;
+  /** Handler for navigating to citation in Knowledge Base */
+  onCitationNavigate?: (href: string) => void;
+  /** Handler for previewing citation */
+  onCitationPreview?: (citation: EnhancedCitation) => void;
 }
 
 export function ChatContainer({
@@ -33,14 +39,21 @@ export function ChatContainer({
   isLoading = false,
   onSendMessage,
   error,
-  appTitle = "AI Assistant",
-  appDescription = "Ask me anything and I'll help you find answers.",
+  appTitle,
+  appDescription,
   suggestedQuestions = [],
   emptyIcon,
   inputPlaceholder,
   onCitationClick,
+  onCitationNavigate,
+  onCitationPreview,
 }: ChatContainerProps) {
+  const { t } = useTranslation("chat");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Use props or fall back to translations
+  const displayTitle = appTitle ?? t("container.defaultTitle");
+  const displayDescription = appDescription ?? t("container.defaultDescription");
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -70,16 +83,16 @@ export function ChatContainer({
             </div>
 
             {/* Title */}
-            <h2 className="text-xl font-semibold tracking-tight mb-1.5">{appTitle}</h2>
+            <h2 className="text-xl font-semibold tracking-tight mb-1.5">{displayTitle}</h2>
             <p className="text-center text-sm text-muted-foreground max-w-sm mb-8 leading-relaxed">
-              {appDescription}
+              {displayDescription}
             </p>
 
             {/* Sample Questions */}
             {suggestedQuestions.length > 0 && (
               <div className="w-full max-w-md space-y-2">
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                  Suggested questions
+                  {t("container.suggestedQuestionsLabel")}
                 </p>
                 {suggestedQuestions.map((question) => (
                   <button
@@ -101,6 +114,8 @@ export function ChatContainer({
                 key={message.id}
                 message={message}
                 onCitationClick={onCitationClick}
+                onCitationNavigate={onCitationNavigate}
+                onCitationPreview={onCitationPreview}
               />
             ))}
             {isLoading && (

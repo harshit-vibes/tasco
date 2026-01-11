@@ -1,0 +1,24 @@
+{
+  "name": "@tasco/export",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Export utilities for PDF and Excel generation",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./pdf": "./src/pdf.ts",
+    "./excel": "./src/excel.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tasco/config": "workspace:*",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  }
+}

@@ -9,14 +9,23 @@ export * from "./components/button";
 export * from "./components/card";
 export * from "./components/chat";
 export * from "./components/dialog";
+export * from "./components/document-content-viewer";
+export * from "./components/document-preview-sheet";
 export * from "./components/dropdown-menu";
 export * from "./components/entity-selector";
+export * from "./components/guide-carousel";
 export * from "./components/input";
+export * from "./components/label";
+export * from "./components/pdf-viewer";
 export * from "./components/scroll-area";
 export * from "./components/select";
 export * from "./components/separator";
+export * from "./components/sheet";
+export * from "./components/skeleton";
+export * from "./components/switch";
 export * from "./components/tabs";
 export * from "./components/textarea";
+export * from "./components/tooltip";
 
 // Utils
 export { cn } from "./lib/utils";

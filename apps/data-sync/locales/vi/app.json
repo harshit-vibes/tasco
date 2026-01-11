@@ -1,0 +1,120 @@
+{
+  "appTitle": "Đồng bộ Dữ liệu",
+  "appDescription": "Đồng bộ hóa dữ liệu bán hàng và doanh thu được hỗ trợ bởi AI cho Inochi",
+  "title": "Đồng bộ Dữ liệu",
+  "description": "Đồng bộ hóa dữ liệu bán hàng và doanh thu được hỗ trợ bởi AI cho Inochi",
+  "nav": {
+    "dashboard": "Bảng điều khiển",
+    "alerts": "Cảnh báo",
+    "systems": "Hệ thống",
+    "chat": "Trợ lý AI"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển Đồng bộ",
+    "subtitle": "Trạng thái đồng bộ dữ liệu thời gian thực cho các hệ thống Inochi",
+    "refresh": "Làm mới",
+    "syncNow": "Đồng bộ ngay",
+    "systemStatus": "Trạng thái Hệ thống",
+    "recentAlerts": "Cảnh báo Gần đây",
+    "viewAll": "Xem tất cả",
+    "syncSummary": "Tóm tắt Đồng bộ"
+  },
+  "metrics": {
+    "recordsSynced": "Bản ghi Đồng bộ Hôm nay",
+    "pendingSync": "Đang chờ Đồng bộ",
+    "averageLatency": "Độ trễ Trung bình",
+    "systemUptime": "Thời gian Hoạt động",
+    "failed": "thất bại",
+    "throughput": "/phút thông lượng",
+    "systemsOnline": "hệ thống trực tuyến"
+  },
+  "alerts": {
+    "title": "Cảnh báo Đồng bộ",
+    "subtitle": "Theo dõi và giải quyết các sai lệch đồng bộ dữ liệu",
+    "openAlerts": "Cảnh báo Mở",
+    "investigating": "Đang điều tra",
+    "critical": "Nghiêm trọng",
+    "highPriority": "Ưu tiên Cao",
+    "filters": "Bộ lọc",
+    "clearAll": "Xóa tất cả",
+    "status": "Trạng thái",
+    "severity": "Mức độ",
+    "system": "Hệ thống",
+    "investigate": "Điều tra",
+    "dismiss": "Bỏ qua",
+    "resolve": "Giải quyết",
+    "noAlerts": "Không có Cảnh báo",
+    "allNormal": "Tất cả hệ thống đang đồng bộ bình thường"
+  },
+  "systems": {
+    "title": "Hệ thống Kết nối",
+    "subtitle": "Quản lý và giám sát kết nối nguồn dữ liệu",
+    "configure": "Cấu hình",
+    "totalSystems": "Tổng Hệ thống",
+    "connected": "Đã kết nối",
+    "delayed": "Bị trễ",
+    "errors": "Lỗi",
+    "syncedToday": "Đồng bộ Hôm nay",
+    "pending": "Đang chờ",
+    "latency": "Độ trễ",
+    "lastSync": "Đồng bộ Cuối",
+    "syncFrequency": "Tần suất Đồng bộ",
+    "timeout": "Thời gian chờ",
+    "apiEndpoint": "Điểm cuối API",
+    "testConnection": "Kiểm tra Kết nối",
+    "testing": "Đang kiểm tra...",
+    "dataFlow": "Luồng Dữ liệu",
+    "dataFlowDesc": "Cách dữ liệu đồng bộ giữa các hệ thống"
+  },
+  "chat": {
+    "title": "Trợ lý Đồng bộ",
+    "subtitle": "Hỏi về trạng thái đồng bộ, sai lệch và vấn đề dữ liệu",
+    "clearChat": "Xóa Chat",
+    "howCanIHelp": "Tôi có thể giúp gì cho bạn?",
+    "helpDescription": "Tôi có thể giúp bạn hiểu trạng thái đồng bộ, điều tra sai lệch và khắc phục sự cố đồng bộ dữ liệu.",
+    "tryAsking": "Thử hỏi:",
+    "inputPlaceholder": "Hỏi về trạng thái đồng bộ, sai lệch hoặc vấn đề dữ liệu..."
+  },
+  "status": {
+    "connected": "Đã kết nối",
+    "delayed": "Bị trễ",
+    "disconnected": "Mất kết nối",
+    "error": "Lỗi"
+  },
+  "severity": {
+    "critical": "Nghiêm trọng",
+    "high": "Cao",
+    "medium": "Trung bình",
+    "low": "Thấp"
+  },
+  "guide": {
+    "welcome": {
+      "title": "Chào mừng đến Data Sync",
+      "description": "Trung tâm đồng bộ dữ liệu được hỗ trợ bởi AI. Theo dõi trạng thái đồng bộ thời gian thực và giải quyết sai lệch nhanh hơn với trợ lý thông minh."
+    },
+    "dashboard": {
+      "title": "Bảng điều khiển Đồng bộ",
+      "description": "Tổng quan tất cả hệ thống kết nối. Theo dõi số bản ghi đã đồng bộ, mục đang chờ và tình trạng hệ thống."
+    },
+    "alerts": {
+      "title": "Cảnh báo Thông minh",
+      "description": "Thông báo chủ động về sai lệch dữ liệu, bản ghi thiếu và lỗi đồng bộ. Lọc theo mức độ và hệ thống để ưu tiên."
+    },
+    "systems": {
+      "title": "Hệ thống Kết nối",
+      "description": "Quản lý luồng dữ liệu. Xem trạng thái kết nối, độ trễ và cấu hình đồng bộ cho từng hệ thống."
+    },
+    "chat": {
+      "title": "Trợ lý AI Đồng bộ",
+      "description": "Đặt câu hỏi về trạng thái đồng bộ, điều tra sai lệch và nhận khuyến nghị. Đối tác thông minh cho vận hành dữ liệu."
+    },
+    "complete": {
+      "title": "Bạn Đã Sẵn Sàng!",
+      "description": "Bạn đã biết những điều cơ bản về Data Sync. Bắt đầu bằng cách kiểm tra bảng điều khiển hoặc hỏi trợ lý AI."
+    },
+    "back": "Quay lại",
+    "skip": "Bỏ qua",
+    "next": "Tiếp",
+    "getStarted": "Bắt đầu"
+  }
+}

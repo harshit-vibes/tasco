@@ -6,12 +6,19 @@
     "dev": "next dev --port 3006",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-agents": "bun run scripts/setup-agents.ts",
+    "seed-guide": "bun run scripts/seed-guide.ts"
   },
   "dependencies": {
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
+    "@tasco/export": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
-    "@tasco/ui": "workspace:*"
+    "@tasco/ui": "workspace:*",
+    "react-dropzone": "^14.3.5",
+    "sonner": "^1.7.4"
   },
   "devDependencies": {
     "@tasco/config": "workspace:*"

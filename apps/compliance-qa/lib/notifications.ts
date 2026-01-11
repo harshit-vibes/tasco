@@ -1,20 +1,58 @@
-// Shared notification store for app-wide activity tracking
+// Notification store with DynamoDB persistence
+
+export type NotificationType = "created" | "updated" | "deleted";
+export type NotificationCategory = "conversation" | "entity" | "document";
 
 export interface Notification {
   id: string;
-  type: "created" | "deleted";
+  type: NotificationType;
+  category: NotificationCategory;
   title: string;
   timestamp: Date;
   read: boolean;
 }
 
-// Store notifications in memory (persists across re-renders but not page refresh)
-let notificationsStore: Notification[] = [];
+// Local cache (for UI responsiveness)
+let notificationsCache: Notification[] = [];
 let previousConversationIds: Set<string> = new Set();
 let listeners: Set<() => void> = new Set();
+let isInitialized = false;
 
+/**
+ * Initialize notifications from API (call once on app load)
+ */
+export async function initializeNotifications(): Promise<void> {
+  if (isInitialized) return;
+
+  try {
+    const response = await fetch("/api/notifications");
+    const data = await response.json();
+
+    if (data.success && data.notifications) {
+      notificationsCache = data.notifications.map((n: {
+        id: string;
+        type: NotificationType;
+        category: NotificationCategory;
+        title: string;
+        timestamp: string;
+        read: boolean;
+      }) => ({
+        ...n,
+        timestamp: new Date(n.timestamp),
+      }));
+      isInitialized = true;
+      notifyListeners();
+    }
+  } catch (error) {
+    console.error("Failed to initialize notifications:", error);
+  }
+}
+
+/**
+ * Get notifications (from local cache)
+ */
 export function getNotifications(): Notification[] {
-  return [...notificationsStore];
+  return [...notificationsCache];
 }
 
 export function getPreviousConversationIds(): Set<string> {
@@ -25,26 +63,81 @@ export function setPreviousConversationIds(ids: Set<string>): void {
   previousConversationIds = ids;
 }
 
-export function addNotification(notification: Notification): void {
-  notificationsStore = [notification, ...notificationsStore].slice(0, 20);
+/**
+ * Add notification (updates local cache and persists to API)
+ */
+export async function addNotification(notification: Notification): Promise<void> {
+  // Update local cache immediately for responsiveness
+  notificationsCache = [notification, ...notificationsCache].slice(0, 20);
   notifyListeners();
+
+  // Persist to API in background
+  try {
+    await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: notification.type,
+        category: notification.category,
+        title: notification.title,
+      }),
+    });
+  } catch (error) {
+    console.error("Failed to persist notification:", error);
+    // Notification is still in local cache, so UI remains updated
+  }
 }
 
-export function markAllAsRead(): void {
-  notificationsStore = notificationsStore.map((n) => ({ ...n, read: true }));
+/**
+ * Mark all notifications as read
+ */
+export async function markAllAsRead(): Promise<void> {
+  // Update local cache
+  notificationsCache = notificationsCache.map((n) => ({ ...n, read: true }));
   notifyListeners();
+
+  // Persist to API
+  try {
+    await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "markAllRead" }),
+    });
+  } catch (error) {
+    console.error("Failed to mark all as read:", error);
+  }
 }
 
-export function clearNotifications(): void {
-  notificationsStore = [];
+/**
+ * Clear all notifications
+ */
+export async function clearNotifications(): Promise<void> {
+  // Update local cache
+  notificationsCache = [];
   notifyListeners();
+
+  // Persist to API
+  try {
+    await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "clearAll" }),
+    });
+  } catch (error) {
+    console.error("Failed to clear notifications:", error);
+  }
 }
 
+/**
+ * Get unread count
+ */
 export function getUnreadCount(): number {
-  return notificationsStore.filter((n) => !n.read).length;
+  return notificationsCache.filter((n) => !n.read).length;
 }
 
-// Subscribe to notification changes
+/**
+ * Subscribe to notification changes
+ */
 export function subscribe(listener: () => void): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
@@ -54,7 +147,9 @@ function notifyListeners(): void {
   listeners.forEach((listener) => listener());
 }
 
-// Format relative time
+/**
+ * Format relative time
+ */
 export function formatTime(date: Date): string {
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -65,4 +160,31 @@ export function formatTime(date: Date): string {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   return date.toLocaleDateString();
+}
+
+/**
+ * Refresh notifications from API (for manual refresh)
+ */
+export async function refreshNotifications(): Promise<void> {
+  try {
+    const response = await fetch("/api/notifications");
+    const data = await response.json();
+
+    if (data.success && data.notifications) {
+      notificationsCache = data.notifications.map((n: {
+        id: string;
+        type: NotificationType;
+        category: NotificationCategory;
+        title: string;
+        timestamp: string;
+        read: boolean;
+      }) => ({
+        ...n,
+        timestamp: new Date(n.timestamp),
+      }));
+      notifyListeners();
+    }
+  } catch (error) {
+    console.error("Failed to refresh notifications:", error);
+  }
 }

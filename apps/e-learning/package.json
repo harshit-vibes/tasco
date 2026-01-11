@@ -6,12 +6,21 @@
     "dev": "next dev --port 3004",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-agents": "bun run scripts/setup-agents.ts",
+    "seed-courses": "bun run scripts/seed-courses.ts",
+    "seed-guide": "bun run scripts/seed-guide.ts"
   },
   "dependencies": {
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
-    "@tasco/ui": "workspace:*"
+    "@tasco/ui": "workspace:*",
+    "mammoth": "^1.8.0",
+    "pdf-parse": "^1.1.1",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "@tasco/config": "workspace:*"

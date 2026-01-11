@@ -1,9 +1,48 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Card, Input, Badge, Button } from "@tasco/ui";
-import { Search, Building2, Building, MapPin, Users, Loader2, ChevronRight, ChevronDown, Plus } from "@tasco/ui/icons";
+import { toast } from "sonner";
+import { addNotification } from "@/lib/notifications";
+import {
+  Card,
+  Input,
+  Badge,
+  Button,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  ScrollArea,
+  Select,
+  Textarea,
+  Separator,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  EntitySelector,
+  type Entity as EntityType,
+} from "@tasco/ui";
+import {
+  Search,
+  Building2,
+  Building,
+  MapPin,
+  Users,
+  Loader2,
+  ChevronRight,
+  ChevronDown,
+  Plus,
+  Save,
+  Trash2,
+  Calendar,
+} from "@tasco/ui/icons";
+import { useTranslation } from "@tasco/i18n";
 
 // Entity type definition (matches @tasco/db/entities)
 interface Entity {
@@ -16,6 +55,7 @@ interface Entity {
     location?: string;
     employeeCount?: number;
     industry?: string;
+    comments?: string;
   };
   createdAt?: string;
   updatedAt?: string;
@@ -26,13 +66,40 @@ interface EntityNode extends Entity {
   children: EntityNode[];
 }
 
+// Entity types for selection
+const ENTITY_TYPES = [
+  { value: "holding", label: "Holding Company" },
+  { value: "subsidiary", label: "Subsidiary" },
+];
+
+// Initial form state
+const initialFormState = {
+  name: "",
+  shortName: "",
+  type: "subsidiary" as "parent" | "holding" | "subsidiary",
+  parentId: "",
+  location: "",
+  employeeCount: "",
+  industry: "",
+  comments: "",
+};
+
 export default function EntitiesPage() {
-  const router = useRouter();
+  const { t } = useTranslation("compliance");
   const [searchQuery, setSearchQuery] = useState("");
   const [entities, setEntities] = useState<Entity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  // Sheet state
+  const [showEntitySheet, setShowEntitySheet] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
+  const [isNewEntity, setIsNewEntity] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [formData, setFormData] = useState(initialFormState);
 
   // Fetch entities from API
   useEffect(() => {
@@ -156,6 +223,204 @@ export default function EntitiesPage() {
     return nodes.reduce((acc, node) => acc + 1 + countEntities(node.children), 0);
   };
 
+  // Get valid parent entities (parent or holding type, excluding current entity)
+  const parentEntities = useMemo((): EntityType[] => {
+    return entities
+      .filter((e) => (e.type === "parent" || e.type === "holding") && e.id !== selectedEntity?.id)
+      .map((e) => ({
+        id: e.id,
+        name: e.name,
+        shortName: e.shortName,
+        type: e.type,
+        parentId: e.parentId,
+      }));
+  }, [entities, selectedEntity?.id]);
+
+  // Open create entity sheet
+  const handleCreateEntity = () => {
+    setSelectedEntity(null);
+    setIsNewEntity(true);
+    setFormData(initialFormState);
+    setShowEntitySheet(true);
+  };
+
+  // Open view/edit entity sheet
+  const handleSelectEntity = async (entityId: string) => {
+    const entity = entities.find((e) => e.id === entityId);
+    if (entity) {
+      setSelectedEntity(entity);
+      setIsNewEntity(false);
+      setFormData({
+        name: entity.name || "",
+        shortName: entity.shortName || "",
+        type: entity.type || "subsidiary",
+        parentId: entity.parentId || "",
+        location: entity.metadata?.location || "",
+        employeeCount: entity.metadata?.employeeCount?.toString() || "",
+        industry: entity.metadata?.industry || "",
+        comments: entity.metadata?.comments || "",
+      });
+      setShowEntitySheet(true);
+    }
+  };
+
+  // Close sheet and reset state
+  const handleCloseSheet = () => {
+    setShowEntitySheet(false);
+    setSelectedEntity(null);
+    setIsNewEntity(false);
+    setFormData(initialFormState);
+  };
+
+  // Handle form input change
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Save entity (create or update)
+  const handleSaveEntity = async () => {
+    if (!formData.name.trim()) {
+      toast.error("Entity name is required");
+      return;
+    }
+
+    setIsSaving(true);
+    const toastId = toast.loading(isNewEntity ? "Creating entity..." : "Saving entity...");
+
+    try {
+      const payload = {
+        name: formData.name.trim(),
+        shortName: formData.shortName.trim() || undefined,
+        type: formData.type,
+        parentId: formData.parentId || undefined,
+        metadata: {
+          location: formData.location.trim() || undefined,
+          employeeCount: formData.employeeCount ? parseInt(formData.employeeCount) : undefined,
+          industry: formData.industry.trim() || undefined,
+          comments: formData.comments.trim() || undefined,
+        },
+      };
+
+      const url = isNewEntity ? "/api/entities" : `/api/entities/${selectedEntity?.id}`;
+      const method = isNewEntity ? "POST" : "PUT";
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(isNewEntity ? "Entity created" : "Entity updated", {
+          id: toastId,
+          description: formData.name,
+        });
+
+        // Add notification
+        addNotification({
+          id: `entity-${isNewEntity ? "created" : "updated"}-${Date.now()}`,
+          type: isNewEntity ? "created" : "updated",
+          category: "entity",
+          title: formData.name,
+          timestamp: new Date(),
+          read: false,
+        });
+
+        // Update local state
+        if (isNewEntity) {
+          setEntities((prev) => [...prev, data.entity]);
+        } else {
+          setEntities((prev) =>
+            prev.map((e) => (e.id === data.entity.id ? data.entity : e))
+          );
+          setSelectedEntity(data.entity);
+        }
+
+        if (isNewEntity) {
+          handleCloseSheet();
+        }
+      } else {
+        toast.error(isNewEntity ? "Failed to create entity" : "Failed to save entity", {
+          id: toastId,
+          description: data.error,
+        });
+      }
+    } catch (err) {
+      console.error("Error saving entity:", err);
+      toast.error("Failed to save entity", {
+        id: toastId,
+        description: "Network error",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Delete entity
+  const handleDeleteEntity = async () => {
+    if (!selectedEntity) return;
+
+    setIsDeleting(true);
+    const toastId = toast.loading(`Deleting "${selectedEntity.name}"...`);
+
+    try {
+      const response = await fetch(`/api/entities/${selectedEntity.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Entity deleted", {
+          id: toastId,
+          description: selectedEntity.name,
+        });
+
+        // Add notification
+        addNotification({
+          id: `entity-deleted-${Date.now()}`,
+          type: "deleted",
+          category: "entity",
+          title: selectedEntity.name,
+          timestamp: new Date(),
+          read: false,
+        });
+
+        // Update local state
+        setEntities((prev) => prev.filter((e) => e.id !== selectedEntity.id));
+        setShowDeleteDialog(false);
+        handleCloseSheet();
+      } else {
+        toast.error("Failed to delete entity", {
+          id: toastId,
+          description: data.error,
+        });
+      }
+    } catch (err) {
+      console.error("Error deleting entity:", err);
+      toast.error("Failed to delete entity", {
+        id: toastId,
+        description: "Network error",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Get type badge for display
+  const getTypeBadgeForSheet = (type: string) => {
+    switch (type) {
+      case "parent":
+        return <Badge className="bg-primary/10 text-primary">Parent</Badge>;
+      case "holding":
+        return <Badge className="bg-blue-100 text-blue-700">Holding</Badge>;
+      default:
+        return <Badge variant="secondary">Subsidiary</Badge>;
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -192,16 +457,16 @@ export default function EntitiesPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between page-header">
         <div>
-          <h1 className="text-2xl font-semibold">Entities</h1>
-          <p className="text-muted-foreground">
-            Company hierarchy and organizational structure
+          <h1 className="text-3xl">{t("entities.title")}</h1>
+          <p className="text-muted-foreground mt-1">
+            {t("entities.description")}
           </p>
         </div>
-        <Button onClick={() => router.push("/entities/new")}>
+        <Button onClick={handleCreateEntity}>
           <Plus className="h-4 w-4 mr-2" />
-          Create Entity
+          {t("entities.addEntity")}
         </Button>
       </div>
 
@@ -257,7 +522,7 @@ export default function EntitiesPage() {
             level={0}
             expandedIds={expandedIds}
             onToggle={toggleExpanded}
-            onSelect={(id) => router.push(`/entities/${id}`)}
+            onSelect={handleSelectEntity}
           />
         ))}
       </div>
@@ -275,13 +540,227 @@ export default function EntitiesPage() {
               : "No entities have been added yet. Create your first entity to get started."}
           </p>
           {!searchQuery && (
-            <Button onClick={() => router.push("/entities/new")}>
+            <Button onClick={handleCreateEntity}>
               <Plus className="h-4 w-4 mr-2" />
               Create Entity
             </Button>
           )}
         </Card>
       )}
+
+      {/* Entity Create/Edit Sheet */}
+      <Sheet open={showEntitySheet} onOpenChange={(open) => !open && handleCloseSheet()}>
+        <SheetContent side="right" className="w-full sm:max-w-md flex flex-col">
+          <SheetHeader className="space-y-1 pb-4 border-b">
+            <div className="flex items-center gap-2">
+              <SheetTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                {isNewEntity ? "Create Entity" : "Entity Details"}
+              </SheetTitle>
+              {!isNewEntity && selectedEntity && getTypeBadgeForSheet(selectedEntity.type)}
+            </div>
+            <SheetDescription>
+              {isNewEntity
+                ? "Add a new company or subsidiary to the organization hierarchy."
+                : `ID: ${selectedEntity?.id}`}
+            </SheetDescription>
+          </SheetHeader>
+
+          <ScrollArea className="flex-1 py-4">
+            <div className="space-y-5 pr-4">
+              {/* Entity Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Entity Name <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  placeholder="Enter entity name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                />
+              </div>
+
+              {/* Short Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Short Name</label>
+                <Input
+                  placeholder="Optional short name"
+                  value={formData.shortName}
+                  onChange={(e) => handleInputChange("shortName", e.target.value)}
+                />
+              </div>
+
+              {/* Entity Type */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Entity Type <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  options={ENTITY_TYPES}
+                  value={formData.type}
+                  onChange={(value) => handleInputChange("type", value)}
+                />
+              </div>
+
+              {/* Parent Entity - using EntitySelector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Parent Entity</label>
+                <EntitySelector
+                  entities={parentEntities}
+                  mode="single"
+                  selectedEntityId={formData.parentId}
+                  onEntityChange={(entityId) => handleInputChange("parentId", entityId || "")}
+                  placeholder="Select parent entity..."
+                  showHierarchy={true}
+                  allowAll={false}
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Optional. Parent or holding company this entity belongs to.
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* Location */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Location</label>
+                <Input
+                  placeholder="e.g., Hanoi, Vietnam"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange("location", e.target.value)}
+                />
+              </div>
+
+              {/* Employee Count */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Employee Count</label>
+                <Input
+                  type="number"
+                  placeholder="Number of employees"
+                  value={formData.employeeCount}
+                  onChange={(e) => handleInputChange("employeeCount", e.target.value)}
+                />
+              </div>
+
+              {/* Industry */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Industry</label>
+                <Input
+                  placeholder="e.g., Insurance, Automotive"
+                  value={formData.industry}
+                  onChange={(e) => handleInputChange("industry", e.target.value)}
+                />
+              </div>
+
+              {/* Comments */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Comments</label>
+                <Textarea
+                  placeholder="Additional notes or comments..."
+                  value={formData.comments}
+                  onChange={(e) => handleInputChange("comments", e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              {/* Timestamps for existing entities */}
+              {!isNewEntity && selectedEntity && (
+                <>
+                  <Separator />
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-3 w-3" />
+                      <span>Created: {new Date(selectedEntity.createdAt!).toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-3 w-3" />
+                      <span>Updated: {new Date(selectedEntity.updatedAt!).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </ScrollArea>
+
+          {/* Footer Actions */}
+          <div className="pt-4 border-t space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              {!isNewEntity && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                  Delete
+                </Button>
+              )}
+              <div className={`flex items-center gap-2 ${isNewEntity ? "ml-auto" : ""}`}>
+                <Button variant="outline" size="sm" onClick={handleCloseSheet}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleSaveEntity} disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                      Saving...
+                    </>
+                  ) : isNewEntity ? (
+                    <>
+                      <Plus className="h-3.5 w-3.5 mr-1.5" />
+                      Create
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-3.5 w-3.5 mr-1.5" />
+                      Save
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Entity</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedEntity?.name}"? This action cannot be undone.
+              {selectedEntity && entities.some((e) => e.parentId === selectedEntity.id) && (
+                <span className="block mt-2 text-orange-600 dark:text-orange-400">
+                  Warning: This entity has child entities. They will become orphaned.
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteEntity}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

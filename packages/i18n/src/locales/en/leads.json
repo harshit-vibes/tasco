@@ -1,0 +1,55 @@
+{
+  "title": "Leads Management",
+  "description": "Manage and nurture your sales pipeline",
+  "priority": {
+    "all": "All Priorities",
+    "hot": "Hot",
+    "warm": "Warm",
+    "cold": "Cold"
+  },
+  "status": {
+    "all": "All Statuses",
+    "new": "New",
+    "contacted": "Contacted",
+    "qualified": "Qualified",
+    "nurturing": "Nurturing",
+    "converted": "Converted",
+    "lost": "Lost"
+  },
+  "source": {
+    "all": "All Sources",
+    "website": "Website",
+    "referral": "Referral",
+    "walk-in": "Walk-in",
+    "event": "Event",
+    "social": "Social Media",
+    "other": "Other"
+  },
+  "sort": {
+    "score": "Score",
+    "createdAt": "Date Created",
+    "name": "Name",
+    "lastContactedAt": "Last Contacted"
+  },
+  "labels": {
+    "score": "Score",
+    "priority": "Priority",
+    "status": "Status",
+    "source": "Source",
+    "created_at": "Created At",
+    "last_contacted": "Last Contacted",
+    "assigned_to": "Assigned To",
+    "interest": "Interest",
+    "brands": "Brands",
+    "vehicle_types": "Vehicle Types",
+    "budget": "Budget",
+    "timeline": "Timeline"
+  },
+  "actions": {
+    "create_lead": "Create Lead",
+    "contact": "Contact",
+    "qualify": "Qualify",
+    "convert": "Convert",
+    "mark_lost": "Mark as Lost"
+  }
+}

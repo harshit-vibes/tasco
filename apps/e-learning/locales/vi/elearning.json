@@ -1,0 +1,188 @@
+{
+  "appTitle": "Nhà máy Học tập",
+  "appSubtitle": "Đào tạo Bảo hiểm Tasco",
+  "appDescription": "Nền tảng đào tạo bảo hiểm được hỗ trợ bởi AI",
+
+  "branding": {
+    "name": "Nhà máy Học tập",
+    "tagline": "Đào tạo Bảo hiểm Tasco",
+    "aiStatus": "AI Trực tuyến",
+    "aiPowered": "Học tập với AI"
+  },
+
+  "nav": {
+    "learn": "Học tập",
+    "dashboard": "Trang chủ",
+    "dashboardDesc": "Trang học tập của bạn",
+    "courses": "Khóa học",
+    "coursesDesc": "Xem tất cả khóa học",
+    "progress": "Tiến độ",
+    "progressDesc": "Theo dõi thành tích",
+    "aiAssistant": "Trợ lý AI",
+    "askAi": "Hỏi AI",
+    "askAiDesc": "Nhận trợ giúp ngay",
+    "createCourse": "Tạo khóa học",
+    "createCourseDesc": "Xây dựng với AI",
+    "newConversation": "Cuộc trò chuyện mới",
+    "recentChats": "Trò chuyện gần đây",
+    "continueLearning": "Tiếp tục học"
+  },
+
+  "stats": {
+    "completed": "Đã hoàn thành",
+    "available": "Có sẵn",
+    "coursesAvailable": "Khóa học có sẵn",
+    "coursesCompleted": "Đã hoàn thành",
+    "quizzesPassed": "Bài kiểm tra đã vượt qua",
+    "learningTime": "Thời gian học",
+    "active": "Đang hoạt động",
+    "modules": "{{count}} mô-đun",
+    "complete": "{{percent}}% hoàn thành"
+  },
+
+  "hero": {
+    "badge": "Học tập với AI",
+    "titleLine1": "Hành trình",
+    "titleLine2": "Học tập của bạn",
+    "description": "Làm chủ sản phẩm bảo hiểm, xử lý khiếu nại và tuân thủ thông qua các khóa học tương tác và học tập được AI hỗ trợ. Đặt câu hỏi, làm bài kiểm tra và theo dõi tiến trình.",
+    "askAssistant": "Hỏi Trợ lý AI",
+    "browseCourses": "Xem Khóa học",
+    "welcomeBack": "Chào mừng bạn trở lại hành trình học tập"
+  },
+
+  "courses": {
+    "title": "Khóa học nổi bật",
+    "subtitle": "Bắt đầu học",
+    "viewAll": "Xem tất cả",
+    "modules": "{{count}} mô-đun",
+    "lessons": "{{count}} bài học",
+    "featured": "Nổi bật",
+    "noCourses": "Chưa có khóa học nào",
+    "noCoursesDesc": "Khóa học sẽ xuất hiện ở đây khi được tạo và xuất bản.",
+    "createFirst": "Tạo khóa học đầu tiên",
+    "filterAll": "Tất cả khóa học",
+    "filterBeginner": "Cơ bản",
+    "filterIntermediate": "Trung cấp",
+    "filterAdvanced": "Nâng cao"
+  },
+
+  "difficulty": {
+    "beginner": "Cơ bản",
+    "intermediate": "Trung cấp",
+    "advanced": "Nâng cao"
+  },
+
+  "assistant": {
+    "title": "Có câu hỏi? Hỏi AI của chúng tôi",
+    "subtitle": "Trợ giúp ngay",
+    "description": "Trợ lý AI của chúng tôi được đào tạo trên tất cả tài liệu bảo hiểm và có thể giúp bạn hiểu các chủ đề phức tạp, trả lời câu hỏi và hướng dẫn học tập.",
+    "startConversation": "Bắt đầu trò chuyện"
+  },
+
+  "chat": {
+    "title": "Trợ lý Học tập AI",
+    "description": "Đặt câu hỏi về sản phẩm bảo hiểm, khiếu nại hoặc tuân thủ",
+    "newChat": "Cuộc trò chuyện mới"
+  },
+
+  "suggestedQuestions": {
+    "motorInsurance": "Bảo hiểm xe máy tiêu chuẩn bao gồm những gì?",
+    "claimProcess": "Làm thế nào để xử lý một yêu cầu bồi thường bảo hiểm xe?",
+    "regulations": "Yêu cầu pháp lý chính cho đại lý bảo hiểm là gì?"
+  },
+
+  "create": {
+    "title": "Tạo khóa học",
+    "describeTitle": "Mô tả khóa học của bạn",
+    "describeSubtitle": "Cho chúng tôi biết loại khóa đào tạo bạn muốn tạo cho nhân viên Bảo hiểm Tasco.",
+    "requirementLabel": "Bạn muốn tạo khóa học gì?",
+    "requirementPlaceholder": "Ví dụ: Tạo một khóa học cơ bản về bảo hiểm xe máy cho đại lý bán hàng mới bao gồm kiến thức sản phẩm, định giá và xử lý phản đối của khách hàng...",
+    "polishButton": "Tinh chỉnh với AI",
+    "polishing": "Đang tinh chỉnh...",
+    "repolish": "Tinh chỉnh lại",
+    "repolishing": "Đang tinh chỉnh lại...",
+    "aiEnhanced": "Yêu cầu được AI cải thiện",
+    "exampleHint": "Ví dụ yêu cầu:",
+    "examples": {
+      "motor": "Tạo khóa học cơ bản về bảo hiểm xe máy cho đại lý bán hàng mới",
+      "risk": "Xây dựng khóa đào tạo nâng cao về đánh giá rủi ro và bảo lãnh cho chuyên viên cao cấp",
+      "compliance": "Thiết kế khóa đào tạo tuân thủ bao gồm các yêu cầu pháp quy cho tất cả nhân viên",
+      "customer": "Tạo khóa học dịch vụ khách hàng dạy quy trình xử lý khiếu nại"
+    }
+  },
+
+  "publish": {
+    "ready": "Khóa học của bạn đã sẵn sàng!",
+    "reviewSubtitle": "Xem lại và xuất bản khóa học của bạn vào thư viện.",
+    "modules": "{{count}} mô-đun",
+    "lessons": "{{count}} bài học",
+    "modulesAndLessons": "{{modules}} mô-đun · {{lessons}} bài học",
+    "quizQuestions": "{{count}} câu hỏi kiểm tra",
+    "duration": "~{{minutes}} phút",
+    "level": "{{level}}",
+    "courseModules": "Các mô-đun khóa học",
+    "preview": "Xem trước",
+    "createAnother": "Tạo khóa khác",
+    "publishCourse": "Xuất bản khóa học",
+    "publishNote": "Sau khi xuất bản, khóa học này sẽ có sẵn trong thư viện khóa học cho tất cả nhân viên truy cập. Bạn có thể chỉnh sửa hoặc ẩn nó sau từ thư viện."
+  },
+
+  "header": {
+    "dashboard": "Trang chủ",
+    "dashboardSubtitle": "Chào mừng bạn trở lại hành trình học tập",
+    "courseLibrary": "Thư viện khóa học",
+    "courseLibrarySubtitle": "Khám phá và bắt đầu học",
+    "myProgress": "Tiến độ của tôi",
+    "myProgressSubtitle": "Theo dõi thành tích của bạn",
+    "aiAssistant": "Trợ lý AI",
+    "aiAssistantSubtitle": "Hỏi bất cứ điều gì về bảo hiểm",
+    "createCourse": "Tạo khóa học",
+    "createCourseSubtitle": "Xây dựng với sự hỗ trợ của AI",
+    "courseDetails": "Chi tiết khóa học",
+    "courseDetailsSubtitle": "Xem chương trình và tiến độ",
+    "module": "Mô-đun",
+    "moduleSubtitle": "Nội dung bài học và kiểm tra",
+    "breadcrumbs": {
+      "courses": "Khóa học",
+      "course": "Khóa học"
+    }
+  },
+
+  "coursesPage": {
+    "title": "Thư viện",
+    "titleAccent": "Khóa học",
+    "subtitle": "Khám phá bộ sưu tập đào tạo bảo hiểm toàn diện của chúng tôi. Từ cơ bản đến nâng cao, tìm khóa học hoàn hảo cho hành trình học tập của bạn.",
+    "searchPlaceholder": "Tìm kiếm khóa học theo tiêu đề hoặc chủ đề...",
+    "coursesAvailable": "{{count}} Khóa học có sẵn",
+    "allCourses": "Tất cả khóa học",
+    "featured": "Nổi bật",
+    "startLearning": "Bắt đầu học",
+    "modules": "{{count}} mô-đun",
+    "minutes": "{{count}} phút",
+    "notStarted": "Chưa bắt đầu",
+    "noCoursesFound": "Không tìm thấy khóa học",
+    "noCoursesFoundEmpty": "Chưa có khóa học nào. Kiểm tra lại sau hoặc tạo một khóa học mới.",
+    "noCoursesFoundFiltered": "Chúng tôi không tìm thấy khóa học nào phù hợp với tiêu chí tìm kiếm của bạn. Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm.",
+    "clearFilters": "Xóa tất cả bộ lọc",
+    "failedToLoad": "Không thể tải khóa học",
+    "loading": "Đang tải..."
+  },
+
+  "errors": {
+    "loadingCourses": "Lỗi khi tải khóa học",
+    "tryAgain": "Thử lại"
+  },
+
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "finish": "Hoàn thành"
+  }
+}

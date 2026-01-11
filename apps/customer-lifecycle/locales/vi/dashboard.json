@@ -1,0 +1,36 @@
+{
+  "title": "Bảng Điều Khiển Vòng Đời Khách Hàng",
+  "description": "Theo dõi khách hàng tiềm năng, khách hàng và hiệu suất chiến dịch theo thời gian thực",
+  "stats": {
+    "total_leads": "Tổng Khách Hàng Tiềm Năng",
+    "hot_leads": "Khách Hàng Tiềm Năng Nóng",
+    "total_customers": "Tổng Khách Hàng",
+    "at_risk_customers": "Khách Hàng Có Nguy Cơ"
+  },
+  "cards": {
+    "lead_inbox": {
+      "title": "Hộp Thư Khách Hàng Tiềm Năng",
+      "new_count": "{{count}} mới",
+      "hot_awaiting": "{{count}} khách hàng tiềm năng nóng đang chờ liên hệ"
+    },
+    "customer_360": {
+      "title": "Khách Hàng 360",
+      "profiles": "{{count}} hồ sơ",
+      "description": "Theo dõi vòng đời đầy đủ"
+    },
+    "active_campaigns": {
+      "title": "Chiến Dịch Đang Hoạt Động",
+      "avg_roi": "{{roi}}x ROI trung bình"
+    }
+  },
+  "sections": {
+    "recent_leads": "Khách Hàng Tiềm Năng Gần Đây",
+    "ai_recommendations": "Đề Xuất AI",
+    "at_risk_alert": "Khách Hàng Có Nguy Cơ Cần Chú Ý",
+    "recommendations_active": "{{count}} đang hoạt động"
+  },
+  "labels": {
+    "churn_risk": "Nguy cơ rời bỏ",
+    "last_activity": "Hoạt động cuối"
+  }
+}

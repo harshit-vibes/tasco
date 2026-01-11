@@ -1,0 +1,173 @@
+{
+  "appTitle": "Trợ Lý Tuân Thủ AI",
+  "appDescription": "Hỏi tôi bất kỳ điều gì về chính sách, quy định và tài liệu tuân thủ của Tasco Group.",
+  "exportTitle": "Báo Cáo Phân Tích Tuân Thủ",
+  "exportPDF": "Xuất Báo Cáo",
+  "suggestedQuestions": {
+    "approval": "Yêu cầu tuân thủ cho thỏa thuận cổ đông theo Luật Doanh nghiệp Việt Nam 2020 là gì?",
+    "travel": "Kiểm tra xem điều lệ công ty có mâu thuẫn với Điều 135 Luật Doanh nghiệp không",
+    "capital": "Các điều khoản nào bắt buộc có trong nghị quyết HĐQT về phân phối cổ tức?",
+    "procurement": "So sánh chính sách nội bộ với các yêu cầu Nghị định liên quan"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "subtitle": "Tổng quan và phân tích Trợ Lý Tuân Thủ AI",
+    "entities": {
+      "title": "Đơn vị",
+      "description": "Quản lý cấu trúc tổ chức và phân cấp công ty"
+    },
+    "knowledgeBase": {
+      "title": "Cơ sở kiến thức",
+      "description": "Quản lý tài liệu tuân thủ và nguồn kiến thức"
+    },
+    "pendingReviews": {
+      "title": "Đang chờ xem xét",
+      "description": "Tài liệu chờ xem xét tuân thủ"
+    },
+    "laws": {
+      "title": "Luật & Quy định",
+      "description": "Kho văn bản pháp luật và quy định"
+    },
+    "agents": {
+      "title": "Trợ lý AI",
+      "description": "Cấu hình và quản lý các trợ lý AI"
+    },
+    "recentActivity": {
+      "title": "Hoạt động gần đây",
+      "noActivity": "Không có hoạt động gần đây",
+      "activityHint": "Hoạt động sẽ xuất hiện ở đây khi bạn sử dụng hệ thống"
+    },
+    "stats": {
+      "totalDocuments": "Tổng tài liệu",
+      "syncedDocuments": "Đã đồng bộ",
+      "totalEntities": "Đơn vị",
+      "totalConversations": "Cuộc trò chuyện"
+    }
+  },
+  "entities": {
+    "title": "Đơn vị",
+    "description": "Quản lý các đơn vị tổ chức và phân cấp công ty",
+    "addEntity": "Thêm đơn vị",
+    "editEntity": "Sửa đơn vị",
+    "deleteEntity": "Xóa đơn vị",
+    "entityName": "Tên đơn vị",
+    "entityType": "Loại đơn vị",
+    "parentEntity": "Đơn vị cha",
+    "noEntities": "Chưa cấu hình đơn vị",
+    "types": {
+      "holding": "Công ty mẹ",
+      "subsidiary": "Công ty con",
+      "department": "Phòng ban",
+      "branch": "Chi nhánh"
+    }
+  },
+  "knowledgeBase": {
+    "title": "Cơ sở kiến thức",
+    "description": "Quản lý và tổ chức tài liệu tuân thủ của bạn",
+    "uploadDocument": "Tải lên tài liệu",
+    "syncDocument": "Đồng bộ với KB",
+    "unsyncDocument": "Xóa khỏi KB",
+    "deleteDocument": "Xóa tài liệu",
+    "documentName": "Tên tài liệu",
+    "documentCategory": "Danh mục",
+    "documentEntity": "Đơn vị",
+    "documentTags": "Thẻ",
+    "syncStatus": {
+      "synced": "Đã đồng bộ",
+      "notSynced": "Chưa đồng bộ",
+      "syncing": "Đang đồng bộ..."
+    },
+    "categories": {
+      "policy": "Chính sách",
+      "procedure": "Quy trình",
+      "regulation": "Quy định",
+      "guideline": "Hướng dẫn",
+      "template": "Mẫu",
+      "report": "Báo cáo"
+    },
+    "noDocuments": "Không tìm thấy tài liệu",
+    "uploadHint": "Tải lên tài liệu để xây dựng cơ sở kiến thức"
+  },
+  "agents": {
+    "title": "Trợ lý AI",
+    "description": "Cấu hình trợ lý AI cho các câu hỏi tuân thủ",
+    "agentId": "ID Trợ lý",
+    "validationAgent": "Trợ lý xác thực",
+    "noAgentConfigured": "Chưa cấu hình trợ lý",
+    "configureHint": "Cấu hình trợ lý AI trong cài đặt để kích hoạt tính năng trò chuyện"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "description": "Cấu hình tùy chọn Trợ Lý Tuân Thủ AI",
+    "apiKey": "Khóa API",
+    "ragUrl": "URL Dịch vụ RAG",
+    "agentId": "ID Trợ lý chính",
+    "validationAgentId": "ID Trợ lý xác thực",
+    "save": "Lưu cài đặt",
+    "saved": "Đã lưu cài đặt thành công",
+    "saveFailed": "Không thể lưu cài đặt"
+  },
+  "notifications": {
+    "conversation": {
+      "created": "Đã bắt đầu cuộc trò chuyện mới",
+      "updated": "Đã cập nhật cuộc trò chuyện",
+      "deleted": "Đã xóa cuộc trò chuyện"
+    },
+    "entity": {
+      "created": "Đã tạo đơn vị",
+      "updated": "Đã cập nhật đơn vị",
+      "deleted": "Đã xóa đơn vị"
+    },
+    "document": {
+      "created": "Đã tải lên tài liệu",
+      "updated": "Đã đồng bộ tài liệu với cơ sở kiến thức",
+      "deleted": "Đã xóa tài liệu",
+      "syncFailed": "Không thể đồng bộ tài liệu"
+    }
+  },
+  "audit": {
+    "title": "Nhật Ký Kiểm Toán",
+    "description": "Theo dõi tất cả hành động và thay đổi trong hệ thống",
+    "filters": "Bộ lọc",
+    "allCategories": "Tất cả danh mục",
+    "allActions": "Tất cả hành động",
+    "refresh": "Làm mới",
+    "totalEvents": "Tổng sự kiện",
+    "documents": "Tài liệu",
+    "entities": "Đơn vị",
+    "conversations": "Cuộc trò chuyện",
+    "activityLog": "Nhật ký hoạt động",
+    "noEvents": "Không có sự kiện",
+    "noEventsHint": "Hoạt động sẽ xuất hiện ở đây khi bạn sử dụng hệ thống",
+    "category": {
+      "document": "Tài liệu",
+      "entity": "Đơn vị",
+      "conversation": "Cuộc trò chuyện"
+    },
+    "type": {
+      "created": "Đã tạo",
+      "updated": "Đã cập nhật",
+      "deleted": "Đã xóa"
+    }
+  },
+  "versions": {
+    "title": "Lịch Sử Phiên Bản",
+    "noVersions": "Không có lịch sử phiên bản",
+    "enableHint": "Bật S3 versioning để theo dõi thay đổi tài liệu",
+    "current": "Hiện tại",
+    "deleted": "Đã xóa",
+    "view": "Xem phiên bản này",
+    "restore": "Khôi phục phiên bản này",
+    "document": "Tài liệu",
+    "from": "Từ",
+    "restoring": "Đang khôi phục...",
+    "restoreButton": "Khôi Phục",
+    "confirmRestore": {
+      "title": "Khôi Phục Phiên Bản",
+      "description": "Bạn có chắc chắn muốn khôi phục phiên bản này? Thao tác này sẽ tạo một phiên bản mới với nội dung từ phiên bản đã chọn."
+    }
+  },
+  "common": {
+    "cancel": "Hủy"
+  }
+}

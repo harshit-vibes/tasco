@@ -1,0 +1,129 @@
+{
+  "appTitle": "Đơn Hàng AI",
+  "appSubtitle": "Inochi",
+  "appDescription": "Tự động hóa nhập liệu đơn hàng với AI",
+
+  "nav": {
+    "upload": "Tải Đơn Hàng",
+    "review": "Hàng Chờ Duyệt",
+    "history": "Lịch Sử Đơn Hàng",
+    "dashboard": "Bảng Điều Khiển"
+  },
+
+  "newUpload": "Tải Mới",
+  "back": "Quay lại",
+  "profile": "Hồ sơ",
+  "settings": "Cài đặt",
+  "signOut": "Đăng xuất",
+
+  "upload": {
+    "title": "Tải Tài Liệu Đơn Hàng",
+    "description": "Tải PDF, hình ảnh hoặc ảnh chụp màn hình đơn hàng để AI trích xuất",
+    "dropzone": {
+      "title": "Thả tệp vào đây hoặc nhấp để tải lên",
+      "description": "Hỗ trợ PDF, PNG, JPG, JPEG (tối đa 10MB)",
+      "uploading": "Đang tải lên...",
+      "processing": "Đang xử lý với AI..."
+    },
+    "recentUploads": "Tải Lên Gần Đây",
+    "noUploads": "Chưa có tải lên nào",
+    "uploadFirst": "Tải lên tài liệu đơn hàng đầu tiên để bắt đầu",
+    "viewAll": "Xem Tất Cả Đơn Hàng"
+  },
+
+  "review": {
+    "title": "Hàng Chờ Duyệt",
+    "description": "Xem xét và phê duyệt dữ liệu đơn hàng đã trích xuất",
+    "empty": "Không có đơn hàng chờ duyệt",
+    "emptyDescription": "Tải lên tài liệu đơn hàng để bắt đầu xử lý",
+    "orderDetails": "Chi Tiết Đơn Hàng",
+    "customerInfo": "Thông Tin Khách Hàng",
+    "orderItems": "Mục Đơn Hàng",
+    "approve": "Phê Duyệt & Xuất",
+    "reject": "Từ Chối",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu Thay Đổi",
+    "cancel": "Hủy",
+    "confidence": "Độ Tin Cậy AI",
+    "sourceDocument": "Tài Liệu Nguồn"
+  },
+
+  "history": {
+    "title": "Lịch Sử Đơn Hàng",
+    "description": "Xem tất cả đơn hàng đã xử lý",
+    "empty": "Chưa có đơn hàng",
+    "emptyDescription": "Đơn hàng đã xử lý sẽ xuất hiện ở đây",
+    "search": "Tìm kiếm đơn hàng...",
+    "filter": {
+      "all": "Tất cả",
+      "approved": "Đã duyệt",
+      "rejected": "Từ chối",
+      "exported": "Đã xuất"
+    },
+    "columns": {
+      "orderId": "Mã Đơn Hàng",
+      "customer": "Khách Hàng",
+      "date": "Ngày",
+      "items": "Sản Phẩm",
+      "total": "Tổng",
+      "status": "Trạng Thái",
+      "actions": "Thao Tác"
+    }
+  },
+
+  "dashboard": {
+    "title": "Bảng Điều Khiển",
+    "description": "Chỉ số xử lý và hiệu suất",
+    "metrics": {
+      "totalOrders": "Tổng Đơn Hàng",
+      "processed": "Xử Lý Hôm Nay",
+      "avgAccuracy": "Độ Chính Xác TB",
+      "timeSaved": "Thời Gian Tiết Kiệm"
+    },
+    "charts": {
+      "orderVolume": "Khối Lượng Đơn Hàng",
+      "accuracyTrend": "Xu Hướng Chính Xác",
+      "processingTime": "Thời Gian Xử Lý"
+    },
+    "recentActivity": "Hoạt Động Gần Đây"
+  },
+
+  "order": {
+    "fields": {
+      "customerName": "Tên Khách Hàng",
+      "customerCode": "Mã Khách Hàng",
+      "orderDate": "Ngày Đặt Hàng",
+      "deliveryDate": "Ngày Giao Hàng",
+      "productCode": "Mã Sản Phẩm",
+      "productName": "Tên Sản Phẩm",
+      "quantity": "Số Lượng",
+      "unit": "Đơn Vị",
+      "unitPrice": "Đơn Giá",
+      "amount": "Thành Tiền",
+      "totalAmount": "Tổng Tiền",
+      "notes": "Ghi Chú"
+    },
+    "status": {
+      "pending": "Chờ xử lý",
+      "reviewing": "Đang duyệt",
+      "approved": "Đã duyệt",
+      "rejected": "Từ chối",
+      "exported": "Đã xuất"
+    }
+  },
+
+  "actions": {
+    "export": "Xuất sang Bravo",
+    "download": "Tải xuống",
+    "view": "Xem Chi Tiết",
+    "delete": "Xóa"
+  },
+
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "success": "Thành công",
+    "noData": "Không có dữ liệu"
+  }
+}

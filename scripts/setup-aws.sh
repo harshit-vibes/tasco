@@ -83,6 +83,43 @@ echo "Listing DynamoDB tables..."
 aws dynamodb list-tables --region $REGION --query 'TableNames[?starts_with(@, `tasco-`)]'
 
 # ==========================================
+# S3 Bucket for Documents
+# ==========================================
+echo ""
+echo "=========================================="
+echo "Creating S3 Bucket for Documents"
+echo "=========================================="
+
+BUCKET_NAME="tasco-compliance-docs"
+
+# Create bucket (handles region-specific LocationConstraint)
+echo "Creating S3 bucket: $BUCKET_NAME..."
+if [ "$REGION" = "us-east-1" ]; then
+    aws s3api create-bucket \
+        --bucket $BUCKET_NAME \
+        --region $REGION \
+        2>/dev/null && echo "✓ S3 bucket created" || echo "→ S3 bucket already exists"
+else
+    aws s3api create-bucket \
+        --bucket $BUCKET_NAME \
+        --region $REGION \
+        --create-bucket-configuration LocationConstraint=$REGION \
+        2>/dev/null && echo "✓ S3 bucket created" || echo "→ S3 bucket already exists"
+fi
+
+# Enable versioning on the bucket
+echo "Enabling S3 versioning..."
+aws s3api put-bucket-versioning \
+    --bucket $BUCKET_NAME \
+    --versioning-configuration Status=Enabled \
+    --region $REGION \
+    && echo "✓ S3 versioning enabled" || echo "✗ Failed to enable versioning"
+
+# Verify versioning status
+echo "Verifying versioning status..."
+aws s3api get-bucket-versioning --bucket $BUCKET_NAME --region $REGION
+
+# ==========================================
 # IAM Role for Amplify
 # ==========================================
 echo ""
@@ -106,8 +143,8 @@ cat > /tmp/amplify-trust-policy.json << 'EOF'
 }
 EOF
 
-# DynamoDB access policy
-cat > /tmp/dynamodb-policy.json << 'EOF'
+# DynamoDB and S3 access policy
+cat > /tmp/tasco-policy.json << 'EOF'
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -126,6 +163,22 @@ cat > /tmp/dynamodb-policy.json << 'EOF'
       "Resource": [
         "arn:aws:dynamodb:*:*:table/tasco-*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetObjectVersion",
+        "s3:ListBucketVersions",
+        "s3:GetBucketVersioning"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tasco-compliance-docs",
+        "arn:aws:s3:::tasco-compliance-docs/*"
+      ]
     }
   ]
 }
@@ -138,12 +191,12 @@ aws iam create-role \
     --assume-role-policy-document file:///tmp/amplify-trust-policy.json \
     2>/dev/null && echo "✓ Role created" || echo "→ Role already exists"
 
-# Attach DynamoDB policy
-echo "Attaching DynamoDB policy..."
+# Attach DynamoDB + S3 policy
+echo "Attaching DynamoDB and S3 policy..."
 aws iam put-role-policy \
     --role-name tasco-amplify-role \
-    --policy-name tasco-dynamodb-access \
-    --policy-document file:///tmp/dynamodb-policy.json \
+    --policy-name tasco-aws-access \
+    --policy-document file:///tmp/tasco-policy.json \
     2>/dev/null && echo "✓ Policy attached" || echo "→ Policy already attached"
 
 # Get role ARN
@@ -151,7 +204,7 @@ ROLE_ARN=$(aws iam get-role --role-name tasco-amplify-role --query 'Role.Arn' --
 echo "Role ARN: $ROLE_ARN"
 
 # Cleanup temp files
-rm -f /tmp/amplify-trust-policy.json /tmp/dynamodb-policy.json
+rm -f /tmp/amplify-trust-policy.json /tmp/tasco-policy.json
 
 # ==========================================
 # Summary
@@ -165,6 +218,9 @@ echo "DynamoDB Tables Created:"
 echo "  - tasco-sessions"
 echo "  - tasco-messages"
 echo "  - tasco-documents"
+echo ""
+echo "S3 Bucket Created:"
+echo "  - tasco-compliance-docs (versioning enabled)"
 echo ""
 echo "IAM Role: tasco-amplify-role"
 echo "Role ARN: $ROLE_ARN"

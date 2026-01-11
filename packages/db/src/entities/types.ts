@@ -8,6 +8,7 @@ export interface EntityMetadata {
   location?: string;
   employeeCount?: number;
   industry?: string;
+  comments?: string;
   [key: string]: unknown;
 }
 

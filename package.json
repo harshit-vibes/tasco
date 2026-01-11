@@ -9,12 +9,25 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "clean": "turbo clean && rm -rf node_modules"
+    "clean": "turbo clean && rm -rf node_modules",
+    "registry": "bun scripts/registry.ts",
+    "registry:list": "bun scripts/registry.ts list",
+    "registry:sync": "bun scripts/registry.ts sync",
+    "registry:env": "bun scripts/registry.ts env",
+    "agents": "bun --cwd packages/agents",
+    "agents:list": "bun --cwd packages/agents run list-agents",
+    "agents:validate": "bun --cwd packages/agents run validate",
+    "agents:setup": "bun --cwd packages/agents run setup-all",
+    "agents:sync": "bun --cwd packages/agents run sync-registry"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.965.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "mammoth": "^1.11.0",
     "next": "^15.1.3",
+    "pdfjs-dist": "^5.4.530",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.2"

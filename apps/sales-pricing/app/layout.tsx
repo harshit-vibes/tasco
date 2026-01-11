@@ -1,9 +1,16 @@
-import "@tasco/ui/globals.css";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sales & Pricing",
-  description: "Sales & Pricing - Tasco AI Challenge",
+import "@tasco/ui/globals.css";
+import { I18nProvider } from "@tasco/i18n";
+import { Toaster } from "@tasco/ui";
+import { AppShell } from "../components/app-shell";
+
+import enApp from "../locales/en/app.json";
+import viApp from "../locales/vi/app.json";
+
+const appResources = {
+  en: { app: enApp },
+  vi: { app: viApp },
 };
 
 export default function RootLayout({
@@ -12,9 +19,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>Sales & Pricing | Tasco Insurance</title>
+        <meta
+          name="description"
+          content="AI-powered sales and pricing cockpit for Tasco Insurance"
+        />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        {children}
+        <I18nProvider appResources={appResources}>
+          <AppShell>{children}</AppShell>
+          <Toaster />
+        </I18nProvider>
       </body>
     </html>
   );

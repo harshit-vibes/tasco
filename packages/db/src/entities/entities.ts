@@ -280,3 +280,26 @@ export async function isEntitiesEmpty(): Promise<boolean> {
 
   return !result.Items || result.Items.length === 0;
 }
+
+/**
+ * Entity lookup map type for document handlers
+ */
+export type EntityMap = Record<string, { name: string; shortName: string }>;
+
+/**
+ * Build an entity lookup map from the database
+ * Used by document handlers to enrich documents with entity info
+ */
+export async function getEntityMap(): Promise<EntityMap> {
+  const { items } = await listEntities(1000); // Get all entities
+
+  const entityMap: EntityMap = {};
+  for (const entity of items) {
+    entityMap[entity.id] = {
+      name: entity.name,
+      shortName: entity.shortName || entity.name,
+    };
+  }
+
+  return entityMap;
+}

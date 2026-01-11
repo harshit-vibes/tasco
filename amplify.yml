@@ -1,19 +1,48 @@
+# AWS Amplify Build Configuration for Tasco Monorepo
+# ===================================================
+#
+# Deploy Strategy: Create one Amplify app per subdomain
+# Each app uses the same amplify.yml but different environment variables:
+#
+#   APP_NAME   | APP_PATH           | Subdomain
+#   -----------|--------------------|-----------------------
+#   compliance | compliance-qa      | compliance.tasco.app
+#   customer   | customer-lifecycle | customer.tasco.app
+#   sync       | data-sync          | sync.tasco.app
+#   elearning  | e-learning         | elearning.tasco.app
+#   promotion  | promotion-control  | promotion.tasco.app
+#   risk       | risk-radar         | risk.tasco.app
+#   orders     | sales-order        | orders.tasco.app
+#   pricing    | sales-pricing      | pricing.tasco.app
+#
+# Required Environment Variables (set in Amplify Console):
+#   - APP_NAME: Short name for filtering (e.g., "compliance-qa")
+#   - APP_PATH: Directory name under apps/ (e.g., "compliance-qa")
+#   - LYZR_API_KEY: Server-side Lyzr API key
+#   - NEXT_PUBLIC_LYZR_API_KEY: Client-side Lyzr API key
+#   - NEXT_PUBLIC_LYZR_AGENT_ID: Primary agent ID for the app
+#   - NEXT_PUBLIC_AWS_REGION: AWS region (ap-southeast-1)
+
 version: 1
+
 frontend:
   phases:
     preBuild:
       commands:
-        # Install Bun
+        # Install Bun package manager
         - curl -fsSL https://bun.sh/install | bash
         - export BUN_INSTALL="$HOME/.bun"
         - export PATH="$BUN_INSTALL/bin:$PATH"
-        # Install dependencies from root
+        # Verify Bun installation
+        - bun --version
+        # Install all dependencies from root (monorepo)
         - bun install
     build:
       commands:
-        # Build the specific app (set APP_NAME in Amplify env vars)
-        # Example: APP_NAME=@tasco/tasco-group-compliance-qa
-        - bun run build --filter=${APP_NAME}
+        - export BUN_INSTALL="$HOME/.bun"
+        - export PATH="$BUN_INSTALL/bin:$PATH"
+        # Build the specific app using Turborepo filter
+        - cd apps/${APP_PATH} && bun run build
   artifacts:
     baseDirectory: apps/${APP_PATH}/.next
     files:
@@ -21,5 +50,6 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
-      - apps/**/.next/cache/**/*
       - packages/**/node_modules/**/*
+      - apps/**/.next/cache/**/*
+      - .turbo/**/*

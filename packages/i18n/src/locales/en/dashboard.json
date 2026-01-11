@@ -1,0 +1,36 @@
+{
+  "title": "Customer Lifecycle Dashboard",
+  "description": "Track leads, customers, and campaign performance in real-time",
+  "stats": {
+    "total_leads": "Total Leads",
+    "hot_leads": "Hot Leads",
+    "total_customers": "Total Customers",
+    "at_risk_customers": "At-Risk Customers"
+  },
+  "cards": {
+    "lead_inbox": {
+      "title": "Lead Inbox",
+      "new_count": "{{count}} new",
+      "hot_awaiting": "{{count}} hot leads awaiting contact"
+    },
+    "customer_360": {
+      "title": "Customer 360",
+      "profiles": "{{count}} profiles",
+      "description": "Complete lifecycle tracking"
+    },
+    "active_campaigns": {
+      "title": "Active Campaigns",
+      "avg_roi": "{{roi}}x avg ROI"
+    }
+  },
+  "sections": {
+    "recent_leads": "Recent Leads",
+    "ai_recommendations": "AI Recommendations",
+    "at_risk_alert": "At-Risk Customers Requiring Attention",
+    "recommendations_active": "{{count}} active"
+  },
+  "labels": {
+    "churn_risk": "Churn risk",
+    "last_activity": "Last activity"
+  }
+}

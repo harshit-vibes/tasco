@@ -1,0 +1,173 @@
+{
+  "appTitle": "Compliance Super AI",
+  "appDescription": "Ask me anything about Tasco Group's policies, regulations, and compliance documents.",
+  "exportTitle": "Compliance Analysis Report",
+  "exportPDF": "Export Report",
+  "suggestedQuestions": {
+    "approval": "What are the compliance requirements for shareholder agreements under Vietnamese Enterprise Law 2020?",
+    "travel": "Check if our company charter conflicts with Article 135 of the Enterprise Law",
+    "capital": "What clauses are required in a board resolution for dividend distribution?",
+    "procurement": "Compare our internal policy with relevant Decree requirements"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Compliance Super AI overview and analytics",
+    "entities": {
+      "title": "Entities",
+      "description": "Manage company hierarchy and organizational structure"
+    },
+    "knowledgeBase": {
+      "title": "Knowledge Base",
+      "description": "Manage compliance documents and knowledge sources"
+    },
+    "pendingReviews": {
+      "title": "Pending Reviews",
+      "description": "Documents awaiting compliance review"
+    },
+    "laws": {
+      "title": "Laws & Regulations",
+      "description": "Legal corpus and regulatory documents"
+    },
+    "agents": {
+      "title": "AI Agents",
+      "description": "Configure and manage AI assistants"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity",
+      "activityHint": "Activity will appear here as you use the system"
+    },
+    "stats": {
+      "totalDocuments": "Total Documents",
+      "syncedDocuments": "Synced to KB",
+      "totalEntities": "Entities",
+      "totalConversations": "Conversations"
+    }
+  },
+  "entities": {
+    "title": "Entities",
+    "description": "Manage organizational entities and company hierarchy",
+    "addEntity": "Add Entity",
+    "editEntity": "Edit Entity",
+    "deleteEntity": "Delete Entity",
+    "entityName": "Entity Name",
+    "entityType": "Entity Type",
+    "parentEntity": "Parent Entity",
+    "noEntities": "No entities configured",
+    "types": {
+      "holding": "Holding Company",
+      "subsidiary": "Subsidiary",
+      "department": "Department",
+      "branch": "Branch"
+    }
+  },
+  "knowledgeBase": {
+    "title": "Knowledge Base",
+    "description": "Manage and organize your compliance documents",
+    "uploadDocument": "Upload Document",
+    "syncDocument": "Sync to KB",
+    "unsyncDocument": "Remove from KB",
+    "deleteDocument": "Delete Document",
+    "documentName": "Document Name",
+    "documentCategory": "Category",
+    "documentEntity": "Entity",
+    "documentTags": "Tags",
+    "syncStatus": {
+      "synced": "Synced",
+      "notSynced": "Not Synced",
+      "syncing": "Syncing..."
+    },
+    "categories": {
+      "policy": "Policy",
+      "procedure": "Procedure",
+      "regulation": "Regulation",
+      "guideline": "Guideline",
+      "template": "Template",
+      "report": "Report"
+    },
+    "noDocuments": "No documents found",
+    "uploadHint": "Upload documents to build your knowledge base"
+  },
+  "agents": {
+    "title": "AI Agents",
+    "description": "Configure AI assistants for compliance questions",
+    "agentId": "Agent ID",
+    "validationAgent": "Validation Agent",
+    "noAgentConfigured": "No agent configured",
+    "configureHint": "Configure an AI agent in settings to enable the chat feature"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your Compliance Super AI preferences",
+    "apiKey": "API Key",
+    "ragUrl": "RAG Service URL",
+    "agentId": "Primary Agent ID",
+    "validationAgentId": "Validation Agent ID",
+    "save": "Save Settings",
+    "saved": "Settings saved successfully",
+    "saveFailed": "Failed to save settings"
+  },
+  "notifications": {
+    "conversation": {
+      "created": "New conversation started",
+      "updated": "Conversation updated",
+      "deleted": "Conversation deleted"
+    },
+    "entity": {
+      "created": "Entity created",
+      "updated": "Entity updated",
+      "deleted": "Entity deleted"
+    },
+    "document": {
+      "created": "Document uploaded",
+      "updated": "Document synced to knowledge base",
+      "deleted": "Document deleted",
+      "syncFailed": "Failed to sync document"
+    }
+  },
+  "audit": {
+    "title": "Audit Trail",
+    "description": "Track all actions and changes in the system",
+    "filters": "Filters",
+    "allCategories": "All Categories",
+    "allActions": "All Actions",
+    "refresh": "Refresh",
+    "totalEvents": "Total Events",
+    "documents": "Documents",
+    "entities": "Entities",
+    "conversations": "Conversations",
+    "activityLog": "Activity Log",
+    "noEvents": "No events found",
+    "noEventsHint": "Activity will appear here as you use the system",
+    "category": {
+      "document": "Documents",
+      "entity": "Entities",
+      "conversation": "Conversations"
+    },
+    "type": {
+      "created": "Created",
+      "updated": "Updated",
+      "deleted": "Deleted"
+    }
+  },
+  "versions": {
+    "title": "Version History",
+    "noVersions": "No version history available",
+    "enableHint": "Enable S3 versioning to track document changes",
+    "current": "Current",
+    "deleted": "Deleted",
+    "view": "View this version",
+    "restore": "Restore this version",
+    "document": "Document",
+    "from": "From",
+    "restoring": "Restoring...",
+    "restoreButton": "Restore Version",
+    "confirmRestore": {
+      "title": "Restore Version",
+      "description": "Are you sure you want to restore this version? This will create a new version with the content from the selected version."
+    }
+  },
+  "common": {
+    "cancel": "Cancel"
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "appTitle": "Sales Order AI",
+  "appSubtitle": "Inochi",
+  "appDescription": "AI-powered order data entry automation",
+
+  "nav": {
+    "upload": "Upload Orders",
+    "review": "Review Queue",
+    "history": "Order History",
+    "dashboard": "Dashboard"
+  },
+
+  "newUpload": "New Upload",
+  "back": "Back",
+  "profile": "Profile",
+  "settings": "Settings",
+  "signOut": "Sign out",
+
+  "upload": {
+    "title": "Upload Order Documents",
+    "description": "Upload PDFs, images, or screenshots of orders for AI extraction",
+    "dropzone": {
+      "title": "Drop files here or click to upload",
+      "description": "Supports PDF, PNG, JPG, JPEG (max 10MB)",
+      "uploading": "Uploading...",
+      "processing": "Processing with AI..."
+    },
+    "recentUploads": "Recent Uploads",
+    "noUploads": "No uploads yet",
+    "uploadFirst": "Upload your first order document to get started",
+    "viewAll": "View All Orders"
+  },
+
+  "review": {
+    "title": "Review Queue",
+    "description": "Review and approve extracted order data",
+    "empty": "No orders pending review",
+    "emptyDescription": "Upload order documents to start processing",
+    "orderDetails": "Order Details",
+    "customerInfo": "Customer Information",
+    "orderItems": "Order Items",
+    "approve": "Approve & Export",
+    "reject": "Reject",
+    "edit": "Edit",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "confidence": "AI Confidence",
+    "sourceDocument": "Source Document"
+  },
+
+  "history": {
+    "title": "Order History",
+    "description": "View all processed orders",
+    "empty": "No orders yet",
+    "emptyDescription": "Processed orders will appear here",
+    "search": "Search orders...",
+    "filter": {
+      "all": "All",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "exported": "Exported"
+    },
+    "columns": {
+      "orderId": "Order ID",
+      "customer": "Customer",
+      "date": "Date",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Processing metrics and performance",
+    "metrics": {
+      "totalOrders": "Total Orders",
+      "processed": "Processed Today",
+      "avgAccuracy": "Avg. Accuracy",
+      "timeSaved": "Time Saved"
+    },
+    "charts": {
+      "orderVolume": "Order Volume",
+      "accuracyTrend": "Accuracy Trend",
+      "processingTime": "Processing Time"
+    },
+    "recentActivity": "Recent Activity"
+  },
+
+  "order": {
+    "fields": {
+      "customerName": "Customer Name",
+      "customerCode": "Customer Code",
+      "orderDate": "Order Date",
+      "deliveryDate": "Delivery Date",
+      "productCode": "Product Code",
+      "productName": "Product Name",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "unitPrice": "Unit Price",
+      "amount": "Amount",
+      "totalAmount": "Total Amount",
+      "notes": "Notes"
+    },
+    "status": {
+      "pending": "Pending",
+      "reviewing": "Reviewing",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "exported": "Exported"
+    }
+  },
+
+  "actions": {
+    "export": "Export to Bravo",
+    "download": "Download",
+    "view": "View Details",
+    "delete": "Delete"
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "success": "Success",
+    "noData": "No data available"
+  }
+}

@@ -6,10 +6,12 @@
     "dev": "next dev --port 3007",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "bun run scripts/seed-data.ts"
   },
   "dependencies": {
     "@tasco/db": "workspace:*",
+    "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
     "@tasco/ui": "workspace:*"
   },

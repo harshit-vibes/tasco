@@ -1,1 +1,276 @@
 @import "@tasco/ui/globals.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vietnamese Industrial Design System */
+/* Inspired by Vietnamese manufacturing and industrial heritage */
+
+@layer base {
+  :root {
+    /* Vietnamese Industrial Color System */
+
+    /* Deep Indigo Primary (inspired by traditional Vietnamese blue dye) */
+    --primary: 230 60% 35%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Golden Amber Accent (inspired by Vietnamese lacquerware) */
+    --accent: 45 95% 50%;
+    --accent-foreground: 230 60% 15%;
+
+    /* Cool Gray System (inspired by industrial steel) */
+    --background: 220 15% 98%;
+    --foreground: 230 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 20% 15%;
+
+    --muted: 220 15% 95%;
+    --muted-foreground: 230 12% 45%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 230 60% 35%;
+
+    /* Semantic Colors with Vietnamese Industrial twist */
+    --success: 150 70% 40%; /* Jade green */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 95% 50%; /* Golden amber */
+    --warning-foreground: 230 60% 15%;
+
+    --destructive: 0 75% 50%; /* Lacquer red */
+    --destructive-foreground: 0 0% 100%;
+
+    --info: 200 85% 45%; /* Ceramic blue */
+    --info-foreground: 0 0% 100%;
+
+    /* Manufacturing Control Panel Colors */
+    --panel-dark: 230 25% 12%;
+    --panel-medium: 230 20% 20%;
+    --panel-border: 230 15% 30%;
+    --panel-highlight: 45 95% 50%;
+
+    /* Status Indicator Colors */
+    --status-active: 150 70% 45%;
+    --status-processing: 200 85% 50%;
+    --status-warning: 45 95% 55%;
+    --status-error: 0 75% 55%;
+    --status-inactive: 220 10% 60%;
+
+    /* Confidence Level Colors */
+    --confidence-high: 150 70% 40%;
+    --confidence-medium: 45 95% 50%;
+    --confidence-low: 0 75% 50%;
+  }
+
+  .dark {
+    /* Dark Mode - Industrial Night Shift Theme */
+    --background: 230 25% 8%;
+    --foreground: 220 15% 95%;
+
+    --card: 230 20% 12%;
+    --card-foreground: 220 15% 95%;
+
+    --primary: 230 60% 55%;
+    --primary-foreground: 230 25% 8%;
+
+    --accent: 45 95% 60%;
+    --accent-foreground: 230 25% 8%;
+
+    --muted: 230 20% 18%;
+    --muted-foreground: 220 12% 65%;
+
+    --border: 230 20% 22%;
+    --input: 230 20% 22%;
+    --ring: 230 60% 55%;
+
+    --success: 150 70% 50%;
+    --warning: 45 95% 60%;
+    --destructive: 0 75% 60%;
+    --info: 200 85% 55%;
+  }
+}
+
+@layer components {
+  /* Industrial Panel Styling */
+  .industrial-panel {
+    @apply rounded-lg border-2 p-6 shadow-xl;
+    border-color: hsl(var(--panel-border));
+    background-color: hsl(var(--panel-medium));
+  }
+
+  .industrial-panel-header {
+    @apply mb-4 flex items-center justify-between border-b-2 pb-3;
+    border-color: hsl(var(--panel-border));
+  }
+
+  /* Status Indicators with Industrial Feel */
+  .status-indicator {
+    @apply relative inline-flex h-3 w-3 rounded-full;
+  }
+
+  .status-indicator::before {
+    content: '';
+    @apply absolute inset-0 animate-ping rounded-full opacity-75;
+  }
+
+  .status-active {
+    background-color: hsl(var(--status-active));
+  }
+
+  .status-active::before {
+    background-color: hsl(var(--status-active));
+  }
+
+  .status-processing {
+    background-color: hsl(var(--status-processing));
+  }
+
+  .status-processing::before {
+    background-color: hsl(var(--status-processing));
+  }
+
+  .status-warning {
+    background-color: hsl(var(--status-warning));
+  }
+
+  .status-warning::before {
+    background-color: hsl(var(--status-warning));
+  }
+
+  /* Manufacturing Metrics Display */
+  .metric-card {
+    @apply flex flex-col rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md;
+  }
+
+  .metric-value {
+    @apply text-4xl font-bold text-primary;
+  }
+
+  .metric-label {
+    @apply mt-2 text-sm font-medium text-muted-foreground;
+  }
+
+  /* Processing Stage Timeline */
+  .stage-timeline {
+    @apply relative flex items-center justify-between;
+  }
+
+  .stage-timeline::before {
+    content: '';
+    @apply absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-border;
+    z-index: 0;
+  }
+
+  .stage-node {
+    @apply relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-4 border-background bg-card shadow-lg transition-all;
+  }
+
+  .stage-node.completed {
+    @apply text-white;
+    border-color: hsl(var(--success));
+    background-color: hsl(var(--success));
+  }
+
+  .stage-node.active {
+    @apply border-primary bg-primary text-white shadow-lg;
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.5);
+  }
+
+  .stage-node.pending {
+    @apply border-muted bg-muted text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  /* Vietnamese Industrial Typography Utilities */
+  .font-heading {
+    font-family: var(--font-ibm-plex), var(--font-inter), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+
+  .font-body {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-mono-code {
+    font-family: var(--font-jetbrains), 'Courier New', monospace;
+    letter-spacing: -0.01em;
+  }
+
+  /* Industrial Grid System */
+  .industrial-grid {
+    @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  /* Confidence Color Utilities */
+  .confidence-high {
+    color: hsl(var(--confidence-high));
+  }
+
+  .confidence-medium {
+    color: hsl(var(--confidence-medium));
+  }
+
+  .confidence-low {
+    color: hsl(var(--confidence-low));
+  }
+
+  /* Edge-to-edge Layout */
+  .edge-to-edge {
+    @apply h-screen w-screen overflow-hidden;
+  }
+
+  .workflow-canvas {
+    @apply h-full w-full overflow-auto bg-background;
+  }
+}
+
+/* Custom Animations for Industrial Feel */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px currentColor;
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 20px currentColor;
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-scan {
+  animation: scan-line 2s linear infinite;
+}
+
+/* Processing Stage Pulse Animation */
+@keyframes processing-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.animate-processing {
+  animation: processing-pulse 1.5s ease-in-out infinite;
+}

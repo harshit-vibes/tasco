@@ -1,6 +1,6 @@
 // Client
 export { createLyzrClient, LyzrClient } from "./client";
-export type { LyzrConfig, ChatMessage, ChatResponse } from "./client";
+export type { LyzrConfig, ChatMessage, ChatResponse, ValidationResult } from "./client";
 
 // Hooks
 export { useChat, usePersistentChat } from "./hooks";

@@ -1,0 +1,188 @@
+{
+  "appTitle": "Learning Factory",
+  "appSubtitle": "Tasco Insurance Training",
+  "appDescription": "AI-powered e-learning platform for insurance training",
+
+  "branding": {
+    "name": "Learning Factory",
+    "tagline": "Tasco Insurance Training",
+    "aiStatus": "AI Online",
+    "aiPowered": "AI-Powered Learning"
+  },
+
+  "nav": {
+    "learn": "Learn",
+    "dashboard": "Dashboard",
+    "dashboardDesc": "Your learning home",
+    "courses": "Courses",
+    "coursesDesc": "Browse all courses",
+    "progress": "Progress",
+    "progressDesc": "Track achievements",
+    "aiAssistant": "AI Assistant",
+    "askAi": "Ask AI",
+    "askAiDesc": "Get instant help",
+    "createCourse": "Create Course",
+    "createCourseDesc": "Build with AI",
+    "newConversation": "New Conversation",
+    "recentChats": "Recent Chats",
+    "continueLearning": "Continue Learning"
+  },
+
+  "stats": {
+    "completed": "Completed",
+    "available": "Available",
+    "coursesAvailable": "Courses Available",
+    "coursesCompleted": "Completed",
+    "quizzesPassed": "Quizzes Passed",
+    "learningTime": "Learning Time",
+    "active": "Active",
+    "modules": "{{count}} modules",
+    "complete": "{{percent}}% complete"
+  },
+
+  "hero": {
+    "badge": "AI-Powered Learning",
+    "titleLine1": "Your Learning",
+    "titleLine2": "Journey Awaits",
+    "description": "Master insurance products, claims processing, and compliance through interactive courses and AI-assisted learning. Ask questions, take quizzes, and track your progress.",
+    "askAssistant": "Ask AI Assistant",
+    "browseCourses": "Browse Courses",
+    "welcomeBack": "Welcome back to your learning journey"
+  },
+
+  "courses": {
+    "title": "Featured Courses",
+    "subtitle": "Start Learning",
+    "viewAll": "View All",
+    "modules": "{{count}} modules",
+    "lessons": "{{count}} lessons",
+    "featured": "Featured",
+    "noCourses": "No courses available yet",
+    "noCoursesDesc": "Courses will appear here once they are created and published.",
+    "createFirst": "Create Your First Course",
+    "filterAll": "All Courses",
+    "filterBeginner": "Beginner",
+    "filterIntermediate": "Intermediate",
+    "filterAdvanced": "Advanced"
+  },
+
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+
+  "assistant": {
+    "title": "Have Questions? Ask Our AI",
+    "subtitle": "Instant Help",
+    "description": "Our AI assistant is trained on all insurance training materials and can help you understand complex topics, answer questions, and guide your learning journey.",
+    "startConversation": "Start a Conversation"
+  },
+
+  "chat": {
+    "title": "AI Learning Assistant",
+    "description": "Ask questions about insurance products, claims, or compliance",
+    "newChat": "New conversation"
+  },
+
+  "suggestedQuestions": {
+    "motorInsurance": "What is covered under a standard motor insurance policy?",
+    "claimProcess": "How do I process a motor insurance claim?",
+    "regulations": "What are the key regulatory requirements for insurance agents?"
+  },
+
+  "create": {
+    "title": "Create Course",
+    "describeTitle": "Describe Your Course",
+    "describeSubtitle": "Tell us what kind of training course you want to create for Tasco Insurance employees.",
+    "requirementLabel": "What course do you want to create?",
+    "requirementPlaceholder": "E.g., Create a beginner course on motor insurance for new sales agents that covers product knowledge, pricing, and customer objection handling...",
+    "polishButton": "Polish with AI",
+    "polishing": "Polishing...",
+    "repolish": "Re-polish",
+    "repolishing": "Re-polishing...",
+    "aiEnhanced": "AI-Enhanced Requirement",
+    "exampleHint": "Example requirements:",
+    "examples": {
+      "motor": "Create a beginner course on motor insurance basics for new sales agents",
+      "risk": "Build an advanced training on risk assessment and underwriting for senior underwriters",
+      "compliance": "Design a compliance training covering regulatory requirements for all employees",
+      "customer": "Make a customer service course teaching claim handling procedures"
+    }
+  },
+
+  "publish": {
+    "ready": "Your Course is Ready!",
+    "reviewSubtitle": "Review and publish your course to the library.",
+    "modules": "{{count}} modules",
+    "lessons": "{{count}} lessons",
+    "modulesAndLessons": "{{modules}} modules · {{lessons}} lessons",
+    "quizQuestions": "{{count}} quiz questions",
+    "duration": "~{{minutes}} minutes",
+    "level": "{{level}}",
+    "courseModules": "Course Modules",
+    "preview": "Preview",
+    "createAnother": "Create Another",
+    "publishCourse": "Publish Course",
+    "publishNote": "Once published, this course will be available in the course library for all employees to access. You can edit or unpublish it later from the library."
+  },
+
+  "header": {
+    "dashboard": "Dashboard",
+    "dashboardSubtitle": "Welcome back to your learning journey",
+    "courseLibrary": "Course Library",
+    "courseLibrarySubtitle": "Explore and start learning",
+    "myProgress": "My Progress",
+    "myProgressSubtitle": "Track your achievements",
+    "aiAssistant": "AI Assistant",
+    "aiAssistantSubtitle": "Ask anything about insurance",
+    "createCourse": "Create Course",
+    "createCourseSubtitle": "Build with AI assistance",
+    "courseDetails": "Course Details",
+    "courseDetailsSubtitle": "View curriculum and progress",
+    "module": "Module",
+    "moduleSubtitle": "Lesson content and quiz",
+    "breadcrumbs": {
+      "courses": "Courses",
+      "course": "Course"
+    }
+  },
+
+  "coursesPage": {
+    "title": "Course",
+    "titleAccent": "Library",
+    "subtitle": "Explore our comprehensive collection of insurance training courses. From fundamentals to advanced topics, find the perfect course for your learning journey.",
+    "searchPlaceholder": "Search courses by title or topic...",
+    "coursesAvailable": "{{count}} Courses Available",
+    "allCourses": "All Courses",
+    "featured": "Featured",
+    "startLearning": "Start Learning",
+    "modules": "{{count}} modules",
+    "minutes": "{{count}} min",
+    "notStarted": "Not started",
+    "noCoursesFound": "No courses found",
+    "noCoursesFoundEmpty": "There are no courses available yet. Check back later or create a new course.",
+    "noCoursesFoundFiltered": "We couldn't find any courses matching your search criteria. Try adjusting your filters or search terms.",
+    "clearFilters": "Clear all filters",
+    "failedToLoad": "Failed to load courses",
+    "loading": "Loading..."
+  },
+
+  "errors": {
+    "loadingCourses": "Error loading courses",
+    "tryAgain": "Try Again"
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
+  }
+}

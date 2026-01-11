@@ -1,1 +1,534 @@
-@import "@tasco/ui/globals.css";
+/* ============================================
+   CUSTOMER LIFECYCLE - LUXURY AUTOMOTIVE THEME
+   A bold, premium aesthetic inspired by
+   luxury automotive showroom experiences
+   ============================================ */
+
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:root {
+  /* Brand Colors - Automotive Luxury */
+  --brand-violet: 263 70% 50%;
+  --brand-cyan: 186 91% 43%;
+  --brand-slate: 222 47% 11%;
+
+  /* Semantic Colors */
+  --color-success: 160 84% 39%;
+  --color-warning: 35 92% 51%;
+  --color-danger: 346 84% 50%;
+  --color-info: 199 89% 48%;
+
+  /* Surface Colors */
+  --surface-elevated: 0 0% 100%;
+  --surface-sunken: 220 14% 96%;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 40px -10px hsl(var(--brand-violet) / 0.3);
+
+  /* Animation Timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, hsl(var(--brand-violet)) 0%, hsl(280 70% 40%) 100%);
+  --gradient-surface: linear-gradient(180deg, hsl(var(--surface-elevated)) 0%, hsl(var(--surface-sunken)) 100%);
+  --gradient-glow: radial-gradient(ellipse at center, hsl(var(--brand-violet) / 0.15) 0%, transparent 70%);
+}
+
+.dark {
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --surface-elevated: 222 47% 11%;
+  --surface-sunken: 222 47% 7%;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display Typography */
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   GRADIENT BACKGROUNDS
+   ============================================ */
+.bg-gradient-brand {
+  background: var(--gradient-brand);
+}
+
+.bg-gradient-surface {
+  background: var(--gradient-surface);
+}
+
+.bg-mesh {
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(at 40% 20%, hsl(var(--brand-violet) / 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, hsl(var(--brand-cyan) / 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, hsl(var(--brand-violet) / 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, hsl(var(--brand-cyan) / 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsl(var(--brand-violet) / 0.08) 0px, transparent 50%);
+}
+
+.dark .bg-mesh {
+  background-image:
+    radial-gradient(at 40% 20%, hsl(var(--brand-violet) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, hsl(var(--brand-cyan) / 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, hsl(var(--brand-violet) / 0.1) 0px, transparent 50%);
+}
+
+/* ============================================
+   CARD VARIANTS
+   ============================================ */
+.card-elevated {
+  background: hsl(var(--card));
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow-md);
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card-interactive {
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.card-interactive:hover {
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  transform: translateY(-4px);
+  border-color: hsl(var(--brand-violet) / 0.3);
+}
+
+.card-interactive:active {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   KPI STAT CARDS
+   ============================================ */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 8px);
+  padding: 1.5rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card-value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card-icon {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  width: 64px;
+  height: 64px;
+  opacity: 0.1;
+}
+
+/* ============================================
+   PRIORITY BADGES
+   ============================================ */
+.badge-hot {
+  background: linear-gradient(135deg, hsl(346 84% 60%) 0%, hsl(346 84% 50%) 100%);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px hsl(346 84% 50% / 0.3);
+}
+
+.badge-warm {
+  background: linear-gradient(135deg, hsl(35 92% 60%) 0%, hsl(35 92% 51%) 100%);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px hsl(35 92% 51% / 0.3);
+}
+
+.badge-cold {
+  background: linear-gradient(135deg, hsl(199 89% 58%) 0%, hsl(199 89% 48%) 100%);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px hsl(199 89% 48% / 0.3);
+}
+
+/* ============================================
+   SEGMENT BADGES
+   ============================================ */
+.badge-vip {
+  background: linear-gradient(135deg, hsl(280 70% 60%) 0%, hsl(280 70% 45%) 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.badge-at-risk {
+  background: linear-gradient(135deg, hsl(35 92% 60%) 0%, hsl(20 90% 50%) 100%);
+  color: white;
+  font-weight: 600;
+}
+
+/* ============================================
+   SCORE RING
+   ============================================ */
+.score-ring {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.score-ring-bg {
+  stroke: hsl(var(--muted));
+  fill: none;
+  stroke-width: 6;
+}
+
+.score-ring-fill {
+  stroke: url(#score-gradient);
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1s var(--ease-out-expo);
+}
+
+.score-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--brand-violet) / 0.2); }
+  50% { box-shadow: 0 0 40px hsl(var(--brand-violet) / 0.4); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Animation Classes */
+.animate-fade-in { animation: fade-in 0.5s var(--ease-out-expo) forwards; }
+.animate-fade-in-up { animation: fade-in-up 0.6s var(--ease-out-expo) forwards; }
+.animate-fade-in-down { animation: fade-in-down 0.4s var(--ease-out-expo) forwards; }
+.animate-slide-in-left { animation: slide-in-left 0.5s var(--ease-out-expo) forwards; }
+.animate-slide-in-right { animation: slide-in-right 0.5s var(--ease-out-expo) forwards; }
+.animate-scale-in { animation: scale-in 0.3s var(--ease-out-expo) forwards; }
+.animate-count-up { animation: count-up 0.6s var(--ease-out-expo) forwards; }
+.animate-shimmer { background: linear-gradient(90deg, transparent, hsl(var(--muted) / 0.5), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* Staggered Delays */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+
+/* ============================================
+   SIDEBAR STYLES
+   ============================================ */
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.sidebar-nav-item:hover {
+  background: hsl(var(--muted) / 0.5);
+  color: hsl(var(--foreground));
+}
+
+.sidebar-nav-item.active {
+  background: var(--gradient-brand);
+  color: white;
+  box-shadow: var(--shadow-md), 0 4px 14px hsl(var(--brand-violet) / 0.3);
+}
+
+.sidebar-nav-item.active:hover {
+  box-shadow: var(--shadow-lg), 0 6px 20px hsl(var(--brand-violet) / 0.4);
+}
+
+/* ============================================
+   CHURN RISK BAR
+   ============================================ */
+.churn-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: hsl(var(--muted));
+  overflow: hidden;
+}
+
+.churn-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s var(--ease-out-expo);
+}
+
+.churn-bar-fill.low { background: linear-gradient(90deg, hsl(var(--color-success)) 0%, hsl(160 84% 50%) 100%); }
+.churn-bar-fill.medium { background: linear-gradient(90deg, hsl(var(--color-warning)) 0%, hsl(35 92% 60%) 100%); }
+.churn-bar-fill.high { background: linear-gradient(90deg, hsl(var(--color-danger)) 0%, hsl(346 84% 60%) 100%); }
+
+/* ============================================
+   TIMELINE
+   ============================================ */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, hsl(var(--brand-violet)) 0%, hsl(var(--brand-violet) / 0.3) 100%);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.625rem;
+  top: 0.25rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: hsl(var(--brand-violet));
+  border: 2px solid hsl(var(--background));
+  box-shadow: 0 0 0 3px hsl(var(--brand-violet) / 0.2);
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.text-gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   QUICK ACTION CARDS
+   ============================================ */
+.quick-action {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 4px);
+  padding: 1.25rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.quick-action::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 80px;
+  height: 80px;
+  background: hsl(var(--brand-violet) / 0.05);
+  border-radius: 50%;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.quick-action:hover {
+  border-color: hsl(var(--brand-violet) / 0.3);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.quick-action:hover::after {
+  transform: scale(1.5);
+  background: hsl(var(--brand-violet) / 0.1);
+}
+
+/* ============================================
+   AI INSIGHT CARD
+   ============================================ */
+.ai-insight {
+  position: relative;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, hsl(var(--brand-violet) / 0.05) 0%, hsl(var(--brand-cyan) / 0.05) 100%);
+  border: 1px solid hsl(var(--brand-violet) / 0.1);
+}
+
+.ai-insight::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background: var(--gradient-brand);
+  border-radius: 1px;
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+@media (max-width: 768px) {
+  .stat-card-value { font-size: 2rem; }
+  .hide-mobile { display: none; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop { display: none; }
+}

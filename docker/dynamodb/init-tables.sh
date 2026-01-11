@@ -46,6 +46,32 @@ aws dynamodb create-table \
   --billing-mode PAY_PER_REQUEST \
   2>/dev/null || echo "Documents table already exists"
 
+# Notifications table - for activity notifications
+aws dynamodb create-table \
+  --endpoint-url $ENDPOINT \
+  --table-name tasco-notifications \
+  --attribute-definitions \
+    AttributeName=pk,AttributeType=S \
+    AttributeName=sk,AttributeType=S \
+  --key-schema \
+    AttributeName=pk,KeyType=HASH \
+    AttributeName=sk,KeyType=RANGE \
+  --billing-mode PAY_PER_REQUEST \
+  2>/dev/null || echo "tasco-notifications table already exists"
+
+# App Guides table - for feature showcase / help carousel
+aws dynamodb create-table \
+  --endpoint-url $ENDPOINT \
+  --table-name tasco-app-guides \
+  --attribute-definitions \
+    AttributeName=pk,AttributeType=S \
+    AttributeName=sk,AttributeType=S \
+  --key-schema \
+    AttributeName=pk,KeyType=HASH \
+    AttributeName=sk,KeyType=RANGE \
+  --billing-mode PAY_PER_REQUEST \
+  2>/dev/null || echo "tasco-app-guides table already exists"
+
 echo "Listing tables..."
 aws dynamodb list-tables --endpoint-url $ENDPOINT
 

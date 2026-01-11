@@ -12,8 +12,10 @@ import {
 } from "@tasco/ui";
 import { Key, Check, Eye, EyeOff } from "@tasco/ui/icons";
 import { useSettings } from "@tasco/lyzr";
+import { useTranslation } from "@tasco/i18n";
 
 export default function SettingsPage() {
+  const { t } = useTranslation("compliance");
   const { settings, updateSettings } = useSettings();
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [showApiKey, setShowApiKey] = useState(false);
@@ -31,10 +33,10 @@ export default function SettingsPage() {
 
   return (
     <div className="flex h-full flex-col p-6 overflow-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-sm text-muted-foreground">
-          Configure your Compliance QA system
+      <div className="mb-6 page-header">
+        <h1 className="text-3xl">{t("settings.title")}</h1>
+        <p className="text-muted-foreground mt-1">
+          {t("settings.description")}
         </p>
       </div>
 

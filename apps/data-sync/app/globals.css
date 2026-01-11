@@ -1,1 +1,433 @@
 @import "@tasco/ui/globals.css";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Data Sync - Industrial Data Flow Aesthetic
+ * Inspired by: Control rooms, network monitoring, data pipelines
+ * Typography: JetBrains Mono (technical) + DM Sans (readable)
+ */
+
+@layer base {
+  :root {
+    /* Data Sync Custom Theme - Dark Mode First (Industrial) */
+    --ds-background: 220 20% 6%;
+    --ds-surface: 220 18% 10%;
+    --ds-surface-elevated: 220 16% 14%;
+    --ds-border: 220 14% 18%;
+
+    /* Data Flow Colors */
+    --ds-flow-primary: 168 84% 50%;     /* Cyan - Active data */
+    --ds-flow-success: 142 76% 46%;     /* Green - Synced */
+    --ds-flow-warning: 38 92% 58%;      /* Amber - Delayed */
+    --ds-flow-danger: 0 84% 60%;        /* Red - Error */
+    --ds-flow-info: 217 91% 60%;        /* Blue - Info */
+
+    /* Accent gradients */
+    --ds-gradient-flow: linear-gradient(135deg, hsl(168 84% 50%) 0%, hsl(217 91% 60%) 100%);
+    --ds-gradient-alert: linear-gradient(135deg, hsl(38 92% 58%) 0%, hsl(0 84% 60%) 100%);
+
+    /* Text */
+    --ds-text-primary: 220 14% 96%;
+    --ds-text-secondary: 220 10% 60%;
+    --ds-text-muted: 220 8% 40%;
+
+    /* Glow effects */
+    --ds-glow-cyan: 0 0 20px hsl(168 84% 50% / 0.3);
+    --ds-glow-green: 0 0 20px hsl(142 76% 46% / 0.3);
+    --ds-glow-amber: 0 0 20px hsl(38 92% 58% / 0.3);
+    --ds-glow-red: 0 0 20px hsl(0 84% 60% / 0.3);
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: hsl(var(--ds-background));
+    color: hsl(var(--ds-text-primary));
+  }
+
+  /* Override shadcn defaults for dark industrial look */
+  .dark, :root {
+    --background: var(--ds-background);
+    --foreground: var(--ds-text-primary);
+    --card: var(--ds-surface);
+    --card-foreground: var(--ds-text-primary);
+    --popover: var(--ds-surface-elevated);
+    --popover-foreground: var(--ds-text-primary);
+    --primary: var(--ds-flow-primary);
+    --primary-foreground: 220 20% 6%;
+    --secondary: var(--ds-surface-elevated);
+    --secondary-foreground: var(--ds-text-primary);
+    --muted: var(--ds-surface);
+    --muted-foreground: var(--ds-text-secondary);
+    --accent: var(--ds-surface-elevated);
+    --accent-foreground: var(--ds-text-primary);
+    --destructive: var(--ds-flow-danger);
+    --destructive-foreground: var(--ds-text-primary);
+    --border: var(--ds-border);
+    --input: var(--ds-border);
+    --ring: var(--ds-flow-primary);
+  }
+}
+
+@layer components {
+  /* Monospace elements */
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Data grid background pattern */
+  .ds-grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--ds-border) / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--ds-border) / 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Scanline effect */
+  .ds-scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--ds-background) / 0.03) 2px,
+      hsl(var(--ds-background) / 0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* Glowing border cards */
+  .ds-card {
+    background: hsl(var(--ds-surface));
+    border: 1px solid hsl(var(--ds-border));
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ds-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--ds-gradient-flow);
+    opacity: 0.6;
+  }
+
+  .ds-card-success::before {
+    background: hsl(var(--ds-flow-success));
+  }
+
+  .ds-card-warning::before {
+    background: hsl(var(--ds-flow-warning));
+  }
+
+  .ds-card-danger::before {
+    background: hsl(var(--ds-flow-danger));
+  }
+
+  /* Status indicators with pulse */
+  .ds-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .ds-status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    animation: ds-pulse 2s ease-out infinite;
+  }
+
+  .ds-status-connected {
+    background: hsl(var(--ds-flow-success));
+    box-shadow: var(--ds-glow-green);
+  }
+
+  .ds-status-connected::after {
+    background: hsl(var(--ds-flow-success) / 0.4);
+  }
+
+  .ds-status-delayed {
+    background: hsl(var(--ds-flow-warning));
+    box-shadow: var(--ds-glow-amber);
+  }
+
+  .ds-status-delayed::after {
+    background: hsl(var(--ds-flow-warning) / 0.4);
+  }
+
+  .ds-status-error {
+    background: hsl(var(--ds-flow-danger));
+    box-shadow: var(--ds-glow-red);
+  }
+
+  .ds-status-error::after {
+    background: hsl(var(--ds-flow-danger) / 0.4);
+  }
+
+  /* Data flow animation */
+  .ds-flow-line {
+    position: relative;
+    height: 2px;
+    background: hsl(var(--ds-border));
+    overflow: hidden;
+  }
+
+  .ds-flow-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--ds-flow-primary)), transparent);
+    animation: ds-flow 2s ease-in-out infinite;
+  }
+
+  /* Metric display */
+  .ds-metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ds-metric-large {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1;
+    background: var(--ds-gradient-flow);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Navigation pill */
+  .ds-nav-item {
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    color: hsl(var(--ds-text-secondary));
+  }
+
+  .ds-nav-item:hover {
+    color: hsl(var(--ds-text-primary));
+    background: hsl(var(--ds-surface-elevated));
+  }
+
+  .ds-nav-item.active {
+    color: hsl(var(--ds-flow-primary));
+    background: hsl(var(--ds-flow-primary) / 0.1);
+  }
+
+  .ds-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: hsl(var(--ds-flow-primary));
+    border-radius: 1px;
+  }
+
+  /* Alert severity badges */
+  .ds-severity-critical {
+    background: hsl(var(--ds-flow-danger) / 0.15);
+    color: hsl(var(--ds-flow-danger));
+    border: 1px solid hsl(var(--ds-flow-danger) / 0.3);
+  }
+
+  .ds-severity-high {
+    background: hsl(38 92% 58% / 0.15);
+    color: hsl(38 92% 68%);
+    border: 1px solid hsl(38 92% 58% / 0.3);
+  }
+
+  .ds-severity-medium {
+    background: hsl(var(--ds-flow-warning) / 0.15);
+    color: hsl(var(--ds-flow-warning));
+    border: 1px solid hsl(var(--ds-flow-warning) / 0.3);
+  }
+
+  .ds-severity-low {
+    background: hsl(var(--ds-flow-info) / 0.15);
+    color: hsl(var(--ds-flow-info));
+    border: 1px solid hsl(var(--ds-flow-info) / 0.3);
+  }
+
+  /* Chat bubbles */
+  .ds-chat-user {
+    background: hsl(var(--ds-flow-primary) / 0.15);
+    border: 1px solid hsl(var(--ds-flow-primary) / 0.3);
+    border-radius: 16px 16px 4px 16px;
+  }
+
+  .ds-chat-assistant {
+    background: hsl(var(--ds-surface-elevated));
+    border: 1px solid hsl(var(--ds-border));
+    border-radius: 16px 16px 16px 4px;
+  }
+
+  /* Button variants */
+  .ds-btn-glow {
+    position: relative;
+    background: hsl(var(--ds-flow-primary));
+    color: hsl(var(--ds-background));
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .ds-btn-glow:hover {
+    box-shadow: var(--ds-glow-cyan);
+    transform: translateY(-1px);
+  }
+
+  /* Onboarding spotlight */
+  .ds-spotlight {
+    position: relative;
+    z-index: 50;
+  }
+
+  .ds-spotlight::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 2px solid hsl(var(--ds-flow-primary));
+    border-radius: 12px;
+    animation: ds-spotlight-pulse 2s ease-in-out infinite;
+  }
+
+  /* Progress bar */
+  .ds-progress {
+    height: 4px;
+    background: hsl(var(--ds-border));
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .ds-progress-fill {
+    height: 100%;
+    background: var(--ds-gradient-flow);
+    transition: width 0.5s ease;
+  }
+
+  /* Tooltip arrow */
+  .ds-tooltip {
+    background: hsl(var(--ds-surface-elevated));
+    border: 1px solid hsl(var(--ds-border));
+    border-radius: 8px;
+    box-shadow: 0 8px 32px hsl(0 0% 0% / 0.4);
+  }
+}
+
+@layer utilities {
+  .text-gradient-flow {
+    background: var(--ds-gradient-flow);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-glow-cyan {
+    border-color: hsl(var(--ds-flow-primary) / 0.5);
+    box-shadow: inset 0 0 20px hsl(var(--ds-flow-primary) / 0.1);
+  }
+
+  .animate-flow {
+    animation: ds-flow 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: ds-pulse 2s ease-out infinite;
+  }
+}
+
+@keyframes ds-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes ds-flow {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes ds-spotlight-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Page transitions */
+@keyframes ds-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ds-page-enter {
+  animation: ds-fade-in 0.4s ease-out;
+}
+
+/* Staggered children animation */
+.ds-stagger > * {
+  animation: ds-fade-in 0.4s ease-out backwards;
+}
+
+.ds-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.ds-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.ds-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.ds-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.ds-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.ds-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.ds-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.ds-stagger > *:nth-child(8) { animation-delay: 350ms; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--ds-background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--ds-border));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--ds-text-muted));
+}

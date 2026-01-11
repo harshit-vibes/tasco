@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "Customer Lifecycle",
+    "company": "Tasco Auto",
+    "version": "Version {{version}}",
+    "tagline": "Innovation Day Demo"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "leads": "Leads",
+    "customers": "Customers",
+    "marketing": "Marketing",
+    "analytics": "Analytics",
+    "chat": "AI Assistant",
+    "settings": "Settings"
+  },
+  "actions": {
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "refresh": "Refresh",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "view_all": "View All",
+    "take_action": "Take Action",
+    "loading": "Loading...",
+    "no_results": "No results found"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "placeholder_leads": "Search by name, email, or phone...",
+    "placeholder_customers": "Search by name, email, or phone...",
+    "placeholder_campaigns": "Search campaigns..."
+  },
+  "entity": {
+    "placeholder_single": "Select showroom...",
+    "placeholder_multi": "Select showrooms..."
+  },
+  "common": {
+    "all": "All",
+    "total": "Total",
+    "new": "New",
+    "active": "Active",
+    "today": "today",
+    "score": "Score",
+    "confidence": "confidence",
+    "conversion_rate": "conversion rate",
+    "high_value": "high value",
+    "retention": "retention",
+    "action_needed": "Action needed"
+  }
+}

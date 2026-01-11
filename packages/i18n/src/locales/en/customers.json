@@ -1,0 +1,51 @@
+{
+  "title": "Customer 360",
+  "description": "Complete lifecycle tracking and customer insights",
+  "segment": {
+    "all": "All Segments",
+    "vip": "VIP",
+    "regular": "Regular",
+    "at-risk": "At Risk",
+    "new": "New"
+  },
+  "stage": {
+    "all": "All Stages",
+    "prospect": "Prospect",
+    "active": "Active",
+    "loyal": "Loyal",
+    "at-risk": "At Risk",
+    "churned": "Churned"
+  },
+  "sort": {
+    "lifetimeValue": "Lifetime Value",
+    "lastActivityAt": "Last Activity",
+    "createdAt": "Date Joined",
+    "name": "Name"
+  },
+  "labels": {
+    "segment": "Segment",
+    "stage": "Stage",
+    "lifetime_value": "Lifetime Value",
+    "total_purchases": "Total Purchases",
+    "average_order_value": "Average Order Value",
+    "churn_risk": "Churn Risk",
+    "satisfaction_score": "Satisfaction Score",
+    "last_activity": "Last Activity",
+    "first_purchase": "First Purchase",
+    "last_purchase": "Last Purchase",
+    "preferred_brands": "Preferred Brands",
+    "communication_channels": "Communication Channels",
+    "service_interests": "Service Interests"
+  },
+  "actions": {
+    "view_profile": "View Profile",
+    "contact": "Contact",
+    "add_interaction": "Add Interaction",
+    "view_purchases": "View Purchases"
+  },
+  "insights": {
+    "recommended_actions": "Recommended Actions",
+    "at_risk_warning": "This customer is at risk of churning",
+    "vip_badge": "VIP Customer"
+  }
+}

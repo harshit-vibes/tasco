@@ -1,0 +1,280 @@
+{
+  "appTitle": "Radar Rủi Ro",
+  "appDescription": "Giám sát rủi ro và lợi nhuận được hỗ trợ bởi AI cho Tasco Insurance",
+  "appSubtitle": "Thông Tin Rủi Ro Thời Gian Thực",
+
+  "nav": {
+    "dashboard": "Tổng Quan",
+    "alerts": "Cảnh Báo",
+    "analysis": "Phân Tích",
+    "assistant": "Trợ Lý AI",
+    "settings": "Cài Đặt"
+  },
+
+  "dashboard": {
+    "title": "Tổng Quan Rủi Ro",
+    "subtitle": "Giám sát thời gian thực trên tất cả sản phẩm bảo hiểm",
+    "welcome": "Chào mừng trở lại",
+    "lastUpdated": "Cập nhật lần cuối",
+    "viewAll": "Xem Tất Cả",
+    "noData": "Không có dữ liệu",
+
+    "metrics": {
+      "lossRatio": "Tỷ Lệ Tổn Thất",
+      "lossRatioDesc": "Bồi thường so với phí thu được",
+      "lossRatioTooltip": "Tỷ lệ bồi thường so với phí thu được. Càng thấp càng tốt. Mục tiêu: dưới 65%",
+      "combinedRatio": "Tỷ Lệ Kết Hợp",
+      "combinedRatioDesc": "Tổng chi phí hoạt động bảo hiểm",
+      "combinedRatioTooltip": "Bồi thường + chi phí theo tỷ lệ phần trăm phí. Dưới 100% có nghĩa là hoạt động có lãi",
+      "premiums": "Phí Bảo Hiểm",
+      "premiumsDesc": "Tổng phí thu được trong kỳ",
+      "premiumsTooltip": "Tổng phí bảo hiểm thu được từ khách hàng trong kỳ",
+      "claims": "Bồi Thường",
+      "claimsDesc": "Tổng bồi thường đã thanh toán",
+      "claimsTooltip": "Tổng số tiền đã chi trả để giải quyết bồi thường. Theo dõi các đợt tăng đột biến",
+      "policies": "Hợp Đồng Hiện Hành",
+      "policiesDesc": "Số hợp đồng bảo hiểm đang hoạt động",
+      "profitMargin": "Biên Lợi Nhuận",
+      "profitMarginDesc": "Tỷ lệ lợi nhuận ròng",
+      "riskExposure": "Mức Độ Rủi Ro",
+      "riskExposureDesc": "Tổng trách nhiệm bảo hiểm",
+      "target": "Mục Tiêu"
+    },
+
+    "trends": {
+      "title": "Xu Hướng Hiệu Suất",
+      "subtitle": "Phân tích lịch sử và dự báo",
+      "period": "Kỳ",
+      "daily": "Hàng Ngày",
+      "weekly": "Hàng Tuần",
+      "monthly": "Hàng Tháng",
+      "quarterly": "Hàng Quý",
+      "vsLastPeriod": "so với kỳ trước",
+      "improving": "Cải thiện",
+      "declining": "Giảm sút",
+      "stable": "Ổn định"
+    },
+
+    "alerts": {
+      "title": "Cảnh Báo Gần Đây",
+      "subtitle": "Bất thường cần chú ý",
+      "viewAll": "Xem tất cả cảnh báo",
+      "noAlerts": "Không có cảnh báo",
+      "critical": "Nghiêm Trọng",
+      "warning": "Cảnh Báo",
+      "info": "Thông Tin",
+      "new": "Mới",
+      "acknowledged": "Đã Xác Nhận",
+      "investigating": "Đang Điều Tra",
+      "resolved": "Đã Giải Quyết"
+    },
+
+    "products": {
+      "title": "Theo Dòng Sản Phẩm",
+      "subtitle": "Phân tích hiệu suất theo loại bảo hiểm",
+      "motor": "Bảo Hiểm Xe Cơ Giới",
+      "health": "Bảo Hiểm Sức Khỏe",
+      "property": "Bảo Hiểm Tài Sản",
+      "life": "Bảo Hiểm Nhân Thọ",
+      "liability": "Bảo Hiểm Trách Nhiệm",
+      "marine": "Bảo Hiểm Hàng Hải",
+      "all": "Tất Cả Sản Phẩm"
+    }
+  },
+
+  "alerts": {
+    "title": "Cảnh Báo Rủi Ro",
+    "subtitle": "Hệ thống phát hiện bất thường và cảnh báo sớm",
+    "filters": "Bộ Lọc",
+    "clearFilters": "Xóa bộ lọc",
+    "search": "Tìm kiếm cảnh báo...",
+    "sortBy": "Sắp xếp theo",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "severity": "Mức độ",
+    "highestSeverity": "Nghiêm trọng nhất",
+    "totalAlerts": "Tổng Cảnh Báo",
+    "openAlerts": "Đang Mở",
+    "criticalAlerts": "Nghiêm Trọng",
+
+    "types": {
+      "all": "Tất Cả Loại",
+      "loss_ratio_spike": "Tỷ Lệ Tổn Thất Tăng Đột Biến",
+      "claim_surge": "Bồi Thường Tăng Vọt",
+      "premium_drop": "Phí Giảm",
+      "profitability_decline": "Lợi Nhuận Suy Giảm",
+      "concentration_risk": "Rủi Ro Tập Trung",
+      "fraud_suspected": "Nghi Ngờ Gian Lận",
+      "threshold_breach": "Vượt Ngưỡng"
+    },
+
+    "status": {
+      "all": "Tất Cả Trạng Thái",
+      "new": "Mới",
+      "acknowledged": "Đã Xác Nhận",
+      "investigating": "Đang Điều Tra",
+      "resolved": "Đã Giải Quyết",
+      "dismissed": "Đã Bỏ Qua"
+    },
+
+    "actions": {
+      "acknowledge": "Xác Nhận",
+      "investigate": "Bắt Đầu Điều Tra",
+      "resolve": "Đánh Dấu Đã Giải Quyết",
+      "dismiss": "Bỏ Qua",
+      "assignTo": "Giao Cho",
+      "viewDetails": "Xem Chi Tiết"
+    },
+
+    "card": {
+      "detected": "Phát hiện",
+      "metric": "Chỉ số",
+      "current": "Giá Trị Hiện Tại",
+      "expected": "Dự Kiến",
+      "deviation": "Độ Lệch",
+      "affectedPeriod": "Kỳ Bị Ảnh Hưởng"
+    },
+
+    "empty": {
+      "title": "Không tìm thấy cảnh báo",
+      "description": "Không có cảnh báo nào phù hợp với bộ lọc hiện tại",
+      "allClear": "Tất cả hệ thống hoạt động bình thường"
+    }
+  },
+
+  "analysis": {
+    "title": "Phân Tích Rủi Ro",
+    "subtitle": "Phân tích chuyên sâu các chỉ số hiệu suất",
+
+    "sections": {
+      "overview": "Tổng Quan",
+      "trends": "Xu Hướng",
+      "comparison": "So Sánh",
+      "breakdown": "Chi Tiết"
+    },
+
+    "filters": {
+      "entity": "Đơn Vị",
+      "product": "Sản Phẩm",
+      "period": "Kỳ",
+      "region": "Khu Vực",
+      "compare": "So sánh với"
+    },
+
+    "charts": {
+      "lossRatioTrend": "Xu Hướng Tỷ Lệ Tổn Thất",
+      "premiumVsClaims": "Phí vs Bồi Thường",
+      "productPerformance": "Hiệu Suất Sản Phẩm",
+      "regionBreakdown": "Phân Bổ Theo Khu Vực"
+    },
+
+    "metrics": {
+      "averageLossRatio": "Tỷ Lệ Tổn Thất TB",
+      "totalPremiums": "Tổng Phí",
+      "totalClaims": "Tổng Bồi Thường",
+      "claimsCount": "Số Vụ Bồi Thường",
+      "avgClaimSize": "Bồi Thường TB",
+      "policyCount": "Số Hợp Đồng"
+    }
+  },
+
+  "assistant": {
+    "title": "Trợ Lý AI Rủi Ro",
+    "subtitle": "Đặt câu hỏi về dữ liệu rủi ro và nhận thông tin ngay lập tức",
+    "placeholder": "Hỏi về tỷ lệ tổn thất, xu hướng bồi thường, lợi nhuận...",
+    "thinking": "Đang phân tích dữ liệu rủi ro...",
+
+    "suggestions": {
+      "title": "Câu Hỏi Gợi Ý",
+      "items": [
+        "Tỷ lệ tổn thất hiện tại theo khu vực là bao nhiêu?",
+        "Cho tôi xem các bất thường bồi thường tuần trước",
+        "Tại sao lợi nhuận giảm trong Q3?",
+        "Các yếu tố rủi ro hàng đầu tháng này là gì?",
+        "So sánh hiệu suất bảo hiểm xe vs sức khỏe"
+      ]
+    },
+
+    "empty": {
+      "title": "Bắt đầu cuộc trò chuyện",
+      "description": "Đặt câu hỏi về dữ liệu rủi ro bằng ngôn ngữ tự nhiên"
+    }
+  },
+
+  "settings": {
+    "title": "Cài Đặt",
+    "subtitle": "Cấu hình trải nghiệm Risk Radar của bạn",
+
+    "general": {
+      "title": "Chung",
+      "language": "Ngôn Ngữ",
+      "theme": "Giao Diện",
+      "dark": "Tối",
+      "light": "Sáng"
+    },
+
+    "api": {
+      "title": "Cấu Hình API",
+      "apiKey": "Khóa API Lyzr",
+      "apiKeyDesc": "Khóa API của bạn cho tính năng trợ lý AI",
+      "save": "Lưu Cấu Hình"
+    }
+  },
+
+  "guide": {
+    "welcome": {
+      "title": "Chào Mừng Đến Risk Radar",
+      "description": "Trung tâm điều khiển được hỗ trợ bởi AI để giám sát rủi ro bảo hiểm"
+    },
+    "dashboard": {
+      "title": "Bảng Điều Khiển Thời Gian Thực",
+      "description": "Theo dõi các chỉ số rủi ro quan trọng — tỷ lệ tổn thất, phí, bồi thường và lợi nhuận"
+    },
+    "alerts": {
+      "title": "Hệ Thống Cảnh Báo Thông Minh",
+      "description": "Phát hiện bất thường bằng AI cảnh báo bạn về các vấn đề tiềm ẩn trước khi chúng leo thang"
+    },
+    "analysis": {
+      "title": "Phân Tích Chuyên Sâu",
+      "description": "Đi sâu vào dữ liệu với biểu đồ tương tác và phân tích xu hướng"
+    },
+    "assistant": {
+      "title": "Trợ Lý AI",
+      "description": "Đặt câu hỏi bằng ngôn ngữ tự nhiên và nhận thông tin ngay từ dữ liệu của bạn"
+    }
+  },
+
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử Lại",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "close": "Đóng",
+    "search": "Tìm Kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "refresh": "Làm Mới",
+    "viewMore": "Xem Thêm",
+    "noResults": "Không tìm thấy kết quả"
+  },
+
+  "time": {
+    "today": "Hôm Nay",
+    "yesterday": "Hôm Qua",
+    "thisWeek": "Tuần Này",
+    "lastWeek": "Tuần Trước",
+    "thisMonth": "Tháng Này",
+    "lastMonth": "Tháng Trước",
+    "thisQuarter": "Quý Này",
+    "lastQuarter": "Quý Trước"
+  },
+
+  "entities": {
+    "select": "Chọn Đơn Vị",
+    "all": "Tất Cả Đơn Vị",
+    "tascoInsurance": "Tasco Insurance",
+    "tascoLife": "Tasco Life",
+    "tascoGeneral": "Tasco General"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "appTitle": "Data Sync",
+  "appDescription": "AI-powered sales and revenue data synchronization for Inochi",
+  "title": "Data Sync",
+  "description": "AI-powered sales and revenue data synchronization for Inochi",
+  "nav": {
+    "dashboard": "Dashboard",
+    "alerts": "Alerts",
+    "systems": "Systems",
+    "chat": "AI Assistant"
+  },
+  "dashboard": {
+    "title": "Sync Dashboard",
+    "subtitle": "Real-time data synchronization status for Inochi systems",
+    "refresh": "Refresh",
+    "syncNow": "Sync Now",
+    "systemStatus": "System Status",
+    "recentAlerts": "Recent Alerts",
+    "viewAll": "View All",
+    "syncSummary": "Sync Summary"
+  },
+  "metrics": {
+    "recordsSynced": "Records Synced Today",
+    "pendingSync": "Pending Sync",
+    "averageLatency": "Average Latency",
+    "systemUptime": "System Uptime",
+    "failed": "failed",
+    "throughput": "/min throughput",
+    "systemsOnline": "systems online"
+  },
+  "alerts": {
+    "title": "Sync Alerts",
+    "subtitle": "Monitor and resolve data synchronization discrepancies",
+    "openAlerts": "Open Alerts",
+    "investigating": "Investigating",
+    "critical": "Critical",
+    "highPriority": "High Priority",
+    "filters": "Filters",
+    "clearAll": "Clear All",
+    "status": "Status",
+    "severity": "Severity",
+    "system": "System",
+    "investigate": "Investigate",
+    "dismiss": "Dismiss",
+    "resolve": "Resolve",
+    "noAlerts": "No Active Alerts",
+    "allNormal": "All systems are syncing normally"
+  },
+  "systems": {
+    "title": "Connected Systems",
+    "subtitle": "Manage and monitor data source connections",
+    "configure": "Configure",
+    "totalSystems": "Total Systems",
+    "connected": "Connected",
+    "delayed": "Delayed",
+    "errors": "Errors",
+    "syncedToday": "Synced Today",
+    "pending": "Pending",
+    "latency": "Latency",
+    "lastSync": "Last Sync",
+    "syncFrequency": "Sync Frequency",
+    "timeout": "Timeout",
+    "apiEndpoint": "API Endpoint",
+    "testConnection": "Test Connection",
+    "testing": "Testing...",
+    "dataFlow": "Data Flow",
+    "dataFlowDesc": "How data synchronizes between systems"
+  },
+  "chat": {
+    "title": "Sync Assistant",
+    "subtitle": "Ask questions about sync status, discrepancies, and data issues",
+    "clearChat": "Clear Chat",
+    "howCanIHelp": "How can I help you?",
+    "helpDescription": "I can help you understand sync status, investigate discrepancies, and troubleshoot data synchronization issues.",
+    "tryAsking": "Try asking:",
+    "inputPlaceholder": "Ask about sync status, discrepancies, or data issues..."
+  },
+  "status": {
+    "connected": "Connected",
+    "delayed": "Delayed",
+    "disconnected": "Disconnected",
+    "error": "Error"
+  },
+  "severity": {
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "guide": {
+    "welcome": {
+      "title": "Welcome to Data Sync",
+      "description": "Your AI-powered data synchronization hub. Monitor real-time sync status across all your business systems and resolve discrepancies faster with intelligent assistance."
+    },
+    "dashboard": {
+      "title": "Sync Dashboard",
+      "description": "Get a bird's-eye view of all your connected systems. Track records synced, pending items, and system health at a glance."
+    },
+    "alerts": {
+      "title": "Smart Alerts",
+      "description": "Proactive notifications for data discrepancies, missing records, and sync failures. Filter by severity and system to prioritize what matters."
+    },
+    "systems": {
+      "title": "Connected Systems",
+      "description": "Manage your data pipelines. View connection status, latency metrics, and sync configuration for each integrated system."
+    },
+    "chat": {
+      "title": "AI Sync Assistant",
+      "description": "Ask questions about sync status, investigate discrepancies, and get recommendations. Your intelligent partner for data operations."
+    },
+    "complete": {
+      "title": "You're All Set!",
+      "description": "You now know the essentials of Data Sync. Start by checking your dashboard or ask the AI assistant for help with any sync issues."
+    },
+    "back": "Back",
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started"
+  }
+}

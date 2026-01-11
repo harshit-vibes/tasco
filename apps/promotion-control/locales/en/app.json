@@ -1,0 +1,264 @@
+{
+  "appTitle": "Promotion Control",
+  "appSubtitle": "Inochi",
+  "appDescription": "AI-powered promotion overlap control for Inochi",
+
+  "nav": {
+    "calendar": "Calendar",
+    "promotions": "Promotions",
+    "alerts": "Alerts",
+    "analytics": "Analytics"
+  },
+
+  "newPromotion": "New Promotion",
+  "back": "Back",
+  "profile": "Profile",
+  "settings": "Settings",
+  "signOut": "Sign out",
+
+  "guide": {
+    "back": "Back",
+    "next": "Next",
+    "skipTour": "Skip tour",
+    "getStarted": "Get Started",
+    "welcome": {
+      "title": "Welcome to Promotion Control",
+      "description": "This AI-powered system helps you manage promotions without conflicts. Let's take a quick tour of the key features.",
+      "tip": "This tour takes about 2 minutes"
+    },
+    "calendar": {
+      "title": "Promotion Calendar",
+      "description": "View all your promotions on a timeline. See what's active now, upcoming, and identify potential overlap periods at a glance.",
+      "tip": "The calendar is your mission control for all promotions"
+    },
+    "promotions": {
+      "title": "Manage Promotions",
+      "description": "Create, edit, and organize all your promotions. Set target segments, channels, dates, and discount rules.",
+      "tip": "Use filters to quickly find specific promotions"
+    },
+    "alerts": {
+      "title": "Conflict Detection",
+      "description": "AI automatically detects conflicts like time overlaps, segment clashes, and stacking violations. Critical issues are highlighted for immediate attention.",
+      "tip": "Check alerts regularly to prevent revenue loss"
+    },
+    "analytics": {
+      "title": "Analytics Dashboard",
+      "description": "Track promotion performance, see distributions by status, type, and segment. Make data-driven decisions about your promotion strategy.",
+      "tip": "Use analytics to optimize your promotion mix"
+    },
+    "complete": {
+      "title": "You're All Set!",
+      "description": "You now know the basics. Start by exploring the calendar or create your first promotion. Need help? Click the help icon anytime.",
+      "tip": "You can restart this tour from the help menu"
+    }
+  },
+
+  "calendar": {
+    "title": "Promotion Calendar",
+    "subtitle": "View all promotions on a timeline",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "noPromotions": "No promotions scheduled",
+    "activeNow": "Active Now",
+    "upcoming": "Upcoming",
+    "expired": "Expired",
+    "drafts": "Drafts",
+    "conflicts": "Conflicts",
+    "viewAll": "View All",
+    "quickStats": "Quick Stats",
+    "timeline": "Timeline",
+    "next30Days": "Next 30 Days"
+  },
+
+  "promotions": {
+    "title": "Promotions",
+    "subtitle": "Manage your promotion rules",
+    "create": "Create Promotion",
+    "createSubtitle": "Set up a new promotion campaign",
+    "edit": "Edit Promotion",
+    "delete": "Delete",
+    "clone": "Clone",
+    "activate": "Activate",
+    "pause": "Pause",
+    "noPromotions": "No promotions found",
+    "createFirst": "Create your first promotion to get started",
+    "savedAsDraft": "Promotion saved as draft",
+    "activated": "Promotion activated",
+    "saveAsDraft": "Save as Draft",
+    "createAndActivate": "Create & Activate",
+    "status": {
+      "active": "Active",
+      "draft": "Draft",
+      "paused": "Paused",
+      "expired": "Expired"
+    },
+    "type": {
+      "discount": "Discount",
+      "bundle": "Bundle",
+      "free-item": "Free Item",
+      "loyalty": "Loyalty",
+      "coupon": "Coupon"
+    },
+    "form": {
+      "basics": "Basic Information",
+      "basicsDesc": "Name your promotion and choose its type",
+      "targeting": "Target Audience",
+      "targetingDesc": "Choose who should receive this promotion",
+      "schedule": "Schedule",
+      "scheduleDesc": "Set when this promotion should be active",
+      "review": "Review & Confirm",
+      "reviewDesc": "Review your promotion before creating",
+      "name": "Promotion Name",
+      "namePlaceholder": "e.g., Summer Sale 2024",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the promotion...",
+      "type": "Type",
+      "status": "Status",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "discountType": "Discount Type",
+      "discountValue": "Discount Value",
+      "discountSettings": "Discount Settings",
+      "discount": "Discount",
+      "percentage": "Percentage (%)",
+      "fixed": "Fixed Amount (VND)",
+      "targetSegments": "Target Segments",
+      "targetProducts": "Target Products",
+      "targetChannels": "Target Channels",
+      "advancedOptions": "Advanced Options",
+      "stackable": "Stackable",
+      "stackableHelp": "Allow combining with other promotions",
+      "priority": "Priority",
+      "priorityLow": "1 - Low",
+      "priorityMedium": "2 - Medium",
+      "priorityHigh": "3 - High",
+      "priorityHelp": "Higher priority promotions are applied first when multiple apply",
+      "minPurchase": "Min. Purchase (VND)",
+      "maxDiscount": "Max. Discount (VND)",
+      "excludePromotions": "Exclude Promotions",
+      "duration": "Duration",
+      "days": "days",
+      "tip": "Tip",
+      "scheduleTip": "Avoid overlapping dates with similar promotions to prevent conflicts. The system will alert you if conflicts are detected.",
+      "reviewWarning": "After creation, the system will automatically check for conflicts with existing promotions."
+    }
+  },
+
+  "alerts": {
+    "title": "Conflict Alerts",
+    "subtitle": "Review and resolve promotion conflicts",
+    "noAlerts": "No conflicts detected",
+    "allClear": "All promotions are configured correctly",
+    "runAnalysis": "Run Analysis",
+    "lastAnalyzed": "Last analyzed",
+    "criticalIssues": "Critical Issues",
+    "warnings": "Warnings",
+    "information": "Information",
+    "involvedPromotions": "Involved Promotions",
+    "affectedSegments": "Affected Segments",
+    "overlapPeriod": "Overlap Period",
+    "recommendation": "Recommendation",
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "type": {
+      "time-overlap": "Time Overlap",
+      "segment-overlap": "Segment Overlap",
+      "stacking-violation": "Stacking Violation",
+      "exclusion-rule": "Exclusion Rule Conflict"
+    },
+    "acknowledge": "Acknowledge",
+    "resolve": "Resolve",
+    "dismiss": "Dismiss",
+    "requireAttention": "Require immediate attention",
+    "shouldReview": "Should be reviewed",
+    "forInfo": "For your information"
+  },
+
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Promotion performance and insights",
+    "totalPromotions": "Total Promotions",
+    "activeNow": "active now",
+    "avgDiscount": "Avg. Discount",
+    "percentageOnly": "Percentage discounts only",
+    "segmentsCovered": "Segments Covered",
+    "uniqueSegments": "Unique customer segments",
+    "promotionTypes": "Promotion Types",
+    "typesInUse": "Different types in use",
+    "byStatus": "By Status",
+    "statusDistribution": "Distribution of promotions by status",
+    "byType": "By Type",
+    "typeDistribution": "Distribution of promotions by type",
+    "bySegment": "By Customer Segment",
+    "segmentCoverage": "Promotions targeting each segment",
+    "byChannel": "By Sales Channel",
+    "channelCoverage": "Promotions across sales channels",
+    "typeBreakdown": "Promotion Type Details",
+    "typeDetails": "Overview of each promotion type",
+    "active": "active",
+    "noSegments": "No segment data available",
+    "noChannels": "No channel data available"
+  },
+
+  "segments": {
+    "all": "All Customers",
+    "vip": "VIP Members",
+    "regular": "Regular",
+    "new": "New Customers",
+    "wholesale": "Wholesale",
+    "retail": "Retail"
+  },
+
+  "channels": {
+    "all": "All Channels",
+    "ecommerce": "E-commerce",
+    "retail": "Retail Store",
+    "wholesale": "Wholesale",
+    "direct": "Direct Sales"
+  },
+
+  "empty": {
+    "promotions": {
+      "title": "No promotions yet",
+      "description": "Create your first promotion to start managing campaigns and detecting conflicts.",
+      "action": "Create Promotion"
+    },
+    "alerts": {
+      "title": "All Clear!",
+      "description": "No conflicts detected. Your promotions are configured correctly.",
+      "action": "View Promotions"
+    },
+    "calendar": {
+      "title": "No promotions scheduled",
+      "description": "Your promotion calendar is empty. Create a promotion to see it on the timeline.",
+      "action": "Create Promotion"
+    }
+  },
+
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm",
+    "search": "Search",
+    "searchPlaceholder": "Search promotions...",
+    "filter": "Filter",
+    "filterByStatus": "Filter by status",
+    "all": "All",
+    "allStatus": "All Status",
+    "none": "None",
+    "refresh": "Refresh",
+    "to": "to",
+    "off": "off"
+  }
+}

@@ -13,7 +13,8 @@
     "next": "^15.0.0"
   },
   "dependencies": {
-    "@tasco/db": "workspace:*"
+    "@tasco/db": "workspace:*",
+    "@tasco/rag": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

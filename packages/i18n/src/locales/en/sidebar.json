@@ -1,0 +1,29 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "documents": "Documents",
+    "knowledgeBase": "Knowledge Base",
+    "entities": "Entities",
+    "agents": "Agents",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout"
+  },
+  "sections": {
+    "main": "Main",
+    "management": "Management",
+    "configuration": "Configuration",
+    "system": "System"
+  },
+  "collapse": {
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar"
+  },
+  "chatHistory": {
+    "title": "Recent Chats",
+    "viewAll": "View all chats",
+    "newChat": "New Chat"
+  }
+}

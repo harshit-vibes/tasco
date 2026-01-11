@@ -103,6 +103,14 @@
 
 ---
 
+## PRD Documents
+
+| App | PRD | Status |
+|-----|-----|--------|
+| compliance-qa (G1) | [prd-compliance-qa.md](prd-compliance-qa.md) | Updated |
+
+---
+
 ## Other Documentation
 
 - [Lyzr Fit Analysis](lyzr-fit.md) - LLM vs non-LLM classification

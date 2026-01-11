@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "Quản Lý Vòng Đời Khách Hàng",
+    "company": "Tasco Auto",
+    "version": "Phiên bản {{version}}",
+    "tagline": "Demo Ngày Đổi Mới"
+  },
+  "navigation": {
+    "dashboard": "Tổng Quan",
+    "leads": "Khách Hàng Tiềm Năng",
+    "customers": "Khách Hàng",
+    "marketing": "Tiếp Thị",
+    "analytics": "Phân Tích",
+    "chat": "Trợ Lý AI",
+    "settings": "Cài Đặt"
+  },
+  "actions": {
+    "search": "Tìm Kiếm",
+    "filter": "Lọc",
+    "sort": "Sắp Xếp",
+    "export": "Xuất",
+    "refresh": "Làm Mới",
+    "create": "Tạo Mới",
+    "edit": "Chỉnh Sửa",
+    "delete": "Xóa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "view_all": "Xem Tất Cả",
+    "take_action": "Hành Động",
+    "loading": "Đang tải...",
+    "no_results": "Không tìm thấy kết quả"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm...",
+    "placeholder_leads": "Tìm theo tên, email hoặc số điện thoại...",
+    "placeholder_customers": "Tìm theo tên, email hoặc số điện thoại...",
+    "placeholder_campaigns": "Tìm chiến dịch..."
+  },
+  "entity": {
+    "placeholder_single": "Chọn showroom...",
+    "placeholder_multi": "Chọn showroom..."
+  },
+  "common": {
+    "all": "Tất Cả",
+    "total": "Tổng",
+    "new": "Mới",
+    "active": "Hoạt Động",
+    "today": "hôm nay",
+    "score": "Điểm",
+    "confidence": "độ tin cậy",
+    "conversion_rate": "tỷ lệ chuyển đổi",
+    "high_value": "giá trị cao",
+    "retention": "giữ chân",
+    "action_needed": "Cần hành động"
+  }
+}

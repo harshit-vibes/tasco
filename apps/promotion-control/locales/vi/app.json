@@ -1,0 +1,264 @@
+{
+  "appTitle": "Quản lý Khuyến mãi",
+  "appSubtitle": "Inochi",
+  "appDescription": "Hệ thống kiểm soát trùng lặp khuyến mãi dựa trên AI cho Inochi",
+
+  "nav": {
+    "calendar": "Lịch",
+    "promotions": "Khuyến mãi",
+    "alerts": "Cảnh báo",
+    "analytics": "Phân tích"
+  },
+
+  "newPromotion": "Tạo khuyến mãi",
+  "back": "Quay lại",
+  "profile": "Hồ sơ",
+  "settings": "Cài đặt",
+  "signOut": "Đăng xuất",
+
+  "guide": {
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "skipTour": "Bỏ qua hướng dẫn",
+    "getStarted": "Bắt đầu",
+    "welcome": {
+      "title": "Chào mừng đến với Quản lý Khuyến mãi",
+      "description": "Hệ thống AI giúp bạn quản lý khuyến mãi không bị trùng lặp. Hãy cùng tìm hiểu các tính năng chính.",
+      "tip": "Hướng dẫn này mất khoảng 2 phút"
+    },
+    "calendar": {
+      "title": "Lịch Khuyến mãi",
+      "description": "Xem tất cả khuyến mãi trên dòng thời gian. Biết được khuyến mãi nào đang hoạt động, sắp tới và phát hiện các khoảng thời gian trùng lặp.",
+      "tip": "Lịch là trung tâm điều khiển cho tất cả khuyến mãi"
+    },
+    "promotions": {
+      "title": "Quản lý Khuyến mãi",
+      "description": "Tạo, chỉnh sửa và sắp xếp tất cả khuyến mãi. Thiết lập đối tượng, kênh bán hàng, thời gian và quy tắc giảm giá.",
+      "tip": "Sử dụng bộ lọc để tìm nhanh khuyến mãi cụ thể"
+    },
+    "alerts": {
+      "title": "Phát hiện Xung đột",
+      "description": "AI tự động phát hiện xung đột như trùng thời gian, xung đột đối tượng và vi phạm kết hợp. Các vấn đề nghiêm trọng được đánh dấu để xử lý ngay.",
+      "tip": "Kiểm tra cảnh báo thường xuyên để tránh thất thoát doanh thu"
+    },
+    "analytics": {
+      "title": "Bảng điều khiển Phân tích",
+      "description": "Theo dõi hiệu suất khuyến mãi, xem phân bố theo trạng thái, loại và đối tượng. Đưa ra quyết định dựa trên dữ liệu.",
+      "tip": "Sử dụng phân tích để tối ưu hóa chiến lược khuyến mãi"
+    },
+    "complete": {
+      "title": "Sẵn sàng rồi!",
+      "description": "Bạn đã biết những điều cơ bản. Bắt đầu bằng cách khám phá lịch hoặc tạo khuyến mãi đầu tiên. Cần hỗ trợ? Nhấp vào biểu tượng trợ giúp.",
+      "tip": "Bạn có thể khởi động lại hướng dẫn từ menu trợ giúp"
+    }
+  },
+
+  "calendar": {
+    "title": "Lịch Khuyến mãi",
+    "subtitle": "Xem tất cả khuyến mãi trên dòng thời gian",
+    "today": "Hôm nay",
+    "thisWeek": "Tuần này",
+    "thisMonth": "Tháng này",
+    "noPromotions": "Không có khuyến mãi nào được lên lịch",
+    "activeNow": "Đang hoạt động",
+    "upcoming": "Sắp tới",
+    "expired": "Đã hết hạn",
+    "drafts": "Bản nháp",
+    "conflicts": "Xung đột",
+    "viewAll": "Xem tất cả",
+    "quickStats": "Thống kê nhanh",
+    "timeline": "Dòng thời gian",
+    "next30Days": "30 ngày tới"
+  },
+
+  "promotions": {
+    "title": "Khuyến mãi",
+    "subtitle": "Quản lý các quy tắc khuyến mãi",
+    "create": "Tạo khuyến mãi",
+    "createSubtitle": "Thiết lập chiến dịch khuyến mãi mới",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "clone": "Sao chép",
+    "activate": "Kích hoạt",
+    "pause": "Tạm dừng",
+    "noPromotions": "Không tìm thấy khuyến mãi",
+    "createFirst": "Tạo khuyến mãi đầu tiên để bắt đầu",
+    "savedAsDraft": "Đã lưu bản nháp",
+    "activated": "Đã kích hoạt khuyến mãi",
+    "saveAsDraft": "Lưu bản nháp",
+    "createAndActivate": "Tạo & Kích hoạt",
+    "status": {
+      "active": "Hoạt động",
+      "draft": "Bản nháp",
+      "paused": "Tạm dừng",
+      "expired": "Hết hạn"
+    },
+    "type": {
+      "discount": "Giảm giá",
+      "bundle": "Combo",
+      "free-item": "Tặng kèm",
+      "loyalty": "Khách hàng thân thiết",
+      "coupon": "Mã giảm giá"
+    },
+    "form": {
+      "basics": "Thông tin cơ bản",
+      "basicsDesc": "Đặt tên và chọn loại khuyến mãi",
+      "targeting": "Đối tượng mục tiêu",
+      "targetingDesc": "Chọn ai sẽ nhận được khuyến mãi này",
+      "schedule": "Lịch trình",
+      "scheduleDesc": "Thiết lập thời gian khuyến mãi hoạt động",
+      "review": "Xem lại & Xác nhận",
+      "reviewDesc": "Xem lại khuyến mãi trước khi tạo",
+      "name": "Tên khuyến mãi",
+      "namePlaceholder": "VD: Khuyến mãi Hè 2024",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Mô tả khuyến mãi...",
+      "type": "Loại",
+      "status": "Trạng thái",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "discountType": "Loại giảm giá",
+      "discountValue": "Giá trị giảm",
+      "discountSettings": "Cài đặt giảm giá",
+      "discount": "Giảm giá",
+      "percentage": "Phần trăm (%)",
+      "fixed": "Số tiền cố định (VND)",
+      "targetSegments": "Đối tượng khách hàng",
+      "targetProducts": "Sản phẩm áp dụng",
+      "targetChannels": "Kênh bán hàng",
+      "advancedOptions": "Tùy chọn nâng cao",
+      "stackable": "Cho phép kết hợp",
+      "stackableHelp": "Cho phép kết hợp với các khuyến mãi khác",
+      "priority": "Độ ưu tiên",
+      "priorityLow": "1 - Thấp",
+      "priorityMedium": "2 - Trung bình",
+      "priorityHigh": "3 - Cao",
+      "priorityHelp": "Khuyến mãi ưu tiên cao hơn được áp dụng trước",
+      "minPurchase": "Đơn hàng tối thiểu (VND)",
+      "maxDiscount": "Giảm tối đa (VND)",
+      "excludePromotions": "Loại trừ khuyến mãi",
+      "duration": "Thời hạn",
+      "days": "ngày",
+      "tip": "Mẹo",
+      "scheduleTip": "Tránh trùng thời gian với các khuyến mãi tương tự để ngăn xung đột. Hệ thống sẽ cảnh báo nếu phát hiện xung đột.",
+      "reviewWarning": "Sau khi tạo, hệ thống sẽ tự động kiểm tra xung đột với các khuyến mãi hiện có."
+    }
+  },
+
+  "alerts": {
+    "title": "Cảnh báo Xung đột",
+    "subtitle": "Xem xét và giải quyết các xung đột khuyến mãi",
+    "noAlerts": "Không phát hiện xung đột",
+    "allClear": "Tất cả khuyến mãi được cấu hình chính xác",
+    "runAnalysis": "Phân tích",
+    "lastAnalyzed": "Phân tích lần cuối",
+    "criticalIssues": "Vấn đề nghiêm trọng",
+    "warnings": "Cảnh báo",
+    "information": "Thông tin",
+    "involvedPromotions": "Khuyến mãi liên quan",
+    "affectedSegments": "Đối tượng bị ảnh hưởng",
+    "overlapPeriod": "Thời gian trùng lặp",
+    "recommendation": "Đề xuất",
+    "severity": {
+      "critical": "Nghiêm trọng",
+      "warning": "Cảnh báo",
+      "info": "Thông tin"
+    },
+    "type": {
+      "time-overlap": "Trùng thời gian",
+      "segment-overlap": "Trùng đối tượng",
+      "stacking-violation": "Vi phạm kết hợp",
+      "exclusion-rule": "Xung đột loại trừ"
+    },
+    "acknowledge": "Ghi nhận",
+    "resolve": "Giải quyết",
+    "dismiss": "Bỏ qua",
+    "requireAttention": "Cần xử lý ngay",
+    "shouldReview": "Cần xem xét",
+    "forInfo": "Thông tin tham khảo"
+  },
+
+  "analytics": {
+    "title": "Phân tích",
+    "subtitle": "Hiệu suất và thông tin khuyến mãi",
+    "totalPromotions": "Tổng khuyến mãi",
+    "activeNow": "đang hoạt động",
+    "avgDiscount": "Giảm giá TB",
+    "percentageOnly": "Chỉ tính giảm giá phần trăm",
+    "segmentsCovered": "Đối tượng phủ",
+    "uniqueSegments": "Các nhóm khách hàng riêng biệt",
+    "promotionTypes": "Loại khuyến mãi",
+    "typesInUse": "Các loại đang sử dụng",
+    "byStatus": "Theo trạng thái",
+    "statusDistribution": "Phân bố khuyến mãi theo trạng thái",
+    "byType": "Theo loại",
+    "typeDistribution": "Phân bố khuyến mãi theo loại",
+    "bySegment": "Theo đối tượng khách hàng",
+    "segmentCoverage": "Khuyến mãi nhắm đến từng đối tượng",
+    "byChannel": "Theo kênh bán hàng",
+    "channelCoverage": "Khuyến mãi trên các kênh bán hàng",
+    "typeBreakdown": "Chi tiết loại khuyến mãi",
+    "typeDetails": "Tổng quan về từng loại khuyến mãi",
+    "active": "hoạt động",
+    "noSegments": "Không có dữ liệu đối tượng",
+    "noChannels": "Không có dữ liệu kênh"
+  },
+
+  "segments": {
+    "all": "Tất cả khách hàng",
+    "vip": "Thành viên VIP",
+    "regular": "Khách hàng thường",
+    "new": "Khách hàng mới",
+    "wholesale": "Bán sỉ",
+    "retail": "Bán lẻ"
+  },
+
+  "channels": {
+    "all": "Tất cả kênh",
+    "ecommerce": "Thương mại điện tử",
+    "retail": "Cửa hàng",
+    "wholesale": "Bán sỉ",
+    "direct": "Bán trực tiếp"
+  },
+
+  "empty": {
+    "promotions": {
+      "title": "Chưa có khuyến mãi",
+      "description": "Tạo khuyến mãi đầu tiên để bắt đầu quản lý chiến dịch và phát hiện xung đột.",
+      "action": "Tạo khuyến mãi"
+    },
+    "alerts": {
+      "title": "Tất cả ổn!",
+      "description": "Không phát hiện xung đột. Các khuyến mãi được cấu hình chính xác.",
+      "action": "Xem khuyến mãi"
+    },
+    "calendar": {
+      "title": "Chưa có khuyến mãi nào",
+      "description": "Lịch khuyến mãi trống. Tạo khuyến mãi để xem trên dòng thời gian.",
+      "action": "Tạo khuyến mãi"
+    }
+  },
+
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "view": "Xem",
+    "close": "Đóng",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "success": "Thành công",
+    "confirm": "Xác nhận",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm kiếm khuyến mãi...",
+    "filter": "Lọc",
+    "filterByStatus": "Lọc theo trạng thái",
+    "all": "Tất cả",
+    "allStatus": "Tất cả trạng thái",
+    "none": "Không có",
+    "refresh": "Làm mới",
+    "to": "đến",
+    "off": "giảm"
+  }
+}

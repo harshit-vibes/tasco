@@ -13,12 +13,16 @@ export interface ChatProviderProps {
   userId?: string;
   /** Lyzr agent ID (from env) */
   agentId?: string;
+  /** Validation agent ID for response scoring */
+  validationAgentId?: string;
   /** Lyzr API key (from env) */
   apiKey?: string;
   /** Auto-generate title from first message */
   autoGenerateTitle?: boolean;
   /** Max messages to load initially */
   initialLoadLimit?: number;
+  /** Enable response validation (requires validationAgentId) */
+  enableValidation?: boolean;
 }
 
 const ChatContext = createContext<UsePersistentChatReturn | undefined>(undefined);
@@ -31,9 +35,11 @@ export function ChatProvider({
   entityId,
   userId = DEFAULT_USER_ID,
   agentId,
+  validationAgentId,
   apiKey,
   autoGenerateTitle = true,
   initialLoadLimit = 50,
+  enableValidation = false,
 }: ChatProviderProps) {
   const chat = usePersistentChat({
     appId,
@@ -42,7 +48,9 @@ export function ChatProvider({
     autoGenerateTitle,
     initialLoadLimit,
     agentId,
+    validationAgentId,
     apiKey,
+    enableValidation,
   });
 
   return (
