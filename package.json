@@ -18,7 +18,9 @@
     "agents:list": "bun --cwd packages/agents run list-agents",
     "agents:validate": "bun --cwd packages/agents run validate",
     "agents:setup": "bun --cwd packages/agents run setup-all",
-    "agents:sync": "bun --cwd packages/agents run sync-registry"
+    "agents:sync": "bun --cwd packages/agents run sync-registry",
+    "amplify:env": "bun scripts/generate-amplify-env.ts",
+    "amplify:env:json": "bun scripts/generate-amplify-env.ts --json"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.965.0",
