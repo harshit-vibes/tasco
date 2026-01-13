@@ -5,13 +5,24 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
  * Database Configuration
  *
  * Always uses production AWS DynamoDB (even for local development).
- * Credentials are loaded from AWS CLI (~/.aws/credentials) via default credential provider chain.
- *
- * Setup: aws configure --profile tasco (or use default profile)
+ * Credentials can be provided via:
+ * 1. NEXT_PUBLIC_AWS_* environment variables (for Amplify/Vercel)
+ * 2. AWS CLI (~/.aws/credentials) via default credential provider chain
+ * 3. IAM roles (for AWS services)
  */
+const accessKeyId = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY;
+
 const client = new DynamoDBClient({
   region: process.env.NEXT_PUBLIC_AWS_REGION || "ap-southeast-1",
-  // Uses default credential provider chain (AWS CLI, env vars, IAM roles)
+  ...(accessKeyId && secretAccessKey
+    ? {
+        credentials: {
+          accessKeyId,
+          secretAccessKey,
+        },
+      }
+    : {}),
 });
 
 export const docClient = DynamoDBDocumentClient.from(client, {
