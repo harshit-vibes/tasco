@@ -26,6 +26,17 @@
 
 const LYZR_API_URL = "https://agent-prod.studio.lyzr.ai";
 
+// Required headers for Lyzr API (Origin + User-Agent headers are required)
+const BROWSER_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+const getHeaders = (apiKey: string, includeContentType = false) => ({
+  "x-api-key": apiKey,
+  "Origin": "https://studio.lyzr.ai",
+  "User-Agent": BROWSER_USER_AGENT,
+  "Accept": "application/json",
+  ...(includeContentType && { "Content-Type": "application/json" }),
+});
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -184,10 +195,7 @@ export async function createAgent(
 
   const response = await fetch(`${baseUrl}/v3/agents/`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey, true),
     body: JSON.stringify({
       name: config.name,
       agent_instructions: config.system_prompt,
@@ -222,9 +230,7 @@ export async function listAgents(
 
   const response = await fetch(`${baseUrl}/v3/agents`, {
     method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey),
   });
 
   if (!response.ok) {
@@ -249,9 +255,7 @@ export async function getAgent(
 
   const response = await fetch(`${baseUrl}/v3/agents/${agentId}`, {
     method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey),
   });
 
   if (!response.ok) {
@@ -287,10 +291,7 @@ export async function updateAgent(
 
   const response = await fetch(`${baseUrl}/v3/agents/${agentId}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey, true),
     body: JSON.stringify(updateData),
   });
 
@@ -315,9 +316,7 @@ export async function deleteAgent(
 
   const response = await fetch(`${baseUrl}/v3/agents/${agentId}`, {
     method: "DELETE",
-    headers: {
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey),
   });
 
   if (!response.ok) {
@@ -428,10 +427,7 @@ export async function updateAgentFull(
 
   const response = await fetch(`${baseUrl}/v3/agents/${agentId}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
+    headers: getHeaders(apiKey, true),
     body: JSON.stringify(fullPayload),
   });
 

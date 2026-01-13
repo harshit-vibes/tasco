@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 const LYZR_API_URL = "https://agent-prod.studio.lyzr.ai";
 
+// Required headers for Lyzr API (Origin + User-Agent headers are required)
+const BROWSER_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+const getHeaders = (apiKey: string) => ({
+  "Content-Type": "application/json",
+  "x-api-key": apiKey,
+  "Origin": "https://studio.lyzr.ai",
+  "User-Agent": BROWSER_USER_AGENT,
+  "Accept": "application/json",
+});
+
 // In-memory cache for agent data
 const agentCache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
@@ -46,10 +57,7 @@ export async function handleGetAgent(
 
     const response = await fetch(`${LYZR_API_URL}/v3/agents/${agentId}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-      },
+      headers: getHeaders(apiKey),
     });
 
     if (!response.ok) {

@@ -130,6 +130,17 @@ class LyzrClient {
     this.baseUrl = config.baseUrl || "https://agent-prod.studio.lyzr.ai";
   }
 
+  // Get headers with required Origin + User-Agent for Lyzr API
+  private getHeaders(includeContentType = false) {
+    return {
+      "x-api-key": this.apiKey,
+      "Origin": "https://studio.lyzr.ai",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Accept": "application/json",
+      ...(includeContentType && { "Content-Type": "application/json" }),
+    };
+  }
+
   async chat(
     agentId: string,
     messages: ChatMessage[],
@@ -137,10 +148,7 @@ class LyzrClient {
   ): Promise<ChatResponse> {
     const response = await fetch(`${this.baseUrl}/v3/inference/chat/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": this.apiKey,
-      },
+      headers: this.getHeaders(true),
       body: JSON.stringify({
         agent_id: agentId,
         user_id: sessionId || "default",
@@ -233,10 +241,7 @@ Scoring guidelines:
     try {
       const response = await fetch(`${this.baseUrl}/v3/inference/chat/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": this.apiKey,
-        },
+        headers: this.getHeaders(true),
         body: JSON.stringify({
           agent_id: validationAgentId,
           user_id: sessionId || "validator",
@@ -304,10 +309,7 @@ Scoring guidelines:
   ): Promise<ChatResponse> {
     const response = await fetch(`${this.baseUrl}/v3/inference/stream/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": this.apiKey,
-      },
+      headers: this.getHeaders(true),
       body: JSON.stringify({
         agent_id: agentId,
         user_id: sessionId || "default",
