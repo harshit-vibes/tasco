@@ -26,10 +26,14 @@ export interface Entity {
  */
 export async function handleListEntities() {
   try {
+    console.log("[Entities] Getting database connection...");
     const db = await getDb();
+    console.log("[Entities] Database name:", db.databaseName);
     const collection = db.collection("entities");
+    console.log("[Entities] Fetching entities from collection...");
 
     const docs = await collection.find({}).sort({ name: 1 }).toArray();
+    console.log("[Entities] Found", docs.length, "entities");
 
     const entities: Entity[] = docs.map((doc) => ({
       id: doc._id?.toHexString() || doc.entityId,
