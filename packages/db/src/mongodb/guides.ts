@@ -132,24 +132,21 @@ export async function putAppGuide(input: {
   const collection = await getGuidesCollection();
   const now = new Date();
 
-  const doc: Omit<GuideDocument, "_id"> = {
-    appId: input.appId,
-    language: input.language,
-    appName: input.appName,
-    appTagline: input.appTagline,
-    slides: input.slides.sort((a, b) => a.order - b.order),
-    onePager: input.onePager,
-    ctaText: input.ctaText,
-    enabled: input.enabled ?? true,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  // Upsert
+  // Upsert - separate createdAt from $set to avoid conflict with $setOnInsert
   const result = await collection.findOneAndUpdate(
     { appId: input.appId, language: input.language },
     {
-      $set: { ...doc, updatedAt: now },
+      $set: {
+        appId: input.appId,
+        language: input.language,
+        appName: input.appName,
+        appTagline: input.appTagline,
+        slides: input.slides.sort((a, b) => a.order - b.order),
+        onePager: input.onePager,
+        ctaText: input.ctaText,
+        enabled: input.enabled ?? true,
+        updatedAt: now,
+      },
       $setOnInsert: { createdAt: now },
     },
     { upsert: true, returnDocument: "after" }
