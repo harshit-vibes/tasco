@@ -4,7 +4,7 @@
  * Uses MongoDB Atlas with connection pooling and singleton pattern.
  */
 
-import { MongoClient, Db, Collection, ObjectId } from "mongodb";
+import { MongoClient, Db, Collection, ObjectId, Document as MongoDocument } from "mongodb";
 
 // Connection URI from environment
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -64,7 +64,7 @@ export async function getDb(): Promise<Db> {
 /**
  * Get typed collection by name
  */
-export async function getCollection<T extends Document>(
+export async function getCollection<T extends MongoDocument>(
   name: string
 ): Promise<Collection<T>> {
   const database = await getDb();

@@ -4,13 +4,16 @@
  * These types map DynamoDB structures to MongoDB documents.
  */
 
-import { ObjectId } from "mongodb";
+import { ObjectId, Document } from "mongodb";
+
+// Base document type that all documents extend
+type BaseDocument = Document;
 
 // ============================================
 // Conversation Types
 // ============================================
 
-export interface ConversationDocument {
+export interface ConversationDocument extends BaseDocument {
   _id?: ObjectId;
   appId: string;
   entityId: string;
@@ -83,7 +86,7 @@ export interface ValidationResult {
   lawArticlesCited?: string[];
 }
 
-export interface MessageDocument {
+export interface MessageDocument extends BaseDocument {
   _id?: ObjectId;
   conversationId: string;
   role: "user" | "assistant" | "system";
@@ -118,7 +121,7 @@ export interface DocumentVersion {
   size?: number;
 }
 
-export interface DocumentDocument {
+export interface DocumentDocument extends BaseDocument {
   _id?: ObjectId;
   appId: string;
   entityId: string;
@@ -173,7 +176,7 @@ export interface UpdateDocumentInput {
 export type EntityType = "parent" | "holding" | "subsidiary";
 export type EntityCategory = "auto" | "insurance" | "inochi" | "general";
 
-export interface EntityDocument {
+export interface EntityDocument extends BaseDocument {
   _id?: ObjectId;
   entityId: string;
   name: string;
@@ -210,7 +213,7 @@ export type NotificationCategory =
   | "system"
   | "compliance";
 
-export interface NotificationDocument {
+export interface NotificationDocument extends BaseDocument {
   _id?: ObjectId;
   appId: string;
   entityId: string;
@@ -268,7 +271,7 @@ export interface AppOnePager {
   sections: OnePagerSection[];
 }
 
-export interface AppGuideDocument {
+export interface AppGuideDocument extends BaseDocument {
   _id?: ObjectId;
   appId: string;
   slides: GuideSlide[];
