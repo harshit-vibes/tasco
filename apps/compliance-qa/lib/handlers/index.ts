@@ -31,4 +31,5 @@ export {
 export {
   handleListEntities,
   handleGetEntity,
+  type Entity,
 } from "./entities";

@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@tasco/db/mongodb";
 
 // Entity types
-interface Entity {
+export interface Entity {
   id: string;
   entityId: string;
   name: string;
