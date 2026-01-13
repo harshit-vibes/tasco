@@ -4,19 +4,30 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 /**
  * Database Configuration
  *
- * Uses the AWS SDK default credential provider chain which automatically
- * uses IAM role credentials on AWS Amplify SSR.
- *
- * Region is determined from:
- * 1. NEXT_PUBLIC_AWS_REGION env var
- * 2. AWS_REGION env var (set by Amplify)
- * 3. Default: ap-southeast-1
+ * Uses explicit credentials from NEXT_PUBLIC_AWS_* environment variables.
+ * Falls back to TASCO_AWS_* if available.
  */
 
 function createDocClient(): DynamoDBDocumentClient {
-  const region = process.env.NEXT_PUBLIC_AWS_REGION || process.env.AWS_REGION || "ap-southeast-1";
+  const region = process.env.NEXT_PUBLIC_AWS_REGION || process.env.TASCO_AWS_REGION || process.env.AWS_REGION || "ap-southeast-1";
+  const accessKeyId = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || process.env.TASCO_AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || process.env.TASCO_AWS_SECRET_ACCESS_KEY;
 
-  const client = new DynamoDBClient({ region });
+  // Log for debugging (remove after fixing)
+  console.log("[DynamoDB Client] Region:", region);
+  console.log("[DynamoDB Client] Has AccessKeyId:", !!accessKeyId, accessKeyId?.substring(0, 8));
+  console.log("[DynamoDB Client] Has SecretKey:", !!secretAccessKey);
+
+  const clientConfig: any = { region };
+
+  if (accessKeyId && secretAccessKey) {
+    clientConfig.credentials = { accessKeyId, secretAccessKey };
+    console.log("[DynamoDB Client] Using explicit credentials");
+  } else {
+    console.log("[DynamoDB Client] Using default credential chain");
+  }
+
+  const client = new DynamoDBClient(clientConfig);
 
   return DynamoDBDocumentClient.from(client, {
     marshallOptions: {
