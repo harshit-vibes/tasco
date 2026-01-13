@@ -9,26 +9,10 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl as awsGetSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-// S3 Client configuration with explicit credentials
-// Uses TASCO_AWS_* for Amplify (can't use AWS_ prefix), falls back to standard env vars
+// S3 Client configuration
+// Uses default credential provider chain (IAM role on Amplify, AWS CLI locally)
 const s3Client = new S3Client({
-  region:
-    process.env.TASCO_AWS_REGION ||
-    process.env.AWS_REGION ||
-    process.env.NEXT_PUBLIC_AWS_REGION ||
-    "ap-southeast-1",
-  credentials: {
-    accessKeyId:
-      process.env.TASCO_AWS_ACCESS_KEY_ID ||
-      process.env.AWS_ACCESS_KEY_ID ||
-      process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID ||
-      "",
-    secretAccessKey:
-      process.env.TASCO_AWS_SECRET_ACCESS_KEY ||
-      process.env.AWS_SECRET_ACCESS_KEY ||
-      process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY ||
-      "",
-  },
+  region: process.env.NEXT_PUBLIC_AWS_REGION || process.env.AWS_REGION || "ap-southeast-1",
 });
 
 export const DOCUMENTS_BUCKET = process.env.DOCUMENTS_BUCKET || "tasco-compliance-docs";
