@@ -55,9 +55,11 @@ export function getDocClient(): DynamoDBDocumentClient {
  * docClient - backwards compatible export
  * Delegates to the lazily-created singleton
  */
-export const docClient = {
-  send: (...args: Parameters<DynamoDBDocumentClient["send"]>) => getDocClient().send(...args),
-};
+export const docClient: DynamoDBDocumentClient = new Proxy({} as DynamoDBDocumentClient, {
+  get(_target, prop) {
+    return (getDocClient() as any)[prop];
+  },
+});
 
 /**
  * dynamoClient - raw DynamoDB client

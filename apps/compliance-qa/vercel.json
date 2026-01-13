@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && bun run build --filter=@tasco/compliance-qa",
-  "installCommand": "cd ../.. && bun install",
   "outputDirectory": ".next",
   "regions": ["sin1"],
   "headers": [
