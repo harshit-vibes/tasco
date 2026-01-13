@@ -1,0 +1,20 @@
+{
+  "name": "@tasco/tours",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles/shepherd.css": "./src/styles/shepherd.css"
+  },
+  "dependencies": {
+    "shepherd.js": "^13.0.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "@tasco/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

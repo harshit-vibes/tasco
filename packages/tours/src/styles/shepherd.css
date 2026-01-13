@@ -1,0 +1,546 @@
+/**
+ * Tasco Tour Theme - Refined Glass Aesthetic
+ * A premium, polished ShepherdJS theme with glassmorphism and elegant motion.
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+
+.shepherd-theme-tasco {
+  /* Core palette - derived from Tasco design tokens */
+  --tour-bg: hsl(0 0% 100% / 0.85);
+  --tour-bg-solid: hsl(0 0% 100%);
+  --tour-text: hsl(0 0% 8%);
+  --tour-text-muted: hsl(0 0% 40%);
+  --tour-primary: hsl(271 91% 40%);
+  --tour-primary-hover: hsl(271 91% 35%);
+  --tour-primary-glow: hsl(271 91% 40% / 0.25);
+  --tour-border: hsl(0 0% 0% / 0.08);
+  --tour-border-subtle: hsl(0 0% 0% / 0.04);
+  --tour-shadow-color: hsl(271 30% 20% / 0.08);
+
+  /* Glassmorphism */
+  --tour-blur: 20px;
+  --tour-glass-overlay: linear-gradient(
+    135deg,
+    hsl(0 0% 100% / 0.9) 0%,
+    hsl(0 0% 100% / 0.7) 100%
+  );
+
+  /* Spacing scale */
+  --tour-space-xs: 0.375rem;
+  --tour-space-sm: 0.625rem;
+  --tour-space-md: 1rem;
+  --tour-space-lg: 1.25rem;
+  --tour-space-xl: 1.5rem;
+
+  /* Radii */
+  --tour-radius: 1rem;
+  --tour-radius-sm: 0.625rem;
+  --tour-radius-full: 9999px;
+
+  /* Typography */
+  --tour-font-display: 'Roboto', system-ui, -apple-system, sans-serif;
+  --tour-font-body: 'Roboto', system-ui, -apple-system, sans-serif;
+
+  /* Motion */
+  --tour-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --tour-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --tour-duration: 0.4s;
+  --tour-duration-fast: 0.2s;
+}
+
+/* Dark mode properties */
+.dark .shepherd-theme-tasco {
+  --tour-bg: hsl(0 0% 10% / 0.9);
+  --tour-bg-solid: hsl(0 0% 8%);
+  --tour-text: hsl(0 0% 96%);
+  --tour-text-muted: hsl(0 0% 60%);
+  --tour-primary: hsl(271 81% 60%);
+  --tour-primary-hover: hsl(271 81% 65%);
+  --tour-primary-glow: hsl(271 81% 60% / 0.3);
+  --tour-border: hsl(0 0% 100% / 0.1);
+  --tour-border-subtle: hsl(0 0% 100% / 0.05);
+  --tour-shadow-color: hsl(0 0% 0% / 0.4);
+  --tour-glass-overlay: linear-gradient(
+    135deg,
+    hsl(0 0% 12% / 0.95) 0%,
+    hsl(0 0% 8% / 0.85) 100%
+  );
+}
+
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
+
+.shepherd-modal-overlay-container {
+  fill: hsl(0 0% 0% / 0.6);
+  transition: opacity var(--tour-duration) var(--tour-ease);
+}
+
+.dark .shepherd-modal-overlay-container {
+  fill: hsl(0 0% 0% / 0.75);
+}
+
+/* ============================================
+   TOUR ELEMENT (POPUP CARD)
+   ============================================ */
+
+.shepherd-element {
+  position: relative;
+  background: var(--tour-glass-overlay), var(--tour-bg);
+  backdrop-filter: blur(var(--tour-blur)) saturate(1.8);
+  -webkit-backdrop-filter: blur(var(--tour-blur)) saturate(1.8);
+  border-radius: var(--tour-radius);
+  border: 1px solid var(--tour-border);
+  max-width: 380px;
+  min-width: 280px;
+  z-index: 9999;
+  overflow: hidden;
+
+  /* Layered shadow for depth */
+  box-shadow:
+    0 0 0 1px var(--tour-border-subtle),
+    0 4px 6px -1px var(--tour-shadow-color),
+    0 12px 24px -4px var(--tour-shadow-color),
+    0 24px 48px -8px var(--tour-shadow-color);
+
+  /* Entrance animation */
+  animation: tourSlideIn var(--tour-duration) var(--tour-ease-bounce) both;
+}
+
+@keyframes tourSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Subtle inner glow */
+.shepherd-element::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    hsl(0 0% 100% / 0.3) 0%,
+    transparent 50%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.dark .shepherd-element::before {
+  background: linear-gradient(
+    135deg,
+    hsl(0 0% 100% / 0.08) 0%,
+    transparent 50%
+  );
+}
+
+/* ============================================
+   ARROW
+   ============================================ */
+
+.shepherd-arrow,
+.shepherd-arrow::before {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  z-index: -1;
+}
+
+.shepherd-arrow {
+  visibility: hidden;
+}
+
+.shepherd-arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+  background: var(--tour-bg-solid);
+  border: 1px solid var(--tour-border);
+  box-shadow: -2px -2px 6px -2px var(--tour-shadow-color);
+}
+
+/* Arrow positioning based on placement */
+.shepherd-element[data-popper-placement^='top'] > .shepherd-arrow {
+  bottom: -6px;
+}
+
+.shepherd-element[data-popper-placement^='bottom'] > .shepherd-arrow {
+  top: -6px;
+}
+
+.shepherd-element[data-popper-placement^='left'] > .shepherd-arrow {
+  right: -6px;
+}
+
+.shepherd-element[data-popper-placement^='right'] > .shepherd-arrow {
+  left: -6px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.shepherd-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--tour-space-lg) var(--tour-space-lg) var(--tour-space-sm);
+  background: transparent;
+  border-bottom: none;
+}
+
+.shepherd-title {
+  font-family: var(--tour-font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--tour-text);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 0;
+  padding-right: var(--tour-space-md);
+}
+
+/* ============================================
+   CANCEL (CLOSE) BUTTON
+   ============================================ */
+
+.shepherd-cancel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px 0 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--tour-radius-sm);
+  background: transparent;
+  color: var(--tour-text-muted);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--tour-duration-fast) var(--tour-ease);
+}
+
+.shepherd-cancel-icon:hover {
+  background: hsl(0 0% 0% / 0.05);
+  color: var(--tour-text);
+}
+
+.dark .shepherd-cancel-icon:hover {
+  background: hsl(0 0% 100% / 0.08);
+}
+
+.shepherd-cancel-icon:active {
+  transform: scale(0.92);
+}
+
+.shepherd-cancel-icon:focus {
+  outline: 2px solid var(--tour-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   CONTENT / TEXT
+   ============================================ */
+
+.shepherd-text {
+  padding: 0 var(--tour-space-lg) var(--tour-space-md);
+  margin: 0;
+}
+
+.shepherd-text,
+.shepherd-text p {
+  font-family: var(--tour-font-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--tour-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.shepherd-text p + p {
+  margin-top: var(--tour-space-sm);
+}
+
+/* ============================================
+   FOOTER (BUTTONS CONTAINER)
+   ============================================ */
+
+.shepherd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--tour-space-sm);
+  padding: var(--tour-space-sm) var(--tour-space-lg) var(--tour-space-lg);
+  border-top: none;
+  background: transparent;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.shepherd-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tour-space-xs);
+  padding: var(--tour-space-sm) var(--tour-space-md);
+  min-height: 36px;
+  border: none;
+  border-radius: var(--tour-radius-sm);
+  font-family: var(--tour-font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all var(--tour-duration-fast) var(--tour-ease);
+  isolation: isolate;
+}
+
+.shepherd-button:focus {
+  outline: 2px solid var(--tour-primary);
+  outline-offset: 2px;
+}
+
+.shepherd-button:active {
+  transform: scale(0.96);
+}
+
+/* Primary Button - Solid with glow */
+.shepherd-button-primary {
+  background: var(--tour-primary);
+  color: white;
+  box-shadow:
+    0 1px 2px hsl(271 91% 20% / 0.2),
+    0 0 0 0 var(--tour-primary-glow);
+}
+
+.shepherd-button-primary:hover {
+  background: var(--tour-primary-hover);
+  box-shadow:
+    0 2px 8px hsl(271 91% 20% / 0.25),
+    0 0 0 4px var(--tour-primary-glow);
+}
+
+.shepherd-button-primary:active {
+  box-shadow:
+    0 1px 2px hsl(271 91% 20% / 0.2),
+    0 0 0 2px var(--tour-primary-glow);
+}
+
+/* Secondary Button - Ghost style */
+.shepherd-button-secondary {
+  background: transparent;
+  color: var(--tour-text-muted);
+  border: 1px solid var(--tour-border);
+}
+
+.shepherd-button-secondary:hover {
+  background: hsl(0 0% 0% / 0.04);
+  color: var(--tour-text);
+  border-color: hsl(0 0% 0% / 0.12);
+}
+
+.dark .shepherd-button-secondary:hover {
+  background: hsl(0 0% 100% / 0.06);
+  border-color: hsl(0 0% 100% / 0.15);
+}
+
+/* ============================================
+   TARGET ELEMENT HIGHLIGHT
+   ============================================ */
+
+.shepherd-target {
+  position: relative;
+  z-index: 9998;
+}
+
+/* Elegant pulsing ring */
+.shepherd-target-click-layer {
+  position: absolute;
+  inset: -6px;
+  border-radius: calc(var(--tour-radius-sm) + 2px);
+  border: 2px solid var(--tour-primary);
+  box-shadow:
+    0 0 0 0 var(--tour-primary-glow),
+    inset 0 0 20px -10px var(--tour-primary);
+  animation: targetPulse 2s var(--tour-ease) infinite;
+  pointer-events: none;
+}
+
+@keyframes targetPulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow:
+      0 0 0 0 var(--tour-primary-glow),
+      inset 0 0 20px -10px var(--tour-primary);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow:
+      0 0 0 10px transparent,
+      inset 0 0 30px -10px var(--tour-primary);
+  }
+}
+
+/* ============================================
+   STEP PROGRESS INDICATOR
+   ============================================ */
+
+.shepherd-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 var(--tour-space-lg) var(--tour-space-sm);
+}
+
+.shepherd-progress-step {
+  width: 20px;
+  height: 3px;
+  border-radius: var(--tour-radius-full);
+  background: var(--tour-border);
+  transition: all var(--tour-duration) var(--tour-ease);
+  overflow: hidden;
+}
+
+.shepherd-progress-step.active {
+  background: var(--tour-primary);
+  width: 32px;
+}
+
+.shepherd-progress-step.completed {
+  background: var(--tour-primary);
+  opacity: 0.5;
+}
+
+/* ============================================
+   STEP COUNTER BADGE
+   ============================================ */
+
+.shepherd-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  min-width: 42px;
+  border-radius: var(--tour-radius-full);
+  background: hsl(271 50% 95%);
+  color: var(--tour-primary);
+  font-family: var(--tour-font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dark .shepherd-step-badge {
+  background: hsl(271 50% 20%);
+  color: hsl(271 81% 70%);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 480px) {
+  .shepherd-element {
+    max-width: calc(100vw - 2rem);
+    min-width: 260px;
+    margin: 0 1rem;
+    --tour-radius: 0.875rem;
+  }
+
+  .shepherd-header {
+    padding: var(--tour-space-md) var(--tour-space-md) var(--tour-space-xs);
+  }
+
+  .shepherd-title {
+    font-size: 1rem;
+  }
+
+  .shepherd-text {
+    padding: 0 var(--tour-space-md) var(--tour-space-sm);
+  }
+
+  .shepherd-text,
+  .shepherd-text p {
+    font-size: 0.8125rem;
+  }
+
+  .shepherd-footer {
+    padding: var(--tour-space-xs) var(--tour-space-md) var(--tour-space-md);
+  }
+
+  .shepherd-button {
+    padding: var(--tour-space-xs) var(--tour-space-sm);
+    min-height: 34px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .shepherd-element {
+    animation: none;
+  }
+
+  .shepherd-target-click-layer {
+    animation: none;
+  }
+
+  .shepherd-button,
+  .shepherd-cancel-icon,
+  .shepherd-progress-step {
+    transition: none;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  .shepherd-element {
+    border-width: 2px;
+  }
+
+  .shepherd-button-primary {
+    border: 2px solid var(--tour-text);
+  }
+
+  .shepherd-button-secondary {
+    border-width: 2px;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .shepherd-element,
+  .shepherd-modal-overlay-container {
+    display: none !important;
+  }
+}
