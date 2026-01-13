@@ -1,10 +1,11 @@
 import { NextRequest } from "next/server";
+// Using MongoDB handlers for pilot migration
 import {
   handleListConversations,
   handleCreateConversation,
   handleDeleteConversation,
   handleUpdateConversation,
-} from "@tasco/api";
+} from "@/lib/handlers";
 
 export async function GET(request: NextRequest) {
   return handleListConversations(request);

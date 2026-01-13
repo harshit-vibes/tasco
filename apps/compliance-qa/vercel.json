@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "cd ../.. && bun run build --filter=@tasco/compliance-qa",
+  "installCommand": "cd ../.. && bun install",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_LYZR_AGENT_ID": "@lyzr-agent-id",
+    "NEXT_PUBLIC_LYZR_API_KEY": "@lyzr-api-key",
+    "LYZR_API_KEY": "@lyzr-api-key",
+    "MONGODB_URI": "@mongodb-uri",
+    "MONGODB_DATABASE": "compliance-qa"
+  },
+  "regions": ["sin1"],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    }
+  ]
+}

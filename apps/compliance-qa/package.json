@@ -12,9 +12,14 @@
     "update-orchestrator": "bun scripts/update-orchestrator.ts",
     "seed-legal-docs": "bun scripts/seed-legal-docs.ts",
     "sync-documents": "bun scripts/sync-documents.ts",
-    "seed-guide": "bun scripts/seed-guide.ts"
+    "seed-guide": "bun scripts/seed-guide.ts",
+    "setup-mongodb": "bun scripts/setup-mongodb.ts",
+    "migrate-to-mongodb": "bun scripts/migrate-to-mongodb.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.699.0",
+    "@aws-sdk/lib-dynamodb": "^3.699.0",
+    "mongodb": "^6.12.0",
     "@tasco/agents": "workspace:*",
     "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
