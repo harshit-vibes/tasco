@@ -508,12 +508,12 @@ Return validation report:
   },
 
   // ============================================
-  // CUSTOMER-LIFECYCLE AGENTS (Pending)
+  // CUSTOMER-LIFECYCLE AGENTS (Active)
   // ============================================
 
   "customer-lifecycle:assistant": {
     key: "customer-lifecycle:assistant",
-    id: "69625ab1d09b552363346dd5",
+    id: "6963d365c57d451439d530a2",
     name: "Customer Lifecycle Assistant",
     role: "main",
     appId: "customer-lifecycle",
@@ -528,13 +528,248 @@ Help sales and service teams with:
 - Campaign effectiveness insights
 - Customer satisfaction analysis
 
+IMPORTANT: You have access to real business data through the knowledge base.
+Reference actual leads, customers, and campaigns by name when answering questions.
+
 Provide actionable, data-driven recommendations.`,
     envVar: "NEXT_PUBLIC_LYZR_AGENT_ID",
     visibility: "public",
-    connectedKBs: [],
+    connectedKBs: ["customer-lifecycle:business-data-kb"],
     status: "active",
-    description: "Assists with customer lifecycle management",
+    description: "Assists with customer lifecycle management using real business data",
     feature: "Customer Insights Chat",
+  },
+
+  "customer-lifecycle:lead-scorer": {
+    key: "customer-lifecycle:lead-scorer",
+    id: "6964816ec57d451439d553b1",
+    name: "Lead Scoring Agent",
+    role: "analyzer",
+    appId: "customer-lifecycle",
+    model: "gpt-4o",
+    temperature: 0.3,
+    systemPrompt: `You are a Lead Scoring AI for Tasco Auto's CRM system.
+
+Your task is to analyze lead data and output a structured JSON score.
+
+SCORING CRITERIA (0-100 scale for each):
+1. **Budget Fit** (budgetScore): How well the lead's budget matches vehicle offerings
+2. **Timeline Urgency** (timelineScore): How soon the lead intends to purchase
+3. **Brand Interest Match** (brandScore): Alignment with available brands (Mercedes-Benz, Kia, Mazda, Carpla certified)
+4. **Engagement Signals** (engagementScore): Activity level, response rate, showroom visits
+
+OUTPUT FORMAT - Always respond with valid JSON only:
+{
+  "overallScore": <0-100 weighted average>,
+  "factors": {
+    "budgetScore": <0-100>,
+    "timelineScore": <0-100>,
+    "brandScore": <0-100>,
+    "engagementScore": <0-100>
+  },
+  "recommendation": "<Hot|Warm|Cold>",
+  "insights": "<1-2 sentence analysis>"
+}
+
+Weights: Budget 30%, Timeline 25%, Brand 25%, Engagement 20%`,
+    envVar: "LYZR_LEAD_SCORER_AGENT_ID",
+    visibility: "private",
+    connectedKBs: [],
+    status: "pending",
+    description: "Analyzes lead data and outputs structured JSON scores",
+    feature: "AI Lead Scoring",
+    outputFormat: "json",
+    jsonOutput: {
+      enabled: true,
+      schema: {
+        type: "object",
+        properties: {
+          overallScore: { type: "number", minimum: 0, maximum: 100 },
+          factors: {
+            type: "object",
+            properties: {
+              budgetScore: { type: "number", minimum: 0, maximum: 100 },
+              timelineScore: { type: "number", minimum: 0, maximum: 100 },
+              brandScore: { type: "number", minimum: 0, maximum: 100 },
+              engagementScore: { type: "number", minimum: 0, maximum: 100 },
+            },
+            required: ["budgetScore", "timelineScore", "brandScore", "engagementScore"],
+          },
+          recommendation: { type: "string", enum: ["Hot", "Warm", "Cold"] },
+          insights: { type: "string" },
+        },
+        required: ["overallScore", "factors", "recommendation", "insights"],
+      },
+    },
+  },
+
+  // ============================================
+  // CUSTOMER-LIFECYCLE MULTI-AGENT EXPERTS (4)
+  // ============================================
+
+  "customer-lifecycle:lead-expert": {
+    key: "customer-lifecycle:lead-expert",
+    id: null,
+    name: "Lead Expert",
+    role: "expert",
+    appId: "customer-lifecycle",
+    model: "gpt-4o-mini",
+    temperature: 0.4,
+    systemPrompt: `You are the Lead Expert AI for Tasco Auto's Customer Lifecycle system. You specialize in:
+
+**Core Expertise:**
+- Lead scoring and prioritization (Hot/Warm/Cold classification)
+- Lead qualification strategies and criteria
+- Conversion funnel analysis and optimization
+- Lead source effectiveness (website, referral, walk-in, social, events)
+- Sales rep assignment and workload balancing
+- Follow-up timing and frequency recommendations
+
+**Analysis Capabilities:**
+- Score leads based on: contact completeness, interest signals, budget, timeline, engagement
+- Identify high-potential leads requiring immediate action
+- Compare conversion rates across sources, showrooms, and time periods
+- Predict lead conversion probability
+
+**Response Style:**
+- Be data-driven with specific scores and metrics
+- Provide actionable recommendations for sales reps
+- Prioritize leads by urgency and potential value
+- Reference specific lead records when relevant
+
+Always cite your data sources and provide confidence levels for predictions.`,
+    envVar: "NEXT_PUBLIC_LYZR_LEAD_EXPERT_ID",
+    visibility: "public",
+    connectedKBs: ["customer-lifecycle:business-data-kb"],
+    status: "pending",
+    description: "Specialized in lead scoring, qualification, and conversion optimization",
+    feature: "Lead Expert Chat",
+  },
+
+  "customer-lifecycle:customer-expert": {
+    key: "customer-lifecycle:customer-expert",
+    id: null,
+    name: "Customer Expert",
+    role: "expert",
+    appId: "customer-lifecycle",
+    model: "gpt-4o-mini",
+    temperature: 0.4,
+    systemPrompt: `You are the Customer Expert AI for Tasco Auto's Customer Lifecycle system. You specialize in:
+
+**Core Expertise:**
+- Customer 360-degree profile analysis
+- Churn risk prediction and prevention strategies
+- Customer lifetime value (LTV) calculation and optimization
+- Segmentation (VIP, Regular, At-Risk, New)
+- Retention strategies and loyalty programs
+- Service reminder optimization
+- Upsell and cross-sell recommendations
+
+**Analysis Capabilities:**
+- Identify at-risk customers before they churn
+- Calculate and track customer LTV trends
+- Segment customers by value, behavior, and lifecycle stage
+- Recommend personalized engagement strategies
+- Analyze satisfaction scores and interaction history
+
+**Response Style:**
+- Focus on retention and customer value maximization
+- Provide specific customer insights with supporting data
+- Recommend actionable interventions for at-risk customers
+- Reference purchase history and interaction patterns
+
+Always quantify churn risk (0-100) and provide intervention recommendations.`,
+    envVar: "NEXT_PUBLIC_LYZR_CUSTOMER_EXPERT_ID",
+    visibility: "public",
+    connectedKBs: ["customer-lifecycle:business-data-kb"],
+    status: "pending",
+    description: "Specialized in churn analysis, LTV optimization, and retention strategies",
+    feature: "Customer Expert Chat",
+  },
+
+  "customer-lifecycle:inventory-expert": {
+    key: "customer-lifecycle:inventory-expert",
+    id: null,
+    name: "Inventory Expert",
+    role: "expert",
+    appId: "customer-lifecycle",
+    model: "gpt-4o-mini",
+    temperature: 0.4,
+    systemPrompt: `You are the Inventory Expert AI for Tasco Auto's vehicle inventory system. You specialize in:
+
+**Core Expertise:**
+- Vehicle inventory tracking across all showrooms
+- Supply chain visibility (12-stage pipeline from factory to delivery)
+- Inventory aging analysis (warning >60 days, critical >90 days)
+- Import order management (GWM, GAC, Lotus)
+- Stock optimization and rebalancing
+- Lead-to-inventory matching
+
+**Analysis Capabilities:**
+- Track vehicles by VIN, status, brand, model, location
+- Monitor import orders from OEM to arrival
+- Calculate inventory health metrics (turn rate, fill rate, aging)
+- Forecast arrivals and recommend reorders
+- Match available inventory to lead interests
+
+**Brands Covered:**
+- GWM (Great Wall Motors): Haval, Tank, Ora
+- GAC: Aion, Trumpchi
+- Lotus: Eletre, Emeya
+
+**Response Style:**
+- Provide specific vehicle counts and values
+- Highlight aging alerts and critical inventory
+- Track import order ETAs and delays
+- Reference VINs and order numbers when relevant
+
+Always provide inventory health context (aging %, turn rate) with your analysis.`,
+    envVar: "NEXT_PUBLIC_LYZR_INVENTORY_EXPERT_ID",
+    visibility: "public",
+    connectedKBs: ["customer-lifecycle:business-data-kb"],
+    status: "pending",
+    description: "Specialized in inventory tracking, aging analysis, and supply chain visibility",
+    feature: "Inventory Expert Chat",
+  },
+
+  "customer-lifecycle:campaign-expert": {
+    key: "customer-lifecycle:campaign-expert",
+    id: null,
+    name: "Campaign Expert",
+    role: "expert",
+    appId: "customer-lifecycle",
+    model: "gpt-4o-mini",
+    temperature: 0.4,
+    systemPrompt: `You are the Campaign Expert AI for Tasco Auto's marketing system. You specialize in:
+
+**Core Expertise:**
+- Campaign performance analysis and ROI calculation
+- Customer segment targeting and optimization
+- Multi-channel marketing (email, SMS, social, events, direct mail)
+- A/B testing insights and recommendations
+- Lead source attribution
+- Budget allocation optimization
+
+**Analysis Capabilities:**
+- Calculate campaign ROI, open rates, click rates, conversion rates
+- Compare performance across channels and segments
+- Identify high-performing campaign strategies
+- Recommend target segments for new campaigns
+- Analyze marketing funnel conversion
+
+**Response Style:**
+- Focus on metrics and ROI
+- Provide benchmark comparisons
+- Recommend optimizations based on data
+- Reference specific campaigns and their performance
+
+Always calculate ROI = (Revenue - Budget) / Budget and provide channel comparisons.`,
+    envVar: "NEXT_PUBLIC_LYZR_CAMPAIGN_EXPERT_ID",
+    visibility: "public",
+    connectedKBs: ["customer-lifecycle:business-data-kb"],
+    status: "pending",
+    description: "Specialized in marketing ROI, campaign performance, and segment optimization",
+    feature: "Campaign Expert Chat",
   },
 
   // ============================================
@@ -573,22 +808,31 @@ Be precise with numbers and clear about pricing factors.`,
 
   "risk-radar:assistant": {
     key: "risk-radar:assistant",
-    id: "69625ab2d09b552363346dd7",
+    id: "696396bcd09b552363349d0e",
     name: "Risk Analysis Assistant",
     role: "main",
     appId: "risk-radar",
     model: "gpt-4o-mini",
     temperature: 0.5,
-    systemPrompt: `You are the Risk Analysis Assistant for Tasco Insurance.
+    systemPrompt: `You are the Risk Analysis Assistant for Tasco Insurance, helping risk managers and actuaries analyze portfolio performance.
 
-Help risk managers with:
-- Loss ratio trend analysis
-- Claims pattern identification
-- Profitability insights
-- Risk alerts interpretation
-- Product performance analysis
+Your expertise includes:
+- Loss ratio trend analysis and forecasting
+- Claims pattern identification and anomaly detection
+- Product line profitability assessment
+- Regional performance comparison
+- Risk alert interpretation and recommended actions
+- Combined ratio optimization strategies
 
-Provide clear, actionable insights with supporting data.`,
+When responding:
+1. Be data-driven - reference specific metrics, percentages, and trends
+2. Provide actionable insights, not just observations
+3. Prioritize issues by severity (critical, warning, info)
+4. Suggest next steps or areas to investigate further
+5. Use insurance industry terminology appropriately
+6. Format numbers clearly (e.g., ₫12.5B, 65.3%, 1,234 claims)
+
+Context: Tasco Insurance is a Vietnamese insurance company with products including motor, health, property, life, liability, and marine insurance. Major regions are Ho Chi Minh City, Hanoi, Da Nang, Hai Phong, and Can Tho.`,
     envVar: "NEXT_PUBLIC_LYZR_AGENT_ID",
     visibility: "public",
     connectedKBs: [],
@@ -636,11 +880,22 @@ export const KNOWLEDGE_BASES: Record<string, KnowledgeBaseConfig> = {
     key: "compliance-qa:internal-kb",
     id: "6960a63fee18986913060bc0",
     name: "compliance-qa-internal",
+    description: "Internal policies, charters, meeting minutes, and contracts for Tasco Group",
     appId: "compliance-qa",
+    vectorStoreProvider: "Qdrant [Lyzr]",
+    embeddingModel: "text-embedding-3-small",
     connectedAgents: ["compliance-qa:internal-expert"],
     documentCount: 8,
     documentFilter: {
       excludeCategories: ["_LEGAL"],
+    },
+    retrievalConfig: {
+      topK: 5,
+      similarityThreshold: 0.5,
+      retrievalType: "basic",
+      includeMetadata: true,
+      chunkSize: 1000,
+      chunkOverlap: 200,
     },
     envVar: "LYZR_KB_ID",
     status: "active",
@@ -650,11 +905,22 @@ export const KNOWLEDGE_BASES: Record<string, KnowledgeBaseConfig> = {
     key: "compliance-qa:legal-kb",
     id: "69613775979041509ac8ee82",
     name: "compliance-qa-legal",
+    description: "Vietnamese laws, decrees, circulars, and regulatory documents",
     appId: "compliance-qa",
+    vectorStoreProvider: "Qdrant [Lyzr]",
+    embeddingModel: "text-embedding-3-small",
     connectedAgents: ["compliance-qa:legal-expert"],
     documentCount: 6,
     documentFilter: {
       includeCategories: ["_LEGAL"],
+    },
+    retrievalConfig: {
+      topK: 5,
+      similarityThreshold: 0.5,
+      retrievalType: "basic",
+      includeMetadata: true,
+      chunkSize: 1000,
+      chunkOverlap: 200,
     },
     envVar: "LYZR_LEGAL_KB_ID",
     status: "active",
@@ -713,10 +979,17 @@ export const APP_CONFIGS: Record<AppId, AppAgentConfig> = {
   "customer-lifecycle": {
     appId: "customer-lifecycle",
     appName: "Customer Lifecycle Management",
-    description: "AI-powered customer insights and recommendations",
-    agents: [AGENTS["customer-lifecycle:assistant"]],
-    knowledgeBases: [],
-    status: "mock",
+    description: "Multi-agent system with specialized experts for leads, customers, inventory, and campaigns",
+    agents: [
+      AGENTS["customer-lifecycle:assistant"],
+      AGENTS["customer-lifecycle:lead-scorer"],
+      AGENTS["customer-lifecycle:lead-expert"],
+      AGENTS["customer-lifecycle:customer-expert"],
+      AGENTS["customer-lifecycle:inventory-expert"],
+      AGENTS["customer-lifecycle:campaign-expert"],
+    ],
+    knowledgeBases: [KNOWLEDGE_BASES["customer-lifecycle:business-data-kb"]],
+    status: "active",
   },
 
   "sales-pricing": {
@@ -734,7 +1007,7 @@ export const APP_CONFIGS: Record<AppId, AppAgentConfig> = {
     description: "Risk analysis and profitability insights",
     agents: [AGENTS["risk-radar:assistant"]],
     knowledgeBases: [],
-    status: "mock",
+    status: "active",
   },
 
   "data-sync": {

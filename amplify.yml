@@ -1,27 +1,12 @@
 # AWS Amplify Build Configuration for Tasco Monorepo
 # ===================================================
 #
-# Deploy Strategy: Create one Amplify app per subdomain
-# Each app uses the same amplify.yml but different environment variables:
-#
-#   APP_NAME   | APP_PATH           | Subdomain
-#   -----------|--------------------|-----------------------
-#   compliance | compliance-qa      | compliance.tasco.app
-#   customer   | customer-lifecycle | customer.tasco.app
-#   sync       | data-sync          | sync.tasco.app
-#   elearning  | e-learning         | elearning.tasco.app
-#   promotion  | promotion-control  | promotion.tasco.app
-#   risk       | risk-radar         | risk.tasco.app
-#   orders     | sales-order        | orders.tasco.app
-#   pricing    | sales-pricing      | pricing.tasco.app
-#
-# Required Environment Variables (set in Amplify Console):
-#   - APP_NAME: Short name for filtering (e.g., "compliance-qa")
-#   - APP_PATH: Directory name under apps/ (e.g., "compliance-qa")
-#   - LYZR_API_KEY: Server-side Lyzr API key
-#   - NEXT_PUBLIC_LYZR_API_KEY: Client-side Lyzr API key
-#   - NEXT_PUBLIC_LYZR_AGENT_ID: Primary agent ID for the app
-#   - NEXT_PUBLIC_AWS_REGION: AWS region (ap-southeast-1)
+# For deploying a single app from this Turborepo monorepo:
+# 1. Create Amplify app in AWS Console
+# 2. Connect to GitHub repo: harshit-vibes/tasco
+# 3. Set environment variable: APP_PATH=compliance-qa (or desired app)
+# 4. Set all required environment variables (LYZR_API_KEY, etc.)
+# 5. Push to prod branch to trigger build
 
 version: 1
 
@@ -42,9 +27,9 @@ frontend:
         - export BUN_INSTALL="$HOME/.bun"
         - export PATH="$BUN_INSTALL/bin:$PATH"
         # Build the specific app using Turborepo filter
-        - cd apps/${APP_PATH} && bun run build
+        - bun run build --filter=@tasco/${APP_PATH:-compliance-qa}
   artifacts:
-    baseDirectory: apps/${APP_PATH}/.next
+    baseDirectory: apps/${APP_PATH:-compliance-qa}/.next
     files:
       - '**/*'
   cache:

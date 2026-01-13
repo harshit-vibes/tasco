@@ -1,10 +1,12 @@
 "use client";
 
 import "./globals.css";
+import "@tasco/tours/styles/shepherd.css";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { Toaster } from "sonner";
 import { SettingsProvider } from "@tasco/lyzr";
 import { I18nProvider } from "@tasco/i18n";
+import { TourProvider } from "@tasco/tours";
 import { AppShell } from "../components/app-shell";
 
 // Import app-specific translations
@@ -51,9 +53,11 @@ export default function RootLayout({
             defaultRagUrl={RAG_BASE_URL}
             storageKey="compliance-qa-settings"
           >
-            <AppShell>
-              {children}
-            </AppShell>
+            <TourProvider appId="compliance-qa" autoStart={true}>
+              <AppShell>
+                {children}
+              </AppShell>
+            </TourProvider>
           </SettingsProvider>
         </I18nProvider>
         <Toaster position="bottom-right" richColors />

@@ -10,7 +10,6 @@ import {
   FolderOpen,
   Building2,
   Clock,
-  MessageSquare,
   Settings,
   Shield,
 } from "@tasco/ui/icons";
@@ -26,6 +25,7 @@ interface NavSection {
     name: string;
     href: string;
     icon: LucideIcon;
+    tourId?: string;
   }[];
 }
 
@@ -34,13 +34,12 @@ const navigationSections: NavSection[] = [
     // Main section (no label)
     items: [
       { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-      { name: "Compliance Chat", href: "/", icon: MessageSquare },
     ],
   },
   {
     label: "DOCUMENTS",
     items: [
-      { name: "Internal Documents", href: "/knowledge-base", icon: FolderOpen },
+      { name: "Internal Documents", href: "/knowledge-base", icon: FolderOpen, tourId: "knowledge-base" },
       { name: "Legal Framework", href: "/legal-framework", icon: Scale },
     ],
   },
@@ -78,7 +77,7 @@ function ComplianceSidebar({ children }: { children: React.ReactNode }) {
   return (
     <aside className="flex h-full w-[280px] flex-col bg-[hsl(222,47%,11%)]">
       {/* Brand Header */}
-      <div className="sidebar-brand">
+      <div className="sidebar-brand" data-tour="welcome">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-lg bg-[hsl(45,93%,47%)] flex items-center justify-center shrink-0">
             <Shield className="h-5 w-5 text-[hsl(222,47%,11%)]" />
@@ -103,6 +102,7 @@ function ComplianceSidebar({ children }: { children: React.ReactNode }) {
                 return (
                   <Link key={item.href} href={item.href}>
                     <button
+                      data-tour={item.tourId}
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
                         active
@@ -121,7 +121,7 @@ function ComplianceSidebar({ children }: { children: React.ReactNode }) {
         ))}
 
         {/* Chat History Section */}
-        <div className="mt-6">
+        <div className="mt-6" data-tour="chat-history">
           <div className="sidebar-section-label">RECENT CHATS</div>
           <div className="px-3">{children}</div>
         </div>

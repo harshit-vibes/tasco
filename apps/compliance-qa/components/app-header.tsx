@@ -42,6 +42,7 @@ import {
 } from "@tasco/ui/icons";
 import { useSettings, useChatContext } from "@tasco/lyzr";
 import { LanguageSwitcher } from "@tasco/i18n";
+import { TourTrigger } from "@tasco/tours";
 import {
   type Notification,
   getNotifications,
@@ -172,8 +173,11 @@ export function AppHeader() {
           )}
         </div>
 
-        {/* Right side - Help, Notifications, Profile */}
+        {/* Right side - Tour, Help, Notifications, Profile */}
         <div className="flex items-center gap-1">
+          {/* Interactive Tour */}
+          <TourTrigger tourId="onboarding" variant="icon" />
+
           {/* Help / Feature Guide */}
           {guide && (
             <GuideTrigger onClick={openGuide} />

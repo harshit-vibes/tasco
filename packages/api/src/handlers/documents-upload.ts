@@ -194,6 +194,8 @@ export function createUploadHandler(config: UploadHandlerConfig) {
         tags: tags ? tags.split(",").map((t) => t.trim()) : [],
         summary: summary || name,
         syncedToKB: false,
+        // Review status - always start as pending (must be approved before sync)
+        reviewStatus: "pending",
         // Store extracted text reference for PDFs
         ...(extractedText && isPDF ? { extractedTextFile: filename.replace(/\.pdf$/i, ".extracted.md") } : {}),
       };
@@ -208,25 +210,9 @@ export function createUploadHandler(config: UploadHandlerConfig) {
         );
       }
 
-      // If syncToKB is true, trigger sync to Lyzr RAG
-      let finalDoc = newDoc;
-      if (syncToKB) {
-        try {
-          const syncResponse = await fetch(new URL(syncApiPath, request.url).toString(), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ documentId: docId, action: "sync" }),
-          });
-
-          if (syncResponse.ok) {
-            finalDoc = { ...newDoc, syncedToKB: true };
-            const updatedWithSync = updatedDocs.map((d) => (d.id === docId ? finalDoc : d));
-            await updateDocumentsIndex(updatedWithSync);
-          }
-        } catch (syncError) {
-          console.warn("Auto-sync failed, document uploaded without sync:", syncError);
-        }
-      }
+      // Note: syncToKB is ignored - documents must be approved before syncing
+      // The sync can be triggered manually after approval via the UI
+      const finalDoc = newDoc;
 
       const enrichedDoc = await enrichDocument(finalDoc);
       return NextResponse.json({

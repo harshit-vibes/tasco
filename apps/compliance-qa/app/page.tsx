@@ -84,15 +84,17 @@ export default function Home() {
         </div>
       )}
 
-      <ChatContainer
-        messages={messages}
-        isLoading={isLoading}
-        onSendMessage={sendMessage}
-        appTitle={t("appTitle")}
-        appDescription={t("appDescription")}
-        suggestedQuestions={suggestedQuestions}
-        onCitationNavigate={handleCitationNavigate}
-      />
+      <div data-tour="chat-input" className="flex-1 flex flex-col min-h-0">
+        <ChatContainer
+          messages={messages}
+          isLoading={isLoading}
+          onSendMessage={sendMessage}
+          appTitle={t("appTitle")}
+          appDescription={t("appDescription")}
+          suggestedQuestions={suggestedQuestions}
+          onCitationNavigate={handleCitationNavigate}
+        />
+      </div>
 
       {/* Document Preview Sheet */}
       <DocumentPreviewSheet

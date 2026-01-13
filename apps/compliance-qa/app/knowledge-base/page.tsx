@@ -48,6 +48,8 @@ import {
   Upload,
   Pencil,
   Save,
+  CheckCircle,
+  Clock,
 } from "@tasco/ui/icons";
 import { addNotification } from "@/lib/notifications";
 import { DocumentContentViewer } from "@tasco/ui";
@@ -72,6 +74,7 @@ interface Document {
   tags: string[];
   summary: string;
   syncedToKB?: boolean; // Whether document is synced to knowledge base
+  reviewStatus?: "pending" | "approved" | "rejected" | "archived"; // Document approval status
 }
 
 // Lyzr Knowledge Base URL
@@ -91,8 +94,14 @@ function DocumentCard({ doc, categoryColors, onView, showEntity = true }: Docume
       className="group cursor-pointer hover:shadow-lg hover:border-primary/30 transition-all duration-200 overflow-hidden"
       onClick={() => onView(doc)}
     >
-      {/* Sync Status Indicator Bar */}
-      <div className={`h-1 ${doc.syncedToKB ? "bg-green-500" : "bg-muted"}`} />
+      {/* Status Indicator Bar - amber for pending, green for synced */}
+      <div className={`h-1 ${
+        doc.reviewStatus === "pending"
+          ? "bg-amber-400"
+          : doc.syncedToKB
+            ? "bg-green-500"
+            : "bg-muted"
+      }`} />
 
       <div className="p-4">
         {/* Header: Category Badge + Sync Status */}
@@ -103,15 +112,20 @@ function DocumentCard({ doc, categoryColors, onView, showEntity = true }: Docume
           >
             {doc.category}
           </Badge>
-          {doc.syncedToKB ? (
+          {doc.reviewStatus === "pending" ? (
+            <span className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+              <Clock className="h-3 w-3" />
+              Pending
+            </span>
+          ) : doc.syncedToKB ? (
             <span className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400 font-medium">
               <Database className="h-3 w-3" />
               Synced
             </span>
           ) : (
             <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <Database className="h-3 w-3" />
-              Not synced
+              <CheckCircle className="h-3 w-3" />
+              Approved
             </span>
           )}
         </div>
@@ -233,6 +247,9 @@ function KnowledgeBaseContent() {
     summary: "",
   });
 
+  // Approval state
+  const [isApproving, setIsApproving] = useState(false);
+
   // Handle sync/unsync document
   const handleSyncDocument = async (doc: Document, action: "sync" | "unsync") => {
     setIsSyncing(true);
@@ -303,6 +320,63 @@ function KnowledgeBaseContent() {
       });
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  // Handle document approval
+  const handleApproveDocument = async (doc: Document) => {
+    setIsApproving(true);
+    const toastId = toast.loading(`Approving "${doc.name}"...`);
+
+    try {
+      const response = await fetch("/api/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: doc.id,
+          reviewStatus: "approved",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update local state
+        setDocuments((prev) =>
+          prev.map((d) =>
+            d.id === doc.id ? { ...d, reviewStatus: "approved" } : d
+          )
+        );
+        // Update selected document
+        if (selectedDocument?.id === doc.id) {
+          setSelectedDocument({ ...selectedDocument, reviewStatus: "approved" });
+        }
+
+        toast.success("Document approved", {
+          id: toastId,
+          description: doc.name,
+        });
+
+        // Add audit notification
+        addNotification({
+          id: `document-approved-${Date.now()}`,
+          type: "updated",
+          category: "document",
+          title: `${doc.name} (approved)`,
+          timestamp: new Date(),
+          read: false,
+        });
+      } else {
+        toast.error("Failed to approve document", {
+          id: toastId,
+          description: data.error,
+        });
+      }
+    } catch (err) {
+      console.error("Error approving document:", err);
+      toast.error("Failed to approve document", { id: toastId });
+    } finally {
+      setIsApproving(false);
     }
   };
 
@@ -668,22 +742,8 @@ function KnowledgeBaseContent() {
   // Stats
   const syncedCount = documents.filter((d) => d.syncedToKB).length;
 
-  // Predefined categories (always show these filter buttons)
-  // Categories for internal/entity-specific documents
-  // (Law-of-the-land docs like Laws, Decrees, Circulars are in Legal Framework)
-  const PREDEFINED_CATEGORIES = [
-    // Company documents
-    "Internal Policies",
-    "Legal Documents",
-    "Company Charters",
-    "Meeting Minutes",
-    "Contracts",
-    "Governance Documents",
-    // Financial reports
-    "Annual Reports",
-    "Quarterly Reports",
-    "Board Resolutions",
-  ];
+  // Get unique categories from actual documents (only show categories that have docs)
+  const availableCategories = [...new Set(documents.map((doc) => doc.category))].sort();
 
   // Category colors for internal/entity-specific documents
   // (Law-of-the-land categories are in Legal Framework page)
@@ -764,36 +824,35 @@ function KnowledgeBaseContent() {
           </div>
         </div>
         {/* Category Filter - clicking selected category again deselects it (shows all) */}
-        <div className="flex gap-2 flex-wrap">
-          <span className="text-sm text-muted-foreground self-center mr-2">Category:</span>
-          {PREDEFINED_CATEGORIES.map((category) => {
-            const count = categoryDocCounts[category] || 0;
-            return (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                className={count === 0 ? "opacity-60" : ""}
-              >
-                {category}
-                {count > 0 && (
+        {availableCategories.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            <span className="text-sm text-muted-foreground self-center mr-2">Category:</span>
+            {availableCategories.map((category) => {
+              const count = categoryDocCounts[category] || 0;
+              return (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+                >
+                  {category}
                   <span className="ml-1.5 text-xs opacity-70">({count})</span>
-                )}
+                </Button>
+              );
+            })}
+            {selectedCategory && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCategory(null)}
+                className="text-muted-foreground"
+              >
+                Clear
               </Button>
-            );
-          })}
-          {selectedCategory && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSelectedCategory(null)}
-              className="text-muted-foreground"
-            >
-              Clear
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Documents */}
@@ -1002,8 +1061,21 @@ function KnowledgeBaseContent() {
               </Button>
             </div>
             <div className="flex items-center gap-2 pt-2">
+              {/* Review Status Badge */}
+              {selectedDocument?.reviewStatus === "pending" ? (
+                <Badge variant="outline" className="gap-1 text-xs text-amber-600 border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700">
+                  <Clock className="h-2.5 w-2.5" />
+                  Pending Approval
+                </Badge>
+              ) : (
+                <Badge className="gap-1 text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                  <CheckCircle className="h-2.5 w-2.5" />
+                  Approved
+                </Badge>
+              )}
+              {/* Sync Status Badge */}
               {selectedDocument?.syncedToKB ? (
-                <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 gap-1 text-xs">
+                <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 gap-1 text-xs">
                   <Database className="h-2.5 w-2.5" />
                   Synced
                 </Badge>
@@ -1169,36 +1241,56 @@ function KnowledgeBaseContent() {
                     <Pencil className="h-3.5 w-3.5 mr-1.5" />
                     Edit
                   </Button>
-                  {selectedDocument?.syncedToKB ? (
+                  {/* Approve Button - Only show if pending */}
+                  {selectedDocument?.reviewStatus === "pending" && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleSyncDocument(selectedDocument, "unsync")}
-                      disabled={isSyncing}
-                      className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950"
-                    >
-                      {isSyncing ? (
-                        <RefreshCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                      ) : (
-                        <Database className="h-3.5 w-3.5 mr-1.5" />
-                      )}
-                      Remove from KB
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSyncDocument(selectedDocument!, "sync")}
-                      disabled={isSyncing}
+                      onClick={() => handleApproveDocument(selectedDocument)}
+                      disabled={isApproving}
                       className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950"
                     >
-                      {isSyncing ? (
-                        <RefreshCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                      {isApproving ? (
+                        <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
                       ) : (
-                        <Database className="h-3.5 w-3.5 mr-1.5" />
+                        <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                       )}
-                      Sync to KB
+                      Approve
                     </Button>
+                  )}
+                  {/* Sync/Unsync Buttons - Only available for approved documents */}
+                  {selectedDocument?.reviewStatus !== "pending" && (
+                    selectedDocument?.syncedToKB ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSyncDocument(selectedDocument, "unsync")}
+                        disabled={isSyncing}
+                        className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950"
+                      >
+                        {isSyncing ? (
+                          <RefreshCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                        ) : (
+                          <Database className="h-3.5 w-3.5 mr-1.5" />
+                        )}
+                        Remove from KB
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSyncDocument(selectedDocument!, "sync")}
+                        disabled={isSyncing}
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950"
+                      >
+                        {isSyncing ? (
+                          <RefreshCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                        ) : (
+                          <Database className="h-3.5 w-3.5 mr-1.5" />
+                        )}
+                        Sync to KB
+                      </Button>
+                    )
                   )}
                 </div>
                 <Button
@@ -1354,18 +1446,17 @@ function KnowledgeBaseContent() {
 
               <Separator />
 
-              {/* Sync Toggle */}
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <label className="text-sm font-medium">Sync to Knowledge Base</label>
-                  <p className="text-xs text-muted-foreground">
-                    Enable RAG search for this document
+              {/* Approval Workflow Info */}
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    Pending Approval
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-300">
+                    New documents require approval before they can be synced to the Knowledge Base.
                   </p>
                 </div>
-                <Switch
-                  checked={syncEnabled}
-                  onChange={setSyncEnabled}
-                />
               </div>
             </div>
           </ScrollArea>

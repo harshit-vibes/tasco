@@ -42,6 +42,16 @@ async function main() {
     process.exit(1);
   }
 
+  // Validate all required IDs are present
+  if (!MAIN_AGENT_ID || !LEGAL_AGENT_ID || !INTERNAL_AGENT_ID) {
+    console.error("Error: Missing agent IDs. Check registry or environment variables.");
+    process.exit(1);
+  }
+  if (!LEGAL_KB_ID || !INTERNAL_KB_ID) {
+    console.error("Error: Missing KB IDs. Check registry or environment variables.");
+    process.exit(1);
+  }
+
   const config: AgentManagementConfig = { apiKey: API_KEY };
 
   console.log("Connecting Multi-Agent System...\n");

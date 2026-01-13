@@ -62,6 +62,12 @@ interface DocumentStats {
   };
   byCategory: Record<string, number>;
   byLegalType: Record<string, number>;
+  /** Legal framework document counts (category: _LEGAL) */
+  legal?: {
+    total: number;
+    syncedToKB: number;
+    byType: Record<string, number>;
+  };
 }
 
 export default function DashboardPage() {
@@ -339,7 +345,7 @@ export default function DashboardPage() {
         {/* Laws & Regulations Card */}
         <Card
           className="cursor-pointer hover:shadow-md transition-shadow group"
-          onClick={() => router.push("/knowledge-base?category=Laws%20%26%20Regulations")}
+          onClick={() => router.push("/legal-framework")}
         >
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
@@ -361,24 +367,26 @@ export default function DashboardPage() {
                 <Loader2 className="h-3 w-3 animate-spin" />
                 Loading...
               </div>
-            ) : docStats ? (
+            ) : docStats?.legal ? (
               <div className="flex items-center gap-3 text-sm">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-lg">
-                    {(docStats.byLegalType?.law || 0) +
-                     (docStats.byLegalType?.decree || 0) +
-                     (docStats.byLegalType?.circular || 0)}
-                  </span>
+                  <span className="font-semibold text-lg">{docStats.legal.total}</span>
                   <span className="text-muted-foreground">documents</span>
                 </div>
                 <Separator orientation="vertical" className="h-4" />
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 text-[10px] px-1.5 py-0">
-                    {docStats.byLegalType?.law || 0} laws
+                  <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-[10px] px-1.5 py-0">
+                    {docStats.legal.syncedToKB} synced
                   </Badge>
-                  <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 text-[10px] px-1.5 py-0">
-                    {docStats.byLegalType?.decree || 0} decrees
-                  </Badge>
+                  {Object.entries(docStats.legal.byType).slice(0, 2).map(([type, count]) => (
+                    <Badge
+                      key={type}
+                      variant="outline"
+                      className="text-[10px] px-1.5 py-0"
+                    >
+                      {count} {type.toLowerCase()}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             ) : (

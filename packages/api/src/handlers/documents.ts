@@ -76,6 +76,12 @@ export interface DocumentStats {
   };
   byCategory: Record<string, number>;
   byLegalType: Record<string, number>;
+  /** Legal framework document counts (category: _LEGAL) */
+  legal: {
+    total: number;
+    syncedToKB: number;
+    byType: Record<string, number>;
+  };
 }
 
 /**
@@ -185,6 +191,11 @@ export function createDocumentsHandler(config: DocumentsHandlerConfig) {
       // If stats requested, return aggregated statistics for dashboard
       if (stats === "true") {
         const allDocs = await getDocumentsIndex();
+
+        // Filter legal framework documents (category: _LEGAL)
+        const legalDocs = allDocs.filter((d) => d.category === "_LEGAL");
+        const legalSyncCount = legalDocs.filter((d) => syncStatuses[d.id]?.syncedToKB).length;
+
         const statsData: DocumentStats = {
           total: allDocs.length,
           syncedToKB: Object.values(syncStatuses).filter((s) => s.syncedToKB).length,
@@ -196,15 +207,26 @@ export function createDocumentsHandler(config: DocumentsHandlerConfig) {
           },
           byCategory: {},
           byLegalType: {},
+          legal: {
+            total: legalDocs.length,
+            syncedToKB: legalSyncCount,
+            byType: {},
+          },
         };
 
-        // Count by category
+        // Count by category and legal type
         for (const doc of allDocs) {
           const cat = doc.category || "General";
           statsData.byCategory[cat] = (statsData.byCategory[cat] || 0) + 1;
           if (doc.legalType) {
             statsData.byLegalType[doc.legalType] = (statsData.byLegalType[doc.legalType] || 0) + 1;
           }
+        }
+
+        // Count legal documents by type
+        for (const doc of legalDocs) {
+          const legalType = doc.legalType || "Other";
+          statsData.legal.byType[legalType] = (statsData.legal.byType[legalType] || 0) + 1;
         }
 
         return NextResponse.json({
@@ -370,13 +392,14 @@ export function createDocumentsHandler(config: DocumentsHandlerConfig) {
         tags: tags || [],
         summary: summary || name,
         syncedToKB: false,
+        // Review status - always start as pending (must be approved before sync)
+        reviewStatus: reviewStatus || "pending",
         // Legal document fields (optional)
         ...(jurisdiction && { jurisdiction }),
         ...(legalType && { legalType }),
         ...(enactmentDate && { enactmentDate }),
         ...(applicableEntityIds && { applicableEntityIds }),
         // Review workflow fields (optional)
-        ...(reviewStatus && { reviewStatus }),
         ...(reviewNotes && { reviewNotes }),
       };
 
@@ -392,25 +415,9 @@ export function createDocumentsHandler(config: DocumentsHandlerConfig) {
         );
       }
 
-      // If syncToKB is true, trigger sync to Lyzr RAG
-      let finalDoc = newDoc;
-      if (syncToKB) {
-        try {
-          const syncResponse = await fetch(new URL(syncApiPath, request.url).toString(), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ documentId: docId, action: "sync" }),
-          });
-
-          if (syncResponse.ok) {
-            finalDoc = { ...newDoc, syncedToKB: true };
-            const updatedWithSync = updatedDocs.map((d) => (d.id === docId ? finalDoc : d));
-            await updateDocumentsIndex(updatedWithSync);
-          }
-        } catch (syncError) {
-          console.warn("Auto-sync failed, document uploaded without sync:", syncError);
-        }
-      }
+      // Note: syncToKB is ignored - documents must be approved before syncing
+      // The sync can be triggered manually after approval via the UI
+      const finalDoc = newDoc;
 
       const enrichedDoc = await enrichDocument(finalDoc as DocumentMetadata & { entity?: string });
       return NextResponse.json({
