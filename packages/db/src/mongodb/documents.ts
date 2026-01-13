@@ -255,14 +255,14 @@ export async function addDocumentVersion(
   const result = await collection.findOneAndUpdate(
     { _id: new ObjectId(documentId) },
     {
-      $push: { versions: versionRecord },
+      $push: { versions: versionRecord as any },
       $set: {
         currentVersion: newVersion,
         blobUrl: version.blobUrl,
         blobPathname: version.blobPathname,
         updatedAt: new Date(),
       },
-    },
+    } as any,
     { returnDocument: "after" }
   );
 
