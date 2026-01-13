@@ -72,6 +72,17 @@ export const TABLES = {
   SYNC_METRICS: process.env.DYNAMODB_TABLE_PREFIX
     ? `${process.env.DYNAMODB_TABLE_PREFIX}-sync-metrics`
     : "tasco-sync-metrics",
+  // Inventory tables (customer-lifecycle app)
+  VEHICLES: process.env.DYNAMODB_TABLE_PREFIX
+    ? `${process.env.DYNAMODB_TABLE_PREFIX}-vehicles`
+    : "tasco-vehicles",
+  IMPORT_ORDERS: process.env.DYNAMODB_TABLE_PREFIX
+    ? `${process.env.DYNAMODB_TABLE_PREFIX}-import-orders`
+    : "tasco-import-orders",
+  // Agents table (stores agent metadata + suggestions per app)
+  AGENTS: process.env.DYNAMODB_TABLE_PREFIX
+    ? `${process.env.DYNAMODB_TABLE_PREFIX}-agents`
+    : "tasco-agents",
 } as const;
 
 // Key prefixes for composite keys
@@ -109,6 +120,11 @@ export const KEY_PREFIXES = {
   // Data Sync prefixes
   SYNC_SYSTEM: "SSYS",
   SYNC_METRIC: "SMET",
+  // Inventory prefixes
+  VEHICLE: "VEH",
+  IMPORT_ORDER: "IORD",
+  // Agent prefix
+  AGENT: "AGENT",
 } as const;
 
 // Helper to build partition keys
@@ -305,3 +321,33 @@ export const buildSyncMetricSK = (date: string, hour?: string): string =>
 
 // Global metrics: pk = SMET#GLOBAL, sk = {date}
 export const SYNC_METRIC_GLOBAL_PK = `${KEY_PREFIXES.SYNC_METRIC}#GLOBAL`;
+
+// ============================================
+// Inventory key builders (customer-lifecycle)
+// ============================================
+
+// Vehicle: pk = VEH#{vehicleId}, sk = METADATA
+export const buildVehiclePK = (vehicleId: string): string =>
+  `${KEY_PREFIXES.VEHICLE}#${vehicleId}`;
+
+export const VEHICLE_METADATA_SK = "METADATA";
+
+// Import Order: pk = IORD#{orderId}, sk = METADATA
+export const buildImportOrderPK = (orderId: string): string =>
+  `${KEY_PREFIXES.IMPORT_ORDER}#${orderId}`;
+
+export const IMPORT_ORDER_METADATA_SK = "METADATA";
+
+// ============================================
+// Agent key builders
+// ============================================
+
+// Agent: pk = AGENT#{appId}, sk = {agentKey}
+export const buildAgentPK = (appId: string): string =>
+  `${KEY_PREFIXES.AGENT}#${appId}`;
+
+export const buildAgentSK = (agentKey: string): string => agentKey;
+
+// All agents for an app: pk = AGENT#{appId}
+export const AGENT_ALL_PK = (appId: string) =>
+  `${KEY_PREFIXES.AGENT}#${appId}`;

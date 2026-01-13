@@ -15,7 +15,7 @@ import {
   Plus,
 } from "@tasco/ui/icons";
 import { AppHeader } from "./app-header";
-import { ChatProvider, useChatContext } from "@tasco/lyzr";
+import { ChatProvider, useChatContext, SettingsProvider } from "@tasco/lyzr";
 import { DemoProvider } from "./demo-controls";
 import { cn } from "@tasco/ui/lib/utils";
 import { useTranslation } from "@tasco/i18n";
@@ -271,23 +271,29 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
-// Lyzr agent configuration (from environment variables)
-const LYZR_AGENT_ID = process.env.NEXT_PUBLIC_LYZR_AGENT_ID;
+// Lyzr agent configuration (centralized registry with env fallback)
+import { getAgent } from "@tasco/agents/registry";
+
+// Get agent from centralized registry, fallback to env var
+const riskRadarAgent = getAgent("risk-radar:assistant");
+const LYZR_AGENT_ID = riskRadarAgent?.id || process.env.NEXT_PUBLIC_LYZR_AGENT_ID;
 const LYZR_API_KEY = process.env.NEXT_PUBLIC_LYZR_API_KEY;
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <DemoProvider>
-      <ChatProvider
-        appId="risk-radar"
-        entityId="risk-radar"
-        agentId={LYZR_AGENT_ID}
-        apiKey={LYZR_API_KEY}
-      >
-        <SharedAppShell sidebar={<SidebarContent />} header={<AppHeader />}>
-          {children}
-        </SharedAppShell>
-      </ChatProvider>
-    </DemoProvider>
+    <SettingsProvider appId="risk-radar">
+      <DemoProvider>
+        <ChatProvider
+          appId="risk-radar"
+          entityId="risk-radar"
+          agentId={LYZR_AGENT_ID}
+          apiKey={LYZR_API_KEY}
+        >
+          <SharedAppShell sidebar={<SidebarContent />} header={<AppHeader />}>
+            {children}
+          </SharedAppShell>
+        </ChatProvider>
+      </DemoProvider>
+    </SettingsProvider>
   );
 }

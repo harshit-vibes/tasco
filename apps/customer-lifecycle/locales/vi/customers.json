@@ -1,8 +1,9 @@
 {
   "title": "Khách Hàng 360",
   "description": "Theo dõi vòng đời đầy đủ và thông tin chi tiết về khách hàng",
+  "subtitle": "{{count}} khách hàng • {{value}} VND tổng giá trị trọn đời",
   "segment": {
-    "all": "Tất Cả Phân Khúc",
+    "all": "Tất Cả Khách Hàng",
     "vip": "VIP",
     "regular": "Thường",
     "at-risk": "Có Nguy Cơ",
@@ -15,6 +16,28 @@
     "loyal": "Trung Thành",
     "at-risk": "Có Nguy Cơ",
     "churned": "Đã Rời Bỏ"
+  },
+  "stats": {
+    "total": "Tổng",
+    "vip": "VIP",
+    "at_risk": "Có Nguy Cơ",
+    "avg_ltv": "LTV TB",
+    "satisfaction": "Hài Lòng"
+  },
+  "filters": {
+    "segment": "Phân Khúc"
+  },
+  "columns": {
+    "customer": "Khách Hàng",
+    "segment": "Phân Khúc",
+    "lifetime_value": "Giá Trị Trọn Đời",
+    "purchases": "Mua Hàng",
+    "churn_risk": "Nguy Cơ Rời Bỏ",
+    "last_active": "Hoạt Động Cuối"
+  },
+  "empty": {
+    "no_customers": "Không tìm thấy khách hàng",
+    "no_customers_hint": "Thử điều chỉnh bộ lọc hoặc tìm kiếm"
   },
   "sort": {
     "lifetimeValue": "Giá Trị Trọn Đời",
@@ -38,6 +61,7 @@
     "service_interests": "Dịch Vụ Quan Tâm"
   },
   "actions": {
+    "add_customer": "Thêm Khách Hàng",
     "view_profile": "Xem Hồ Sơ",
     "contact": "Liên Hệ",
     "add_interaction": "Thêm Tương Tác",

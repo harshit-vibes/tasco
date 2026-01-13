@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent, Button, Badge } from "@tasco/ui";
 import {
   Search,
@@ -23,17 +23,23 @@ import {
   Sparkles,
   Car,
 } from "@tasco/ui/icons";
-import {
-  getAllCustomers,
-  type Customer,
-} from "../../lib/data-layer";
+import type { Customer } from "../../lib/data-layer";
 import { useTranslation } from "@tasco/i18n";
+import { CustomerDetailSheet } from "../../components/customer-detail-sheet";
+import { useEntityFilter, buildEntityFilterParams } from "../../lib/entity-filter-context";
 
 type SegmentFilter = "all" | "vip" | "regular" | "at-risk" | "new";
 type SortField = "name" | "ltv" | "lastActivity" | "purchases";
 
 export default function CustomersPage() {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation("customers");
+  const { t: tApp } = useTranslation("app");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Entity filter from context
+  const { selectedEntityIds, isLoading: isEntitiesLoading } = useEntityFilter();
+
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,21 +48,75 @@ export default function CustomersPage() {
   const [sortField, setSortField] = useState<SortField>("ltv");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
+  // Sheet overlay state
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+  const [sheetMode, setSheetMode] = useState<"view" | "create" | "edit">("view");
+
+  // Handle URL deep linking
   useEffect(() => {
+    const idParam = searchParams.get("id");
+    if (idParam) {
+      setSelectedCustomerId(idParam);
+    }
+  }, [searchParams]);
+
+  // Update URL when sheet opens/closes
+  const handleCustomerSelect = (customerId: string | null) => {
+    setSelectedCustomerId(customerId);
+    setSheetMode("view");
+    if (customerId) {
+      router.push(`/customers?id=${customerId}`, { scroll: false });
+    } else {
+      router.push("/customers", { scroll: false });
+    }
+  };
+
+  // Open sheet in create mode
+  const handleCreateCustomer = () => {
+    setSelectedCustomerId(null);
+    setSheetMode("create");
+  };
+
+  // Close sheet
+  const handleCloseSheet = () => {
+    setSelectedCustomerId(null);
+    setSheetMode("view");
+    router.push("/customers", { scroll: false });
+  };
+
+  useEffect(() => {
+    // Wait for entities to load before fetching customers
+    if (isEntitiesLoading) return;
+
     async function loadCustomers() {
+      setIsLoading(true);
       try {
-        const customersData = await getAllCustomers();
-        setCustomers(customersData);
-        setFilteredCustomers(customersData);
+        // Build entity filter query param
+        const entityParam = buildEntityFilterParams(selectedEntityIds);
+        const url = entityParam ? `/api/customers?${entityParam}` : "/api/customers";
+
+        // Fetch customers from API route with entity filter
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.success && Array.isArray(data.customers)) {
+          setCustomers(data.customers);
+          setFilteredCustomers(data.customers);
+        } else {
+          // Ensure arrays are set even if API returns empty/invalid data
+          setCustomers([]);
+          setFilteredCustomers([]);
+        }
       } catch (error) {
         console.error("Error loading customers:", error);
+        setCustomers([]);
+        setFilteredCustomers([]);
       } finally {
         setIsLoading(false);
       }
     }
 
     loadCustomers();
-  }, []);
+  }, [selectedEntityIds, isEntitiesLoading]);
 
   useEffect(() => {
     let filtered = [...customers];
@@ -145,18 +205,18 @@ export default function CustomersPage() {
             <div className="h-16 w-16 rounded-2xl bg-gradient-brand animate-pulse" />
             <UserCircle className="absolute inset-0 m-auto h-8 w-8 text-white" />
           </div>
-          <p className="mt-6 text-sm font-medium text-muted-foreground">Loading customers...</p>
+          <p className="mt-6 text-sm font-medium text-muted-foreground">{tApp("actions.loading")}</p>
         </div>
       </div>
     );
   }
 
   const segmentConfig = {
-    all: { label: "All Customers", color: "bg-primary" },
-    vip: { label: "VIP", color: "bg-gradient-to-r from-violet-500 to-purple-500", icon: Crown },
-    regular: { label: "Regular", color: "bg-gradient-to-r from-blue-500 to-cyan-500", icon: Users },
-    "at-risk": { label: "At Risk", color: "bg-gradient-to-r from-red-500 to-orange-500", icon: AlertTriangle },
-    new: { label: "New", color: "bg-gradient-to-r from-emerald-500 to-teal-500", icon: Sparkles },
+    all: { labelKey: "segment.all", color: "bg-primary" },
+    vip: { labelKey: "segment.vip", color: "bg-gradient-to-r from-violet-500 to-purple-500", icon: Crown },
+    regular: { labelKey: "segment.regular", color: "bg-gradient-to-r from-blue-500 to-cyan-500", icon: Users },
+    "at-risk": { labelKey: "segment.at-risk", color: "bg-gradient-to-r from-red-500 to-orange-500", icon: AlertTriangle },
+    new: { labelKey: "segment.new", color: "bg-gradient-to-r from-emerald-500 to-teal-500", icon: Sparkles },
   };
 
   return (
@@ -167,14 +227,18 @@ export default function CustomersPage() {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="animate-fade-in-up">
-                <h1 className="font-display text-3xl font-bold tracking-tight">Customer 360</h1>
+                <h1 className="font-display text-3xl font-bold tracking-tight">{t("title")}</h1>
                 <p className="mt-1 text-muted-foreground">
-                  {filteredCustomers.length} customers • {formatCurrency(stats.totalLTV)} VND total lifetime value
+                  {filteredCustomers.length} {tApp("navigation.customers").toLowerCase()} • {formatCurrency(stats.totalLTV)} VND
                 </p>
               </div>
-              <Button className="gap-2 bg-gradient-brand shadow-lg hover:opacity-90 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+              <Button
+                className="gap-2 bg-gradient-brand shadow-lg hover:opacity-90 animate-fade-in-up"
+                style={{ animationDelay: "100ms" }}
+                onClick={handleCreateCustomer}
+              >
                 <Plus className="h-4 w-4" />
-                Add Customer
+                {t("actions.add_customer")}
               </Button>
             </div>
 
@@ -185,7 +249,7 @@ export default function CustomersPage() {
                   <Users className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total</p>
+                  <p className="text-sm text-muted-foreground">{t("stats.total")}</p>
                   <p className="font-display text-2xl font-bold">{stats.total}</p>
                 </div>
               </div>
@@ -194,7 +258,7 @@ export default function CustomersPage() {
                   <Crown className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">VIP</p>
+                  <p className="text-sm text-muted-foreground">{t("stats.vip")}</p>
                   <p className="font-display text-2xl font-bold">{stats.vip}</p>
                 </div>
               </div>
@@ -203,7 +267,7 @@ export default function CustomersPage() {
                   <AlertTriangle className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">At Risk</p>
+                  <p className="text-sm text-muted-foreground">{t("stats.at_risk")}</p>
                   <p className="font-display text-2xl font-bold">{stats.atRisk}</p>
                 </div>
               </div>
@@ -212,7 +276,7 @@ export default function CustomersPage() {
                   <DollarSign className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Avg LTV</p>
+                  <p className="text-sm text-muted-foreground">{t("stats.avg_ltv")}</p>
                   <p className="font-display text-lg font-bold">{formatCurrency(stats.avgLTV)}</p>
                 </div>
               </div>
@@ -221,7 +285,7 @@ export default function CustomersPage() {
                   <Star className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Satisfaction</p>
+                  <p className="text-sm text-muted-foreground">{t("stats.satisfaction")}</p>
                   <p className="font-display text-2xl font-bold">{stats.avgSatisfaction}/5</p>
                 </div>
               </div>
@@ -238,7 +302,7 @@ export default function CustomersPage() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search customers by name, email, phone..."
+                  placeholder={tApp("search.placeholder_customers")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full h-10 rounded-xl border-0 bg-muted/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
@@ -247,7 +311,7 @@ export default function CustomersPage() {
 
               {/* Segment Pills */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-medium text-muted-foreground mr-2">Segment:</span>
+                <span className="text-sm font-medium text-muted-foreground mr-2">{t("filters.segment")}:</span>
                 {(["all", "vip", "regular", "at-risk", "new"] as SegmentFilter[]).map((segment) => {
                   const config = segmentConfig[segment];
                   const count = segment === "all" ? stats.total : stats[segment === "at-risk" ? "atRisk" : segment as keyof typeof stats] as number;
@@ -263,7 +327,7 @@ export default function CustomersPage() {
                           : "bg-muted/50 text-muted-foreground hover:bg-muted"
                       }`}
                     >
-                      {config.label}
+                      {t(config.labelKey)}
                       <span className={`${segmentFilter === segment ? "opacity-80" : "opacity-60"}`}>
                         {count}
                       </span>
@@ -285,30 +349,30 @@ export default function CustomersPage() {
                   className="min-w-0 flex-1 cursor-pointer hover:text-primary flex items-center gap-2"
                   onClick={() => toggleSort("name")}
                 >
-                  Customer
+                  {t("columns.customer")}
                   <ArrowUpDown className="h-3.5 w-3.5" />
                 </div>
-                <div className="w-28 px-4 text-center">Segment</div>
+                <div className="w-28 px-4 text-center">{t("columns.segment")}</div>
                 <div
                   className="w-36 cursor-pointer px-4 hover:text-primary flex items-center gap-2"
                   onClick={() => toggleSort("ltv")}
                 >
-                  Lifetime Value
+                  {t("columns.lifetime_value")}
                   <ArrowUpDown className="h-3.5 w-3.5" />
                 </div>
                 <div
                   className="w-28 cursor-pointer px-4 hover:text-primary flex items-center gap-2"
                   onClick={() => toggleSort("purchases")}
                 >
-                  Purchases
+                  {t("columns.purchases")}
                   <ArrowUpDown className="h-3.5 w-3.5" />
                 </div>
-                <div className="w-32 px-4">Churn Risk</div>
+                <div className="w-32 px-4">{t("columns.churn_risk")}</div>
                 <div
                   className="w-32 cursor-pointer px-4 hover:text-primary flex items-center gap-2"
                   onClick={() => toggleSort("lastActivity")}
                 >
-                  Last Active
+                  {t("columns.last_active")}
                   <ArrowUpDown className="h-3.5 w-3.5" />
                 </div>
               </div>
@@ -319,18 +383,18 @@ export default function CustomersPage() {
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
                     <UserCircle className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <p className="mt-4 font-medium">No customers found</p>
+                  <p className="mt-4 font-medium">{t("empty.no_customers")}</p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Try adjusting your filters or search query
+                    {t("empty.no_customers_hint")}
                   </p>
                 </div>
               ) : (
                 <div className="divide-y">
                   {filteredCustomers.map((customer, index) => (
-                    <Link
+                    <div
                       key={customer.id}
-                      href={`/customers/${customer.id}`}
-                      className="flex items-center px-4 py-4 transition-all hover:bg-muted/50 animate-fade-in-up"
+                      onClick={() => handleCustomerSelect(customer.id)}
+                      className="flex items-center px-4 py-4 transition-all hover:bg-muted/50 animate-fade-in-up cursor-pointer"
                       style={{ animationDelay: `${index * 30}ms` }}
                     >
                       <div className="min-w-0 flex-1">
@@ -371,7 +435,7 @@ export default function CustomersPage() {
                       </div>
                       <div className="w-28 px-4 text-center">
                         <span className={`segment-badge ${customer.insights.segment}`}>
-                          {customer.insights.segment}
+                          {t(`segment.${customer.insights.segment}`)}
                         </span>
                       </div>
                       <div className="w-36 px-4">
@@ -408,7 +472,7 @@ export default function CustomersPage() {
                           {new Date(customer.lastActivityAt).toLocaleDateString("vi-VN")}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               )}
@@ -416,6 +480,32 @@ export default function CustomersPage() {
           </Card>
         </div>
       </div>
+
+      {/* Customer Detail Sheet */}
+      <CustomerDetailSheet
+        open={!!selectedCustomerId || sheetMode === "create"}
+        onOpenChange={(open) => !open && handleCloseSheet()}
+        customerId={selectedCustomerId}
+        mode={sheetMode}
+        onModeChange={setSheetMode}
+        onCustomerUpdated={() => {
+          // Refresh customers list when a customer is updated
+          const entityParam = buildEntityFilterParams(selectedEntityIds);
+          const url = entityParam ? `/api/customers?${entityParam}` : "/api/customers";
+          fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success && Array.isArray(data.customers)) {
+                setCustomers(data.customers);
+              }
+            });
+        }}
+        onCustomerCreated={(newCustomer) => {
+          // Add new customer to list and close sheet
+          setCustomers([newCustomer, ...customers]);
+          handleCloseSheet();
+        }}
+      />
     </div>
   );
 }

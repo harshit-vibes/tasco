@@ -38,7 +38,9 @@
   },
   "entity": {
     "placeholder_single": "Chọn showroom...",
-    "placeholder_multi": "Chọn showroom..."
+    "placeholder_multi": "Chọn công ty...",
+    "all_companies": "Tất Cả Công Ty",
+    "companies_selected": "công ty đã chọn"
   },
   "common": {
     "all": "Tất Cả",

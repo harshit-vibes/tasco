@@ -1,0 +1,102 @@
+{
+  "title": "Chiến Dịch Marketing",
+  "description": "Tạo, quản lý và theo dõi các chiến dịch tiếp thị",
+  "status": {
+    "all": "Tất Cả",
+    "active": "Đang Hoạt Động",
+    "draft": "Bản Nháp",
+    "scheduled": "Đã Lên Lịch",
+    "paused": "Tạm Dừng",
+    "completed": "Đã Hoàn Thành"
+  },
+  "type": {
+    "all": "Tất Cả Loại",
+    "email": "Email",
+    "sms": "SMS",
+    "social": "Mạng Xã Hội",
+    "display": "Quảng Cáo Hiển Thị",
+    "event": "Sự Kiện",
+    "promotion": "Khuyến Mãi"
+  },
+  "stats": {
+    "total_campaigns": "Tổng Chiến Dịch",
+    "avg_roi": "ROI TB",
+    "total_reach": "Tổng Tiếp Cận",
+    "conversion_rate": "Tỷ Lệ Chuyển Đổi"
+  },
+  "filters": {
+    "status": "Trạng Thái",
+    "search_placeholder": "Tìm kiếm chiến dịch..."
+  },
+  "sort": {
+    "startDate": "Ngày Bắt Đầu",
+    "endDate": "Ngày Kết Thúc",
+    "name": "Tên",
+    "budget": "Ngân Sách",
+    "roi": "ROI"
+  },
+  "labels": {
+    "name": "Tên Chiến Dịch",
+    "status": "Trạng Thái",
+    "type": "Loại",
+    "campaign_type": "Loại Chiến Dịch",
+    "target_segment": "Phân Khúc Mục Tiêu",
+    "budget": "Ngân Sách",
+    "budget_vnd": "Ngân Sách (VND)",
+    "spent": "Đã Chi",
+    "roi": "ROI",
+    "start_date": "Ngày Bắt Đầu",
+    "end_date": "Ngày Kết Thúc",
+    "end_date_optional": "Ngày Kết Thúc (Tùy Chọn)",
+    "reach": "Tiếp Cận",
+    "target": "Mục Tiêu",
+    "ongoing": "Đang Tiến Hành",
+    "engagement": "Tương Tác",
+    "conversions": "Chuyển Đổi",
+    "leads_generated": "Lead Tạo Ra",
+    "target_audience": "Đối Tượng Mục Tiêu",
+    "channels": "Kênh"
+  },
+  "segments": {
+    "all": "Tất Cả Khách Hàng",
+    "vip": "Khách Hàng VIP",
+    "new": "Khách Hàng Mới",
+    "at-risk": "Khách Hàng Có Nguy Cơ",
+    "hot-leads": "Lead Nóng"
+  },
+  "metrics": {
+    "total_campaigns": "Tổng Chiến Dịch",
+    "active_campaigns": "Chiến Dịch Đang Hoạt Động",
+    "total_budget": "Tổng Ngân Sách",
+    "total_spent": "Tổng Chi",
+    "average_roi": "ROI Trung Bình"
+  },
+  "empty": {
+    "no_campaigns": "Không tìm thấy chiến dịch",
+    "no_campaigns_hint": "Thử điều chỉnh bộ lọc hoặc tạo chiến dịch mới"
+  },
+  "dialog": {
+    "create_title": "Tạo Chiến Dịch Mới",
+    "create_description": "Thiết lập chiến dịch marketing mới cho đối tượng mục tiêu.",
+    "cancel": "Hủy",
+    "creating": "Đang Tạo..."
+  },
+  "ai_insights": {
+    "title": "AI Marketing Insights",
+    "powered_by": "Được hỗ trợ bởi Lyzr AI",
+    "recommendation": "Đề Xuất",
+    "recommendation_text": "Cân nhắc ra mắt chiến dịch giữ chân khách VIP - nguy cơ rời bỏ đã tăng 15% tháng này.",
+    "performance": "Hiệu Suất",
+    "performance_text": "Chiến dịch email có ROI cao hơn 3.2 lần so với mạng xã hội - cân nhắc phân bổ lại ngân sách.",
+    "audience": "Khán Giả",
+    "audience_text": "Lead nóng từ website chuyển đổi tốt hơn 45% với follow-up cá nhân hóa trong 24h."
+  },
+  "actions": {
+    "create_campaign": "Tạo Chiến Dịch",
+    "edit": "Chỉnh Sửa",
+    "pause": "Tạm Dừng",
+    "resume": "Tiếp Tục",
+    "duplicate": "Nhân Bản",
+    "view_report": "Xem Báo Cáo"
+  }
+}

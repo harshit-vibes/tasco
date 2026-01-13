@@ -1,0 +1,102 @@
+{
+  "title": "Marketing Campaigns",
+  "description": "Create, manage and track marketing campaigns",
+  "status": {
+    "all": "All",
+    "active": "Active",
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "paused": "Paused",
+    "completed": "Completed"
+  },
+  "type": {
+    "all": "All Types",
+    "email": "Email",
+    "sms": "SMS",
+    "social": "Social Media",
+    "display": "Display Ads",
+    "event": "Event",
+    "promotion": "Promotion"
+  },
+  "stats": {
+    "total_campaigns": "Total Campaigns",
+    "avg_roi": "Avg. ROI",
+    "total_reach": "Total Reach",
+    "conversion_rate": "Conversion Rate"
+  },
+  "filters": {
+    "status": "Status",
+    "search_placeholder": "Search campaigns..."
+  },
+  "sort": {
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "name": "Name",
+    "budget": "Budget",
+    "roi": "ROI"
+  },
+  "labels": {
+    "name": "Campaign Name",
+    "status": "Status",
+    "type": "Type",
+    "campaign_type": "Campaign Type",
+    "target_segment": "Target Segment",
+    "budget": "Budget",
+    "budget_vnd": "Budget (VND)",
+    "spent": "Spent",
+    "roi": "ROI",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "end_date_optional": "End Date (Optional)",
+    "reach": "Reach",
+    "target": "Target",
+    "ongoing": "Ongoing",
+    "engagement": "Engagement",
+    "conversions": "Conversions",
+    "leads_generated": "Leads Generated",
+    "target_audience": "Target Audience",
+    "channels": "Channels"
+  },
+  "segments": {
+    "all": "All Customers",
+    "vip": "VIP Customers",
+    "new": "New Customers",
+    "at-risk": "At-Risk Customers",
+    "hot-leads": "Hot Leads"
+  },
+  "metrics": {
+    "total_campaigns": "Total Campaigns",
+    "active_campaigns": "Active Campaigns",
+    "total_budget": "Total Budget",
+    "total_spent": "Total Spent",
+    "average_roi": "Average ROI"
+  },
+  "empty": {
+    "no_campaigns": "No campaigns found",
+    "no_campaigns_hint": "Try adjusting your filters or create a new campaign"
+  },
+  "dialog": {
+    "create_title": "Create New Campaign",
+    "create_description": "Set up a new marketing campaign for your target audience.",
+    "cancel": "Cancel",
+    "creating": "Creating..."
+  },
+  "ai_insights": {
+    "title": "AI Marketing Insights",
+    "powered_by": "Powered by Lyzr AI",
+    "recommendation": "Recommendation",
+    "recommendation_text": "Consider launching a VIP customer retention campaign - churn risk has increased 15% this month.",
+    "performance": "Performance",
+    "performance_text": "Email campaigns show 3.2x higher ROI than social media - consider reallocating budget.",
+    "audience": "Audience",
+    "audience_text": "Hot leads from website visits convert 45% better with personalized follow-up within 24h."
+  },
+  "actions": {
+    "create_campaign": "Create Campaign",
+    "edit": "Edit",
+    "pause": "Pause",
+    "resume": "Resume",
+    "duplicate": "Duplicate",
+    "view_report": "View Report"
+  }
+}

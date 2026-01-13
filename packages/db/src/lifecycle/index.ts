@@ -7,3 +7,6 @@ export * from "./interactions";
 export * from "./purchases";
 export * from "./campaigns";
 export * from "./recommendations";
+// Inventory Module
+export * from "./vehicles";
+export * from "./import-orders";

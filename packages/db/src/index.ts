@@ -4,6 +4,9 @@ export * from "./chat";
 // Re-export entities selectively to avoid PaginatedResult conflict
 export {
   listEntities,
+  listEntitiesByType,
+  listEntitiesByParent,
+  listEntitiesByCategory,
   getEntity,
   createEntity,
   updateEntity,
@@ -15,6 +18,7 @@ export {
 export type {
   Entity,
   EntityType,
+  EntityCategory,
   EntityMetadata,
   CreateEntityInput,
   UpdateEntityInput,
@@ -237,6 +241,7 @@ export {
 export {
   // Types
   type Lead,
+  type AILeadScore,
   type CreateLeadInput,
   type UpdateLeadInput,
   type Customer,
@@ -252,6 +257,23 @@ export {
   type AIRecommendation,
   type CreateAIRecommendationInput,
   type UpdateAIRecommendationInput,
+  // Vehicle types (Inventory Module)
+  type Vehicle,
+  type VehicleItem,
+  type VehicleStatus,
+  type VehicleBrand,
+  type AgeAlert,
+  type CreateVehicleInput,
+  type UpdateVehicleInput,
+  type VehicleStats,
+  // ImportOrder types (Inventory Module)
+  type ImportOrder,
+  type ImportOrderItem,
+  type OrderStatus as ImportOrderStatus,
+  type VehicleOrderLine,
+  type CreateImportOrderInput,
+  type UpdateImportOrderInput,
+  type ImportOrderStats,
   // Enums
   LeadSource,
   LeadStatus,
@@ -268,6 +290,11 @@ export {
   RecommendationType,
   RecommendationPriority,
   RecommendationStatus,
+  // Vehicle enums
+  VehicleStatusEnum,
+  VehicleBrandEnum,
+  AgeAlertEnum,
+  OrderStatusEnum,
   // Enum helpers
   LEAD_SOURCES,
   LEAD_STATUSES,
@@ -284,6 +311,14 @@ export {
   RECOMMENDATION_TYPES,
   RECOMMENDATION_PRIORITIES,
   RECOMMENDATION_STATUSES,
+  // Vehicle enum helpers
+  VEHICLE_STATUSES,
+  VEHICLE_BRANDS,
+  AGE_ALERTS,
+  ORDER_STATUSES,
+  VEHICLE_STATUS_LABELS,
+  ORDER_STATUS_LABELS,
+  VEHICLE_STATUS_GROUPS,
   // Lead operations
   createLead,
   getLeadById,
@@ -333,6 +368,32 @@ export {
   getRecommendationsByType,
   updateAIRecommendation,
   getRecommendationStats,
+  // Vehicle operations (Inventory Module)
+  createVehicle,
+  getVehicleById,
+  getVehicleByVin,
+  getAllVehicles,
+  getVehiclesByEntity,
+  getVehiclesByStatus,
+  getVehiclesByBrand,
+  getVehiclesByImportOrder,
+  getAgingVehicles,
+  getAvailableVehicles,
+  updateVehicle,
+  deleteVehicle,
+  getVehicleStats,
+  // ImportOrder operations (Inventory Module)
+  createImportOrder,
+  getImportOrderById,
+  getImportOrderByNumber,
+  getAllImportOrders,
+  getImportOrdersByEntity,
+  getImportOrdersByStatus,
+  getImportOrdersByBrand,
+  getActiveImportOrders,
+  updateImportOrder,
+  deleteImportOrder,
+  getImportOrderStats,
 } from "./lifecycle";
 
 // Users module
@@ -516,3 +577,25 @@ export {
   getPromotionDuration,
   sortPromotionsByPriority,
 } from "./promotions";
+
+// Agents module (agent metadata + suggestions per app)
+export {
+  // Types
+  type Agent,
+  type AgentSuggestion,
+  type CreateAgentInput,
+  type UpdateAgentInput,
+  // Agent operations
+  createAgent,
+  getAgent,
+  getAgentsByApp,
+  getEnabledAgentsByApp,
+  updateAgent,
+  deleteAgent,
+  getDefaultAgent,
+  // Suggestion operations
+  addSuggestion,
+  removeSuggestion,
+  updateSuggestions,
+  getAllSuggestionsByApp,
+} from "./agents";

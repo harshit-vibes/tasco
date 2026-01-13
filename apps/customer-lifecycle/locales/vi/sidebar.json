@@ -1,0 +1,31 @@
+{
+  "brand": {
+    "name": "Quản Lý Vòng Đời Khách Hàng",
+    "company": "Tasco Auto"
+  },
+  "menu": {
+    "dashboard": "Tổng Quan",
+    "customer_ops": "Vận Hành KH",
+    "leads": "Tiềm Năng",
+    "customers": "Khách Hàng",
+    "campaigns": "Chiến Dịch",
+    "inventory_ops": "Vận Hành Kho",
+    "organisations": "Danh Mục",
+    "vehicles": "Phương Tiện",
+    "orders": "Đơn Hàng"
+  },
+  "ai": {
+    "title": "Trợ Lý AI",
+    "ask_placeholder": "Hỏi AI bất cứ điều gì...",
+    "empty_state": "Đặt câu hỏi ở trên để bắt đầu",
+    "delete_title": "Xóa cuộc trò chuyện?",
+    "delete_description": "Điều này sẽ xóa vĩnh viễn cuộc trò chuyện này và tất cả tin nhắn của nó.",
+    "cancel": "Hủy",
+    "delete": "Xóa"
+  },
+  "footer": {
+    "title": "Ngày Đổi Mới",
+    "version": "Demo v1.0",
+    "description": "Quản lý vòng đời khách hàng bằng AI cho các đại lý Tasco Auto."
+  }
+}

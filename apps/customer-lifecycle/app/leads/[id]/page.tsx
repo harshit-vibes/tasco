@@ -28,14 +28,7 @@ import {
   MoreHorizontal,
   DollarSign,
 } from "@tasco/ui/icons";
-import {
-  getLeadById,
-  getInteractionsByLeadId,
-  getRecommendationsByTargetId,
-  type Lead,
-  type Interaction,
-  type AIRecommendation,
-} from "../../../lib/data-layer";
+import type { Lead, Interaction, AIRecommendation } from "../../../lib/data-layer";
 
 export default function LeadDetailPage() {
   const params = useParams();
@@ -51,15 +44,13 @@ export default function LeadDetailPage() {
   useEffect(() => {
     async function loadLeadData() {
       try {
-        const leadData = await getLeadById(leadId);
-        if (leadData) {
-          setLead(leadData);
-          const [interactionsData, recsData] = await Promise.all([
-            getInteractionsByLeadId(leadId),
-            getRecommendationsByTargetId(leadId),
-          ]);
-          setInteractions(interactionsData);
-          setRecommendations(recsData);
+        const response = await fetch(`/api/leads/${leadId}`);
+        const data = await response.json();
+
+        if (data.success && data.lead) {
+          setLead(data.lead);
+          setInteractions(data.interactions || []);
+          setRecommendations(data.recommendations || []);
         }
       } catch (error) {
         console.error("Error loading lead:", error);
@@ -174,10 +165,10 @@ export default function LeadDetailPage() {
                       <Phone className="h-4 w-4" />
                       {lead.customer.phone}
                     </span>
-                    {lead.customer.address && (
+                    {lead.customer.location && (
                       <span className="flex items-center gap-1.5">
                         <MapPin className="h-4 w-4" />
-                        {lead.customer.address}
+                        {lead.customer.location}
                       </span>
                     )}
                   </div>
@@ -290,14 +281,14 @@ export default function LeadDetailPage() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Preferred Models</p>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Vehicle Types</p>
                       <div className="flex flex-wrap gap-2">
-                        {lead.interest.models.map((model) => (
+                        {lead.interest.vehicleTypes.map((type) => (
                           <span
-                            key={model}
+                            key={type}
                             className="px-3 py-1.5 rounded-full bg-muted text-sm font-medium"
                           >
-                            {model}
+                            {type}
                           </span>
                         ))}
                       </div>
@@ -306,7 +297,7 @@ export default function LeadDetailPage() {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Budget Range</p>
                         <p className="font-semibold">
-                          {(lead.interest.budgetMin / 1000000).toFixed(0)}M - {(lead.interest.budgetMax / 1000000).toFixed(0)}M VND
+                          {lead.interest.budget}
                         </p>
                       </div>
                       <div>
@@ -485,24 +476,24 @@ export default function LeadDetailPage() {
                                   </p>
                                 </div>
                                 <span className="text-xs text-muted-foreground">
-                                  {new Date(interaction.date).toLocaleDateString("vi-VN")}
+                                  {new Date(interaction.timestamp).toLocaleDateString("vi-VN")}
                                 </span>
                               </div>
-                              {interaction.outcome && (
+                              {interaction.sentiment && (
                                 <div className="mt-2 flex items-center gap-2">
                                   <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                                    interaction.outcome === "positive"
+                                    interaction.sentiment === "positive"
                                       ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                      : interaction.outcome === "negative"
+                                      : interaction.sentiment === "negative"
                                         ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                                         : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"
                                   }`}>
-                                    {interaction.outcome === "positive" ? (
+                                    {interaction.sentiment === "positive" ? (
                                       <CheckCircle className="h-3 w-3" />
-                                    ) : interaction.outcome === "negative" ? (
+                                    ) : interaction.sentiment === "negative" ? (
                                       <XCircle className="h-3 w-3" />
                                     ) : null}
-                                    {interaction.outcome}
+                                    {interaction.sentiment}
                                   </span>
                                 </div>
                               )}

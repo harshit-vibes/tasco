@@ -1,7 +1,7 @@
 {
   "$schema": "./lyzr-registry.schema.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-01-10",
+  "lastUpdated": "2026-01-11",
   "apiUrl": "https://agent-prod.studio.lyzr.ai",
   "agents": {
     "compliance-qa": {
@@ -128,13 +128,9 @@
     },
     "customer-lifecycle": {
       "main": {
-        "id": "69625ab1d09b552363346dd5",
+        "id": "6963d365c57d451439d530a2",
         "name": "Customer Lifecycle Assistant",
-        "role": "main",
-        "model": "gpt-4o-mini",
-        "description": "AI assistant for customer lifecycle management at Tasco Auto",
-        "connectedKBs": [],
-        "envVar": "NEXT_PUBLIC_LYZR_AGENT_ID"
+        "description": "Main chat agent for CRM and lifecycle management"
       }
     },
     "sales-pricing": {

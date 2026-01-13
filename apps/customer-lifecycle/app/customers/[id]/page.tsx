@@ -31,14 +31,7 @@ import {
   Heart,
   BarChart3,
 } from "@tasco/ui/icons";
-import {
-  getCustomerById,
-  getPurchasesByCustomerId,
-  getInteractionsByCustomerId,
-  type Customer,
-  type Purchase,
-  type Interaction,
-} from "../../../lib/data-layer";
+import type { Customer, Purchase, Interaction } from "../../../lib/data-layer";
 import { useTranslation } from "@tasco/i18n";
 
 type TabType = "overview" | "history" | "insights";
@@ -58,18 +51,17 @@ export default function CustomerDetailPage() {
   useEffect(() => {
     async function loadCustomerData() {
       try {
-        const customerData = await getCustomerById(customerId);
-        if (!customerData) {
+        const response = await fetch(`/api/customers/${customerId}`);
+        const data = await response.json();
+
+        if (!data.success || !data.customer) {
           router.push("/customers");
           return;
         }
 
-        const purchasesData = await getPurchasesByCustomerId(customerId);
-        const interactionsData = await getInteractionsByCustomerId(customerId);
-
-        setCustomer(customerData);
-        setPurchases(purchasesData);
-        setInteractions(interactionsData);
+        setCustomer(data.customer);
+        setPurchases(data.purchases || []);
+        setInteractions(data.interactions || []);
       } catch (error) {
         console.error("Error loading customer data:", error);
       } finally {

@@ -328,11 +328,6 @@ h1, h2, h3, .font-display {
   100% { background-position: 200% 0; }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px hsl(var(--brand-violet) / 0.2); }
-  50% { box-shadow: 0 0 40px hsl(var(--brand-violet) / 0.4); }
-}
-
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -347,17 +342,7 @@ h1, h2, h3, .font-display {
 .animate-scale-in { animation: scale-in 0.3s var(--ease-out-expo) forwards; }
 .animate-count-up { animation: count-up 0.6s var(--ease-out-expo) forwards; }
 .animate-shimmer { background: linear-gradient(90deg, transparent, hsl(var(--muted) / 0.5), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-float { animation: float 3s ease-in-out infinite; }
-
-/* Staggered Delays */
-.delay-75 { animation-delay: 75ms; }
-.delay-100 { animation-delay: 100ms; }
-.delay-150 { animation-delay: 150ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
 
 /* ============================================
    SCROLLBAR STYLING
@@ -522,6 +507,148 @@ h1, h2, h3, .font-display {
 }
 
 /* ============================================
+   PRIORITY BADGES (Dynamic)
+   ============================================ */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+}
+
+.priority-badge.hot {
+  background: linear-gradient(135deg, hsl(346 84% 60%) 0%, hsl(346 84% 50%) 100%);
+  color: white;
+  box-shadow: 0 2px 8px hsl(346 84% 50% / 0.3);
+}
+
+.priority-badge.warm {
+  background: linear-gradient(135deg, hsl(35 92% 60%) 0%, hsl(35 92% 51%) 100%);
+  color: white;
+  box-shadow: 0 2px 8px hsl(35 92% 51% / 0.3);
+}
+
+.priority-badge.cold {
+  background: linear-gradient(135deg, hsl(199 89% 58%) 0%, hsl(199 89% 48%) 100%);
+  color: white;
+  box-shadow: 0 2px 8px hsl(199 89% 48% / 0.3);
+}
+
+/* ============================================
+   SEGMENT BADGES (Dynamic)
+   ============================================ */
+.segment-badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.segment-badge.vip {
+  background: linear-gradient(135deg, hsl(280 70% 60%) 0%, hsl(280 70% 45%) 100%);
+  color: white;
+}
+
+.segment-badge.regular {
+  background: linear-gradient(135deg, hsl(210 70% 60%) 0%, hsl(210 70% 50%) 100%);
+  color: white;
+}
+
+.segment-badge.at-risk {
+  background: linear-gradient(135deg, hsl(35 92% 60%) 0%, hsl(20 90% 50%) 100%);
+  color: white;
+}
+
+.segment-badge.new {
+  background: linear-gradient(135deg, hsl(160 84% 45%) 0%, hsl(173 80% 40%) 100%);
+  color: white;
+}
+
+/* ============================================
+   GLASS CARD VARIANT
+   ============================================ */
+.card-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   AI INSIGHT CARD (Full Component)
+   ============================================ */
+.ai-insight-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card)) 100%);
+  border: 1px solid hsl(var(--brand-violet) / 0.2);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow-md), 0 0 40px hsl(var(--brand-violet) / 0.05);
+}
+
+.ai-insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+}
+
+.dark .ai-insight-card {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(263 70% 10% / 0.3) 100%);
+  border-color: hsl(var(--brand-violet) / 0.3);
+}
+
+/* ============================================
+   TIMELINE DOT (Enhanced)
+   ============================================ */
+.timeline-dot {
+  position: absolute;
+  left: -1.625rem;
+  top: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.timeline-content {
+  padding-left: 0.5rem;
+}
+
+/* Override default timeline dot when using custom dots */
+.timeline-item:has(.timeline-dot)::before {
+  display: none;
+}
+
+/* ============================================
+   CHURN BAR (Enhanced with auto-color)
+   ============================================ */
+.churn-bar-fill {
+  background: linear-gradient(90deg,
+    hsl(var(--color-success)) 0%,
+    hsl(var(--color-warning)) 50%,
+    hsl(var(--color-danger)) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
 @media (max-width: 768px) {
@@ -532,3 +659,995 @@ h1, h2, h3, .font-display {
 @media (min-width: 769px) {
   .hide-desktop { display: none; }
 }
+
+/* ============================================
+   AI CONFIDENCE BAR (Simple)
+   ============================================ */
+.ai-confidence-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: hsl(var(--muted) / 0.3);
+  overflow: hidden;
+}
+
+/* ============================================
+   INVENTORY MODULE STYLES
+   Premium automotive aesthetic for vehicle tracking
+   ============================================ */
+
+/* Vehicle Card Brand Accents */
+.vehicle-card-gwm {
+  --brand-primary: 0 84% 60%;
+  background: linear-gradient(135deg, hsl(var(--brand-primary) / 0.1) 0%, hsl(var(--brand-primary) / 0.05) 100%);
+  border-color: hsl(var(--brand-primary) / 0.3);
+}
+
+.vehicle-card-gac {
+  --brand-primary: 217 91% 60%;
+  background: linear-gradient(135deg, hsl(var(--brand-primary) / 0.1) 0%, hsl(var(--brand-primary) / 0.05) 100%);
+  border-color: hsl(var(--brand-primary) / 0.3);
+}
+
+.vehicle-card-lotus {
+  --brand-primary: 45 93% 47%;
+  background: linear-gradient(135deg, hsl(var(--brand-primary) / 0.1) 0%, hsl(var(--brand-primary) / 0.05) 100%);
+  border-color: hsl(var(--brand-primary) / 0.3);
+}
+
+/* Vehicle Status Pipeline */
+.status-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-pipeline-step {
+  height: 0.375rem;
+  flex: 1;
+  border-radius: 9999px;
+  background: hsl(var(--muted));
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.status-pipeline-step.active {
+  background: var(--gradient-brand);
+}
+
+.status-pipeline-step.completed {
+  background: hsl(var(--color-success));
+}
+
+/* Vehicle Age Alert */
+.age-alert {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.age-alert.warning {
+  background: hsl(var(--color-warning) / 0.2);
+  color: hsl(var(--color-warning));
+}
+
+.age-alert.critical {
+  background: hsl(var(--color-danger) / 0.2);
+  color: hsl(var(--color-danger));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Import Order Timeline */
+.order-timeline {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.order-timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: hsl(var(--muted));
+  transform: translateY(-50%);
+}
+
+.order-timeline-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.order-timeline-dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: hsl(var(--muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.order-timeline-dot.active {
+  background: var(--gradient-brand);
+  box-shadow: 0 0 12px hsl(var(--brand-violet) / 0.5);
+}
+
+.order-timeline-dot.completed {
+  background: hsl(var(--color-success));
+}
+
+.order-timeline-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+  font-weight: 600;
+}
+
+/* Inventory Hero Section */
+.inventory-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 47% 8%) 100%);
+  border-radius: calc(var(--radius) + 8px);
+}
+
+.inventory-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, hsl(var(--brand-cyan) / 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, hsl(var(--brand-violet) / 0.15) 0%, transparent 50%);
+}
+
+/* Brand Logo Pills */
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.brand-pill.gwm {
+  background: linear-gradient(135deg, hsl(0 84% 60% / 0.2) 0%, hsl(0 84% 50% / 0.1) 100%);
+  color: hsl(0 84% 60%);
+  border: 1px solid hsl(0 84% 60% / 0.3);
+}
+
+.brand-pill.gac {
+  background: linear-gradient(135deg, hsl(217 91% 60% / 0.2) 0%, hsl(217 91% 50% / 0.1) 100%);
+  color: hsl(217 91% 60%);
+  border: 1px solid hsl(217 91% 60% / 0.3);
+}
+
+.brand-pill.lotus {
+  background: linear-gradient(135deg, hsl(45 93% 47% / 0.2) 0%, hsl(45 93% 40% / 0.1) 100%);
+  color: hsl(45 93% 47%);
+  border: 1px solid hsl(45 93% 47% / 0.3);
+}
+
+.brand-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Inventory Stats Card Variant */
+.inventory-stat {
+  position: relative;
+  padding: 1.25rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  overflow: hidden;
+}
+
+.inventory-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.inventory-stat:hover::before {
+  opacity: 1;
+}
+
+/* Stock Level Indicator */
+.stock-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stock-indicator-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: hsl(var(--muted));
+  overflow: hidden;
+}
+
+.stock-indicator-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s var(--ease-out-expo);
+}
+
+.stock-indicator-fill.low {
+  background: linear-gradient(90deg, hsl(var(--color-danger)) 0%, hsl(346 84% 60%) 100%);
+}
+
+.stock-indicator-fill.medium {
+  background: linear-gradient(90deg, hsl(var(--color-warning)) 0%, hsl(35 92% 60%) 100%);
+}
+
+.stock-indicator-fill.high {
+  background: linear-gradient(90deg, hsl(var(--color-success)) 0%, hsl(160 84% 50%) 100%);
+}
+
+/* LC (Letter of Credit) Badge */
+.lc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius);
+  background: hsl(var(--muted) / 0.5);
+  font-size: 0.7rem;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.02em;
+}
+
+.lc-badge.expiring-soon {
+  background: hsl(var(--color-warning) / 0.2);
+  color: hsl(var(--color-warning));
+  border: 1px solid hsl(var(--color-warning) / 0.3);
+}
+
+/* Grid pattern background for hero sections */
+.bg-grid {
+  background-image: linear-gradient(hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ============================================
+   PREMIUM DASHBOARD COMPONENTS
+   Ultra-luxe automotive dashboard experience
+   ============================================ */
+
+/* Hero Metric Card - Large KPIs */
+.hero-metric {
+  position: relative;
+  padding: 2rem;
+  border-radius: calc(var(--radius) + 12px);
+  background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.95) 100%);
+  border: 1px solid hsl(var(--border) / 0.3);
+  overflow: hidden;
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.hero-metric::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top right, hsl(var(--brand-violet) / 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-metric::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hero-metric:hover::after {
+  opacity: 1;
+}
+
+.hero-metric-value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-metric-value.gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-metric-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.hero-metric-change.positive {
+  background: hsl(var(--color-success) / 0.15);
+  color: hsl(var(--color-success));
+}
+
+.hero-metric-change.negative {
+  background: hsl(var(--color-danger) / 0.15);
+  color: hsl(var(--color-danger));
+}
+
+/* Vehicle Showroom Card */
+.vehicle-showroom-card {
+  position: relative;
+  border-radius: calc(var(--radius) + 8px);
+  overflow: hidden;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.vehicle-showroom-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 40px -15px hsl(var(--brand-violet) / 0.2),
+    0 0 0 1px hsl(var(--brand-violet) / 0.1);
+}
+
+.vehicle-showroom-card .vehicle-image {
+  position: relative;
+  height: 180px;
+  background: linear-gradient(145deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.5) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.vehicle-showroom-card .vehicle-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, hsl(var(--card) / 0.9) 100%);
+  z-index: 1;
+}
+
+.vehicle-showroom-card .vehicle-brand-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.vehicle-showroom-card .vehicle-brand-accent.gwm { background: hsl(0 84% 60%); }
+.vehicle-showroom-card .vehicle-brand-accent.gac { background: hsl(217 91% 60%); }
+.vehicle-showroom-card .vehicle-brand-accent.lotus { background: hsl(45 93% 47%); }
+
+.vehicle-showroom-card .vehicle-status-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+}
+
+.vehicle-showroom-card .vehicle-details {
+  padding: 1.5rem;
+}
+
+.vehicle-showroom-card .vehicle-price {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dashboard Widget */
+.dashboard-widget {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: calc(var(--radius) + 8px);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  overflow: hidden;
+}
+
+.dashboard-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.dashboard-widget-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.dashboard-widget-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, hsl(var(--brand-violet) / 0.15) 0%, hsl(var(--brand-cyan) / 0.1) 100%);
+}
+
+/* Supply Chain Tracker */
+.supply-chain-tracker {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: calc(var(--radius) + 8px);
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+  border: 1px solid hsl(var(--border) / 0.5);
+  overflow: hidden;
+}
+
+.supply-chain-tracker::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, hsl(var(--brand-cyan) / 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 100%, hsl(var(--brand-violet) / 0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.supply-chain-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: hsl(var(--background) / 0.6);
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.supply-chain-node:hover {
+  background: hsl(var(--background) / 0.8);
+  border-color: hsl(var(--border));
+}
+
+.supply-chain-node.active {
+  background: hsl(var(--background) / 0.8);
+  border-color: hsl(var(--brand-cyan));
+  box-shadow: 0 0 20px hsl(var(--brand-cyan) / 0.2);
+}
+
+.supply-chain-connector {
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  width: 2px;
+  height: 1rem;
+  background: linear-gradient(180deg, hsl(var(--brand-cyan) / 0.5) 0%, transparent 100%);
+}
+
+/* Quick Stats Row */
+.quick-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quick-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.quick-stat-item:hover {
+  border-color: hsl(var(--brand-violet) / 0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+
+.quick-stat-icon.emerald {
+  background: hsl(var(--color-success) / 0.15);
+  color: hsl(var(--color-success));
+}
+
+.quick-stat-icon.amber {
+  background: hsl(var(--color-warning) / 0.15);
+  color: hsl(var(--color-warning));
+}
+
+.quick-stat-icon.rose {
+  background: hsl(var(--color-danger) / 0.15);
+  color: hsl(var(--color-danger));
+}
+
+.quick-stat-icon.blue {
+  background: hsl(var(--color-info) / 0.15);
+  color: hsl(var(--color-info));
+}
+
+.quick-stat-icon.violet {
+  background: hsl(var(--brand-violet) / 0.15);
+  color: hsl(var(--brand-violet));
+}
+
+.quick-stat-value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.quick-stat-label {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Activity Feed */
+.activity-feed {
+  position: relative;
+}
+
+.activity-feed::before {
+  content: '';
+  position: absolute;
+  left: 1.25rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, hsl(var(--brand-violet) / 0.3) 0%, transparent 100%);
+}
+
+.activity-item {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  padding-left: 3rem;
+}
+
+.activity-item::before {
+  content: '';
+  position: absolute;
+  left: 0.875rem;
+  top: 1.25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: hsl(var(--brand-violet));
+  border: 2px solid hsl(var(--background));
+  box-shadow: 0 0 0 3px hsl(var(--brand-violet) / 0.2);
+}
+
+.activity-item.success::before { background: hsl(var(--color-success)); box-shadow: 0 0 0 3px hsl(var(--color-success) / 0.2); }
+.activity-item.warning::before { background: hsl(var(--color-warning)); box-shadow: 0 0 0 3px hsl(var(--color-warning) / 0.2); }
+.activity-item.danger::before { background: hsl(var(--color-danger)); box-shadow: 0 0 0 3px hsl(var(--color-danger) / 0.2); }
+
+/* Donut Chart Center */
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center-value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.donut-center-label {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Order Progress Steps */
+.order-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.order-progress-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.order-progress-step::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: hsl(var(--muted));
+  z-index: 0;
+}
+
+.order-progress-step:first-child::before { left: 50%; }
+.order-progress-step:last-child::before { right: 50%; }
+
+.order-progress-step.completed::before {
+  background: hsl(var(--color-success));
+}
+
+.order-progress-step.active::before {
+  background: linear-gradient(90deg, hsl(var(--color-success)) 0%, hsl(var(--brand-violet)) 100%);
+}
+
+.order-progress-dot {
+  position: relative;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: hsl(var(--muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.order-progress-step.completed .order-progress-dot {
+  background: hsl(var(--color-success));
+  color: white;
+}
+
+.order-progress-step.active .order-progress-dot {
+  background: var(--gradient-brand);
+  color: white;
+  box-shadow: 0 0 20px hsl(var(--brand-violet) / 0.5);
+  animation: pulse 2s infinite;
+}
+
+.order-progress-label {
+  margin-top: 0.5rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+
+.order-progress-step.active .order-progress-label,
+.order-progress-step.completed .order-progress-label {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+/* Value Currency Display */
+.currency-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.125rem;
+}
+
+.currency-symbol {
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+
+.currency-value {
+  font-weight: 700;
+}
+
+.currency-unit {
+  font-size: 0.7em;
+  opacity: 0.7;
+  margin-left: 0.125rem;
+}
+
+/* Search Input Fancy */
+.search-input-fancy {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: hsl(var(--muted) / 0.3);
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.search-input-fancy:focus-within {
+  background: hsl(var(--card));
+  border-color: hsl(var(--brand-violet) / 0.5);
+  box-shadow: 0 0 0 3px hsl(var(--brand-violet) / 0.1);
+}
+
+.search-input-fancy input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.875rem;
+}
+
+.search-input-fancy kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  background: hsl(var(--muted) / 0.5);
+  font-size: 0.65rem;
+  font-family: var(--font-mono, monospace);
+  color: hsl(var(--muted-foreground));
+}
+
+/* Premium Filter Tabs */
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: hsl(var(--muted) / 0.3);
+}
+
+.filter-tab {
+  position: relative;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  transition: all 0.2s var(--ease-out-expo);
+  cursor: pointer;
+}
+
+.filter-tab:hover {
+  color: hsl(var(--foreground));
+}
+
+.filter-tab.active {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-tab .badge {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: hsl(var(--muted));
+}
+
+.filter-tab.active .badge {
+  background: var(--gradient-brand);
+  color: white;
+}
+
+/* Empty State Premium */
+.empty-state-premium {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--brand-violet) / 0.1) 0%, hsl(var(--brand-cyan) / 0.1) 100%);
+  margin-bottom: 1.5rem;
+}
+
+.empty-state-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-description {
+  color: hsl(var(--muted-foreground));
+  max-width: 320px;
+  margin-bottom: 1.5rem;
+}
+
+/* Notification Dot */
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--color-danger));
+  border: 2px solid hsl(var(--background));
+}
+
+.notification-dot.animate {
+  animation: pulse 2s infinite;
+}
+
+/* Sheet Overlay Enhancements */
+.sheet-content {
+  max-width: 600px;
+}
+
+.sheet-header {
+  position: sticky;
+  top: 0;
+  background: hsl(var(--background));
+  z-index: 10;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+}
+
+/* Sparkline */
+.sparkline {
+  height: 40px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.sparkline-bar {
+  flex: 1;
+  background: linear-gradient(180deg, hsl(var(--brand-violet) / 0.8) 0%, hsl(var(--brand-violet) / 0.4) 100%);
+  border-radius: 2px 2px 0 0;
+  transition: height 0.3s var(--ease-out-expo);
+}
+
+.sparkline-bar:hover {
+  background: linear-gradient(180deg, hsl(var(--brand-violet)) 0%, hsl(var(--brand-violet) / 0.6) 100%);
+}
+
+/* VIN Display */
+.vin-display {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  background: hsl(var(--muted) / 0.5);
+  color: hsl(var(--muted-foreground));
+}
+
+/* Days Counter */
+.days-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.days-counter.normal {
+  color: hsl(var(--muted-foreground));
+}
+
+.days-counter.warning {
+  color: hsl(var(--color-warning));
+}
+
+.days-counter.critical {
+  color: hsl(var(--color-danger));
+  animation: pulse 2s infinite;
+}
+
+/* Brand Color Indicators */
+.brand-indicator {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.brand-indicator.gwm { background: hsl(0 84% 60%); }
+.brand-indicator.gac { background: hsl(217 91% 60%); }
+.brand-indicator.lotus { background: hsl(45 93% 47%); }
+
+/* Table Row Hover */
+.table-row-hover {
+  transition: all 0.2s var(--ease-out-expo);
+}
+
+.table-row-hover:hover {
+  background: hsl(var(--muted) / 0.3);
+}
+
+/* Status Dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.success { background: hsl(var(--color-success)); box-shadow: 0 0 8px hsl(var(--color-success) / 0.5); }
+.status-dot.warning { background: hsl(var(--color-warning)); box-shadow: 0 0 8px hsl(var(--color-warning) / 0.5); }
+.status-dot.danger { background: hsl(var(--color-danger)); box-shadow: 0 0 8px hsl(var(--color-danger) / 0.5); }
+.status-dot.info { background: hsl(var(--color-info)); box-shadow: 0 0 8px hsl(var(--color-info) / 0.5); }
+.status-dot.muted { background: hsl(var(--muted-foreground)); }

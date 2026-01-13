@@ -170,11 +170,17 @@
 
     "metrics": {
       "averageLossRatio": "Avg Loss Ratio",
+      "averageLossRatioTooltip": "Weighted average of loss ratios across all product lines. Lower indicates better underwriting performance",
       "totalPremiums": "Total Premiums",
+      "totalPremiumsTooltip": "Sum of all premiums collected across all insurance products and regions",
       "totalClaims": "Total Claims",
+      "totalClaimsTooltip": "Total amount paid out for all settled claims across the portfolio",
       "claimsCount": "Claims Count",
+      "claimsCountTooltip": "Total number of claims filed. Track against historical averages for anomaly detection",
       "avgClaimSize": "Avg Claim Size",
-      "policyCount": "Policy Count"
+      "avgClaimSizeTooltip": "Average payout per claim. Large deviations may indicate fraud or catastrophic events",
+      "policyCount": "Policy Count",
+      "policyCountTooltip": "Total number of active insurance policies in force across all product lines"
     }
   },
 

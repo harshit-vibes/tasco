@@ -123,6 +123,20 @@ export enum RecommendationStatus {
 // Lead Types
 // ============================================
 
+// AI Lead Score - output from Lead Scoring Agent
+export interface AILeadScore {
+  overallScore: number; // 0-100 weighted average
+  factors: {
+    budgetScore: number; // 0-100 - Budget fit
+    timelineScore: number; // 0-100 - Timeline urgency
+    brandScore: number; // 0-100 - Brand interest match
+    engagementScore: number; // 0-100 - Engagement signals
+  };
+  recommendation: "Hot" | "Warm" | "Cold";
+  insights: string; // 1-2 sentence analysis
+  analyzedAt: string; // ISO timestamp
+}
+
 export interface Lead {
   id: string;
   customer: {
@@ -134,7 +148,8 @@ export interface Lead {
   source: "website" | "referral" | "walk-in" | "event" | "social" | "other";
   status: "new" | "contacted" | "qualified" | "nurturing" | "converted" | "lost";
   priority: "hot" | "warm" | "cold";
-  score: number; // 0-100
+  score: number; // 0-100 (basic score, may be updated by AI)
+  aiScore?: AILeadScore; // AI-generated score with factor breakdown
   interest: {
     brands: string[];
     vehicleTypes: string[];
@@ -166,9 +181,13 @@ export interface CreateLeadInput {
 }
 
 export interface UpdateLeadInput {
+  customer?: Partial<Lead["customer"]>;
+  source?: Lead["source"];
   status?: Lead["status"];
   priority?: Lead["priority"];
   score?: number;
+  aiScore?: AILeadScore;
+  interest?: Partial<Lead["interest"]>;
   assignedTo?: string;
   lastContactedAt?: string;
 }
@@ -229,10 +248,12 @@ export interface CreateCustomerInput {
 }
 
 export interface UpdateCustomerInput {
+  profile?: Partial<Customer["profile"]>;
   lifecycle?: Partial<Customer["lifecycle"]>;
   insights?: Partial<Customer["insights"]>;
   preferences?: Partial<Customer["preferences"]>;
   lastActivityAt?: string;
+  entityId?: string;
 }
 
 // ============================================
@@ -414,4 +435,221 @@ export interface PaginatedResult<T> {
   items: T[];
   lastEvaluatedKey?: Record<string, any>;
   count: number;
+}
+
+// ============================================
+// Vehicle Types (Inventory Module)
+// ============================================
+
+export type VehicleBrand = "GWM" | "GAC" | "Lotus";
+
+export type VehicleStatus =
+  | "ordered" // PO placed with OEM
+  | "in_production" // OEM manufacturing
+  | "shipped" // On vessel
+  | "at_port" // Arrived at Vietnam port
+  | "customs" // Customs clearance
+  | "inspection" // Quality inspection
+  | "in_warehouse" // Central warehouse
+  | "in_transit" // Being delivered to showroom
+  | "at_showroom" // Available for sale
+  | "reserved" // Reserved for customer
+  | "sold" // Sold
+  | "delivered"; // Delivered to customer
+
+export type AgeAlert = "none" | "warning" | "critical";
+
+export interface Vehicle {
+  id: string;
+  vin: string; // Vehicle Identification Number (unique)
+
+  // Vehicle Details
+  brand: VehicleBrand;
+  model: string; // e.g., "Haval H6", "Lynk & Co 01"
+  variant: string; // e.g., "Premium", "Sport"
+  color: string;
+  configuration?: string; // e.g., "4WD", "Sunroof Package"
+  year: number;
+
+  // Pricing (all in VND unless noted)
+  importPrice: number; // Cost price (USD)
+  listPrice: number; // MSRP (VND)
+  dealerPrice?: number; // Price to dealer (VND)
+
+  // Status & Location
+  status: VehicleStatus;
+  currentLocation?: string; // Showroom ID or warehouse ID
+  assignedShowroom: string; // Target showroom for delivery
+
+  // Timeline
+  orderedAt: string; // ISO date - when PO was placed
+  expectedArrival: string; // ISO date - expected at showroom
+  arrivedAt?: string; // ISO date - actual arrival at showroom
+  soldAt?: string; // ISO date - when sold
+
+  // Age Tracking (computed on read)
+  daysInInventory: number; // Days since arrivedAt (or 0 if not arrived)
+  ageAlert: AgeAlert; // none | warning (>60d) | critical (>90d)
+
+  // Linking
+  importOrderId?: string; // Parent import order
+  soldToCustomerId?: string; // Customer who purchased
+  reservedForLeadId?: string; // Lead with reservation
+
+  // Multi-tenant
+  entityId: string; // Showroom/entity
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VehicleItem extends Vehicle {
+  pk: string; // VEH#{vehicleId}
+  sk: string; // METADATA
+}
+
+export interface CreateVehicleInput {
+  id?: string; // Auto-generated if not provided
+  vin: string;
+  brand: VehicleBrand;
+  model: string;
+  variant: string;
+  color: string;
+  configuration?: string;
+  year: number;
+  importPrice: number;
+  listPrice: number;
+  dealerPrice?: number;
+  status?: VehicleStatus; // Default: "ordered"
+  currentLocation?: string;
+  assignedShowroom: string;
+  orderedAt: string;
+  expectedArrival: string;
+  importOrderId?: string;
+  entityId: string;
+}
+
+export interface UpdateVehicleInput {
+  status?: VehicleStatus;
+  currentLocation?: string;
+  assignedShowroom?: string;
+  expectedArrival?: string;
+  arrivedAt?: string;
+  soldAt?: string;
+  soldToCustomerId?: string;
+  reservedForLeadId?: string;
+  listPrice?: number;
+  dealerPrice?: number;
+}
+
+// Vehicle Stats type
+export interface VehicleStats {
+  total: number;
+  byStatus: Partial<Record<VehicleStatus, number>>;
+  byBrand: Partial<Record<VehicleBrand, number>>;
+  atShowroom: number;
+  inTransit: number;
+  reserved: number;
+  sold: number;
+  agingWarning: number; // >60 days
+  agingCritical: number; // >90 days
+  totalValue: number; // Sum of listPrice for unsold
+}
+
+// ============================================
+// Import Order Types (Inventory Module)
+// ============================================
+
+export type OrderStatus =
+  | "draft"
+  | "submitted"
+  | "confirmed"
+  | "in_production"
+  | "shipped"
+  | "arrived"
+  | "completed";
+
+export interface VehicleOrderLine {
+  model: string;
+  variant: string;
+  color: string;
+  quantity: number;
+  unitPrice: number; // USD per unit
+}
+
+export interface ImportOrder {
+  id: string;
+  orderNumber: string; // PO number (e.g., "PO-2025-001")
+
+  // Order Details
+  brand: VehicleBrand;
+  totalUnits: number; // Sum of all line quantities
+  vehicles: VehicleOrderLine[];
+
+  // Timeline
+  orderedAt: string; // ISO date - PO submission
+  expectedProductionComplete: string; // ISO date - OEM production done
+  expectedShipDate: string; // ISO date - leaves factory
+  expectedArrivalDate: string; // ISO date - arrives Vietnam
+  actualArrivalDate?: string; // ISO date - actual arrival
+
+  // Status
+  status: OrderStatus;
+
+  // Financials
+  totalValue: number; // Total order value (USD)
+  lcNumber?: string; // Letter of Credit number
+  lcOpenedAt?: string; // LC opening date
+  lcExpiryAt?: string; // LC expiry date
+
+  // Notes
+  notes?: string;
+
+  // Multi-tenant
+  entityId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ImportOrderItem extends ImportOrder {
+  pk: string; // IORD#{orderId}
+  sk: string; // METADATA
+}
+
+export interface CreateImportOrderInput {
+  id?: string;
+  orderNumber: string;
+  brand: VehicleBrand;
+  vehicles: VehicleOrderLine[];
+  orderedAt: string;
+  expectedProductionComplete: string;
+  expectedShipDate: string;
+  expectedArrivalDate: string;
+  totalValue: number;
+  lcNumber?: string;
+  lcOpenedAt?: string;
+  lcExpiryAt?: string;
+  notes?: string;
+  entityId: string;
+}
+
+export interface UpdateImportOrderInput {
+  status?: OrderStatus;
+  expectedProductionComplete?: string;
+  expectedShipDate?: string;
+  expectedArrivalDate?: string;
+  actualArrivalDate?: string;
+  lcNumber?: string;
+  lcOpenedAt?: string;
+  lcExpiryAt?: string;
+  notes?: string;
+}
+
+export interface ImportOrderStats {
+  total: number;
+  byStatus: Partial<Record<OrderStatus, number>>;
+  byBrand: Partial<Record<VehicleBrand, number>>;
+  totalUnits: number;
+  totalValue: number;
+  pendingArrival: number; // Not yet arrived
+  arrivedThisMonth: number;
 }

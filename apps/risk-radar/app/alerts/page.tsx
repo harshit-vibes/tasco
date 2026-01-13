@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "@tasco/i18n";
 import {
   Card,
@@ -18,6 +18,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  Skeleton,
 } from "@tasco/ui";
 import {
   Search,
@@ -35,6 +36,7 @@ import {
   Users,
   Info,
   Zap,
+  RefreshCw,
 } from "@tasco/ui/icons";
 import { cn } from "@tasco/ui/lib/utils";
 
@@ -57,91 +59,21 @@ interface Alert {
   region: string;
   detectedAt: string;
   affectedPeriod: string;
+  _raw?: {
+    timestamp: string;
+    alertId: string;
+    entityId: string;
+  };
 }
 
-// Demo alerts data
-const alertsData: Alert[] = [
-  {
-    id: "ALT-001",
-    type: "loss_ratio_spike",
-    severity: "critical",
-    status: "new",
-    title: "Loss Ratio Spike - Motor Insurance",
-    description: "Significant increase in motor insurance claims in Ho Chi Minh City region. Loss ratio exceeded threshold by 15 percentage points.",
-    metric: "Loss Ratio",
-    currentValue: "78.5%",
-    expectedValue: "63%",
-    deviation: "+15.5%",
-    product: "motor",
-    region: "Ho Chi Minh",
-    detectedAt: "15 minutes ago",
-    affectedPeriod: "Q4 2024",
-  },
-  {
-    id: "ALT-002",
-    type: "claim_surge",
-    severity: "critical",
-    status: "acknowledged",
-    title: "Claims Surge - Health Insurance",
-    description: "Unusual spike in health insurance claims volume in Hanoi district. Possible fraud or seasonal illness outbreak.",
-    metric: "Claims Count",
-    currentValue: "2,847",
-    expectedValue: "1,960",
-    deviation: "+45%",
-    product: "health",
-    region: "Hanoi",
-    detectedAt: "1 hour ago",
-    affectedPeriod: "Week 48",
-  },
-  {
-    id: "ALT-003",
-    type: "profitability_decline",
-    severity: "warning",
-    status: "investigating",
-    title: "Profitability Decline - Life Insurance",
-    description: "Life insurance segment showing declining margins. Combined ratio approaching break-even threshold.",
-    metric: "Profit Margin",
-    currentValue: "4.2%",
-    expectedValue: "12%",
-    deviation: "-7.8%",
-    product: "life",
-    region: "All Regions",
-    detectedAt: "3 hours ago",
-    affectedPeriod: "Q4 2024",
-  },
-  {
-    id: "ALT-004",
-    type: "premium_drop",
-    severity: "warning",
-    status: "new",
-    title: "Premium Drop - Property Insurance",
-    description: "New business premiums below target in Da Nang region. Competitive pressure from new market entrant.",
-    metric: "Premium Growth",
-    currentValue: "-8.5%",
-    expectedValue: "+5%",
-    deviation: "-13.5%",
-    product: "property",
-    region: "Da Nang",
-    detectedAt: "5 hours ago",
-    affectedPeriod: "Month to Date",
-  },
-  {
-    id: "ALT-005",
-    type: "concentration_risk",
-    severity: "info",
-    status: "new",
-    title: "Concentration Risk - Marine Insurance",
-    description: "Portfolio concentration in single shipping company exceeds limit. Reinsurance review recommended.",
-    metric: "Single Risk Exposure",
-    currentValue: "18%",
-    expectedValue: "< 15%",
-    deviation: "+3%",
-    product: "marine",
-    region: "Hai Phong",
-    detectedAt: "1 day ago",
-    affectedPeriod: "Current Book",
-  },
-];
+interface AlertStats {
+  total: number;
+  open: number;
+  critical: number;
+  warning: number;
+  info: number;
+  recentCount: number;
+}
 
 const productIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   motor: Car,
@@ -153,9 +85,52 @@ const productIcons: Record<string, React.ComponentType<{ className?: string }>> 
 
 export default function AlertsPage() {
   const { t } = useTranslation("app");
+  const [alertsData, setAlertsData] = useState<Alert[]>([]);
+  const [stats, setStats] = useState<AlertStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState<AlertSeverity | "all">("all");
   const [statusFilter, setStatusFilter] = useState<AlertStatus | "all">("all");
+
+  // Fetch alerts from API
+  useEffect(() => {
+    async function fetchAlerts() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/alerts?entityId=risk-radar&limit=50");
+        if (!res.ok) throw new Error("Failed to fetch alerts");
+        const data = await res.json();
+        setAlertsData(data.alerts || []);
+        setStats(data.stats || null);
+      } catch (err) {
+        console.error("Error fetching alerts:", err);
+        setError("Failed to load alerts. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchAlerts();
+  }, []);
+
+  // Refresh function
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/alerts?entityId=risk-radar&limit=50");
+      if (!res.ok) throw new Error("Failed to fetch alerts");
+      const data = await res.json();
+      setAlertsData(data.alerts || []);
+      setStats(data.stats || null);
+    } catch (err) {
+      console.error("Error refreshing alerts:", err);
+      setError("Failed to refresh alerts.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredAlerts = alertsData.filter((alert) => {
     const matchesSearch =
@@ -205,15 +180,103 @@ export default function AlertsPage() {
     }
   };
 
-  const criticalCount = alertsData.filter((a) => a.severity === "critical").length;
-  const openCount = alertsData.filter((a) => a.status !== "resolved" && a.status !== "dismissed").length;
+  // Calculate counts from local data if stats not available
+  const criticalCount = stats?.critical ?? alertsData.filter((a) => a.severity === "critical").length;
+  const openCount = stats?.open ?? alertsData.filter((a) => a.status !== "resolved" && a.status !== "dismissed").length;
+  const totalCount = stats?.total ?? alertsData.length;
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold">{t("alerts.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("alerts.subtitle")}</p>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="metric-card">
+              <CardContent className="p-4 flex items-center gap-3">
+                <Skeleton className="h-10 w-10 rounded-lg" />
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Card key={i}>
+              <CardContent className="p-5">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-12 w-12 rounded-lg" />
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-20" />
+                      <Skeleton className="h-5 w-24" />
+                    </div>
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <div className="grid grid-cols-4 gap-4 mt-4">
+                      {[1, 2, 3, 4].map((j) => (
+                        <div key={j} className="space-y-2">
+                          <Skeleton className="h-3 w-16" />
+                          <Skeleton className="h-5 w-20" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold">{t("alerts.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("alerts.subtitle")}</p>
+        </div>
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardContent className="py-12 text-center">
+            <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-destructive" />
+            <h3 className="text-lg font-semibold">Error Loading Alerts</h3>
+            <p className="text-muted-foreground mt-1">{error}</p>
+            <Button onClick={handleRefresh} className="mt-4 gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold">{t("alerts.title")}</h1>
-        <p className="text-muted-foreground mt-1">{t("alerts.subtitle")}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("alerts.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("alerts.subtitle")}</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
+          <RefreshCw className="h-4 w-4" />
+          Refresh
+        </Button>
       </div>
 
       {/* Stats Bar */}
@@ -224,7 +287,7 @@ export default function AlertsPage() {
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </div>
             <div>
-              <div className="text-2xl font-bold font-mono">{alertsData.length}</div>
+              <div className="text-2xl font-bold font-mono">{totalCount}</div>
               <div className="text-xs text-muted-foreground">{t("alerts.totalAlerts")}</div>
             </div>
           </CardContent>

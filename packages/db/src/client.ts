@@ -8,41 +8,32 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
  * (not just at build time). This is critical for AWS Amplify SSR deployments.
  *
  * Credentials are provided via:
- * 1. TASCO_AWS_* environment variables (for Amplify - can't use AWS_ prefix)
+ * 1. NEXT_PUBLIC_AWS_* environment variables (available at runtime in Amplify)
  * 2. AWS_* environment variables (standard - local dev)
- * 3. NEXT_PUBLIC_AWS_* environment variables (fallback)
  */
 let _client: DynamoDBClient | null = null;
 let _docClient: DynamoDBDocumentClient | null = null;
 
-function getClient(): DynamoDBClient {
-  if (!_client) {
-    _client = new DynamoDBClient({
-      region:
-        process.env.TASCO_AWS_REGION ||
-        process.env.AWS_REGION ||
-        process.env.NEXT_PUBLIC_AWS_REGION ||
-        "ap-southeast-1",
-      credentials: {
-        accessKeyId:
-          process.env.TASCO_AWS_ACCESS_KEY_ID ||
-          process.env.AWS_ACCESS_KEY_ID ||
-          process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID ||
-          "",
-        secretAccessKey:
-          process.env.TASCO_AWS_SECRET_ACCESS_KEY ||
-          process.env.AWS_SECRET_ACCESS_KEY ||
-          process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY ||
-          "",
-      },
-    });
-  }
-  return _client;
+function createClient(): DynamoDBClient {
+  const region = process.env.NEXT_PUBLIC_AWS_REGION || process.env.AWS_REGION || "ap-southeast-1";
+  const accessKeyId = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "";
+  const secretAccessKey = process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || "";
+
+  return new DynamoDBClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  });
 }
 
-function getDocClient(): DynamoDBDocumentClient {
+export function getDocClient(): DynamoDBDocumentClient {
   if (!_docClient) {
-    _docClient = DynamoDBDocumentClient.from(getClient(), {
+    if (!_client) {
+      _client = createClient();
+    }
+    _docClient = DynamoDBDocumentClient.from(_client, {
       marshallOptions: {
         convertEmptyValues: true,
         removeUndefinedValues: true,
@@ -53,13 +44,26 @@ function getDocClient(): DynamoDBDocumentClient {
   return _docClient;
 }
 
-// Export getters that lazily initialize clients
-export const docClient = {
-  send: <T>(command: Parameters<DynamoDBDocumentClient["send"]>[0]) =>
-    getDocClient().send(command) as T,
-};
+export function getDynamoClient(): DynamoDBClient {
+  if (!_client) {
+    _client = createClient();
+  }
+  return _client;
+}
 
-export const dynamoClient = {
-  send: <T>(command: Parameters<DynamoDBClient["send"]>[0]) =>
-    getClient().send(command) as T,
-};
+// For backward compatibility - these are proxies that delegate to lazy-initialized clients
+export const docClient = new Proxy({} as DynamoDBDocumentClient, {
+  get(_, prop) {
+    const client = getDocClient();
+    const value = (client as any)[prop];
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
+
+export const dynamoClient = new Proxy({} as DynamoDBClient, {
+  get(_, prop) {
+    const client = getDynamoClient();
+    const value = (client as any)[prop];
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});

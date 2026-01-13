@@ -13,12 +13,15 @@
     "lint": "eslint .",
     "db:init": "bun run src/scripts/init-tables.ts",
     "db:seed-entities": "bun run src/scripts/seed-entities.ts",
+    "db:seed-automotive": "bun run src/scripts/seed-automotive-entities.ts",
+    "db:update-categories": "bun run src/scripts/update-entity-categories.ts",
     "db:seed-lifecycle": "bun run src/scripts/seed-lifecycle.ts",
     "db:seed-sales-orders": "bun run src/scripts/seed-sales-orders.ts",
     "db:seed-users": "bun run src/scripts/seed-users.ts",
     "db:extract-users": "bun run src/scripts/extract-users.ts",
     "db:seed-promotions": "bun run src/scripts/seed-promotions.ts",
-    "db:seed-guides": "bun run src/scripts/seed-guides.ts"
+    "db:seed-guides": "bun run src/scripts/seed-guides.ts",
+    "db:seed-inventory": "bun run src/scripts/seed-inventory.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.712.0",

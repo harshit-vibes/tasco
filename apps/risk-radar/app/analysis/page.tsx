@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "@tasco/i18n";
 import {
   Card,
@@ -12,6 +12,11 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Skeleton,
 } from "@tasco/ui";
 import {
   TrendingUp,
@@ -25,111 +30,229 @@ import {
   Users,
   Anchor,
   Shield,
+  Info,
+  RefreshCw,
+  AlertTriangle,
 } from "@tasco/ui/icons";
+import { cn } from "@tasco/ui/lib/utils";
 
-// Demo trend data
-const monthlyTrends = [
-  { month: "Jul", lossRatio: 58, premiums: 42, claims: 24 },
-  { month: "Aug", lossRatio: 61, premiums: 45, claims: 27 },
-  { month: "Sep", lossRatio: 59, premiums: 44, claims: 26 },
-  { month: "Oct", lossRatio: 63, premiums: 46, claims: 29 },
-  { month: "Nov", lossRatio: 65, premiums: 48, claims: 31 },
-  { month: "Dec", lossRatio: 62, premiums: 48, claims: 30 },
-];
+// Types for API responses
+interface MonthlyTrend {
+  month: string;
+  period: string;
+  lossRatio: number;
+  premiums: number;
+  claims: number;
+}
 
-const productMetrics = [
-  {
-    name: "motor",
-    icon: Car,
-    color: "hsl(215, 70%, 50%)",
-    lossRatio: 68.5,
-    premiums: 18200,
-    claims: 12500,
-    policies: 45230,
-    claimsCount: 3420,
-    avgClaimSize: 3.65,
-  },
-  {
-    name: "health",
-    icon: Heart,
-    color: "hsl(152, 60%, 40%)",
-    lossRatio: 58.2,
-    premiums: 15800,
-    claims: 9200,
-    policies: 32150,
-    claimsCount: 5680,
-    avgClaimSize: 1.62,
-  },
-  {
-    name: "property",
-    icon: Home,
-    color: "hsl(25, 80%, 50%)",
-    lossRatio: 42.1,
-    premiums: 8500,
-    claims: 3600,
-    policies: 12890,
-    claimsCount: 890,
-    avgClaimSize: 4.04,
-  },
-  {
-    name: "life",
-    icon: Users,
-    color: "hsl(270, 60%, 50%)",
-    lossRatio: 71.8,
-    premiums: 5700,
-    claims: 4100,
-    policies: 8920,
-    claimsCount: 245,
-    avgClaimSize: 16.73,
-  },
-  {
-    name: "liability",
-    icon: Shield,
-    color: "hsl(340, 70%, 50%)",
-    lossRatio: 35.4,
-    premiums: 3200,
-    claims: 1130,
-    policies: 4560,
-    claimsCount: 156,
-    avgClaimSize: 7.24,
-  },
-  {
-    name: "marine",
-    icon: Anchor,
-    color: "hsl(190, 70%, 45%)",
-    lossRatio: 48.9,
-    premiums: 2800,
-    claims: 1370,
-    policies: 2180,
-    claimsCount: 89,
-    avgClaimSize: 15.39,
-  },
-];
+interface ProductMetric {
+  name: string;
+  icon: string;
+  color: string;
+  lossRatio: number;
+  premiums: number;
+  claims: number;
+  policies: number;
+  claimsCount: number;
+  avgClaimSize: number;
+}
 
-const regionMetrics = [
-  { region: "Ho Chi Minh", premiums: 22500, claims: 14200, lossRatio: 63.1, policies: 48500 },
-  { region: "Hanoi", premiums: 18200, claims: 10800, lossRatio: 59.3, policies: 38200 },
-  { region: "Da Nang", premiums: 6800, claims: 4100, lossRatio: 60.3, policies: 15800 },
-  { region: "Hai Phong", premiums: 4200, claims: 2400, lossRatio: 57.1, policies: 9800 },
-  { region: "Can Tho", premiums: 3500, claims: 2100, lossRatio: 60.0, policies: 8200 },
-  { region: "Other", premiums: 3000, claims: 1700, lossRatio: 56.7, policies: 9430 },
-];
+interface RegionMetric {
+  region: string;
+  premiums: number;
+  claims: number;
+  lossRatio: number;
+  policies: number;
+}
+
+interface AnalysisSummary {
+  avgLossRatio: number;
+  totalPremiums: string;
+  totalClaims: string;
+  totalPolicies: number;
+  totalClaimsCount: number;
+  avgClaimSize: number;
+}
+
+interface AnalysisData {
+  monthlyTrends: MonthlyTrend[];
+  productMetrics: ProductMetric[];
+  regionMetrics: RegionMetric[];
+  summary: AnalysisSummary;
+}
+
+// Icon mapping for products
+const productIconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  motor: Car,
+  health: Heart,
+  property: Home,
+  life: Users,
+  liability: Shield,
+  marine: Anchor,
+};
 
 export default function AnalysisPage() {
   const { t } = useTranslation("app");
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
+  const [data, setData] = useState<AnalysisData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data from API
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/trends?entityId=risk-radar&type=all");
+        if (!res.ok) throw new Error("Failed to fetch analysis data");
+        const result = await res.json();
+        setData(result);
+      } catch (err) {
+        console.error("Error fetching analysis data:", err);
+        setError("Failed to load analysis data. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  // Refresh function
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/trends?entityId=risk-radar&type=all");
+      if (!res.ok) throw new Error("Failed to fetch analysis data");
+      const result = await res.json();
+      setData(result);
+    } catch (err) {
+      console.error("Error refreshing analysis data:", err);
+      setError("Failed to refresh data.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const formatCurrency = (value: number) => {
     if (value >= 1000) return `₫${(value / 1000).toFixed(1)}B`;
     return `₫${value}M`;
   };
 
-  const totalPremiums = productMetrics.reduce((sum, p) => sum + p.premiums, 0);
-  const totalClaims = productMetrics.reduce((sum, p) => sum + p.claims, 0);
-  const avgLossRatio = (totalClaims / totalPremiums) * 100;
-  const totalPolicies = productMetrics.reduce((sum, p) => sum + p.policies, 0);
-  const totalClaimsCount = productMetrics.reduce((sum, p) => sum + p.claimsCount, 0);
-  const avgClaimSize = totalClaims / totalClaimsCount;
+  // Calculate totals from product data (or use API summary)
+  const productMetrics = data?.productMetrics || [];
+  const monthlyTrends = data?.monthlyTrends || [];
+  const regionMetrics = data?.regionMetrics || [];
+
+  const totalPremiums = data?.summary?.totalPremiums
+    ? parseFloat(data.summary.totalPremiums.replace(/[₫BM,]/g, "")) * (data.summary.totalPremiums.includes("B") ? 1000 : 1)
+    : productMetrics.reduce((sum, p) => sum + p.premiums, 0);
+  const totalClaims = data?.summary?.totalClaims
+    ? parseFloat(data.summary.totalClaims.replace(/[₫BM,]/g, "")) * (data.summary.totalClaims.includes("B") ? 1000 : 1)
+    : productMetrics.reduce((sum, p) => sum + p.claims, 0);
+  const avgLossRatio = data?.summary?.avgLossRatio ?? (totalClaims && totalPremiums ? (totalClaims / totalPremiums) * 100 : 0);
+  const totalPolicies = data?.summary?.totalPolicies ?? productMetrics.reduce((sum, p) => sum + p.policies, 0);
+  const totalClaimsCount = data?.summary?.totalClaimsCount ?? productMetrics.reduce((sum, p) => sum + p.claimsCount, 0);
+  const avgClaimSize = data?.summary?.avgClaimSize ?? (totalClaimsCount ? totalClaims / totalClaimsCount : 0);
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">{t("analysis.title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("analysis.subtitle")}</p>
+          </div>
+          <Skeleton className="h-9 w-24" />
+        </div>
+
+        {/* Summary Stats Skeleton */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="metric-card">
+              <CardContent className="p-4">
+                <Skeleton className="h-3 w-20 mb-2" />
+                <Skeleton className="h-8 w-16" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Tabs Skeleton */}
+        <Skeleton className="h-10 w-80" />
+
+        {/* Charts Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-40" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <Skeleton className="h-10 w-10 rounded-lg" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex justify-between">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+                    <Skeleton className="h-2 w-full rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-40" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-6 w-6" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-right">
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-3 w-12" />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold">{t("analysis.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("analysis.subtitle")}</p>
+        </div>
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardContent className="py-12 text-center">
+            <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-destructive" />
+            <h3 className="text-lg font-semibold">Error Loading Data</h3>
+            <p className="text-muted-foreground mt-1">{error}</p>
+            <Button onClick={handleRefresh} className="mt-4 gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -145,72 +268,131 @@ export default function AnalysisPage() {
             <Calendar className="h-4 w-4" />
             Q4 2024
           </Button>
+          <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
         </div>
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.averageLossRatio")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              {avgLossRatio.toFixed(1)}%
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.totalPremiums")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              {formatCurrency(totalPremiums)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.totalClaims")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              {formatCurrency(totalClaims)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.claimsCount")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              {totalClaimsCount.toLocaleString()}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.avgClaimSize")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              ₫{avgClaimSize.toFixed(1)}M
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="metric-card">
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">
-              {t("analysis.metrics.policyCount")}
-            </div>
-            <div className="text-2xl font-bold font-mono mt-1">
-              {totalPolicies.toLocaleString()}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <TooltipProvider>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-100 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.averageLossRatio")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.averageLossRatioTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className={cn(
+                "text-2xl font-bold font-mono mt-1 animate-count-up",
+                avgLossRatio > 65 ? "text-[hsl(0,72%,51%)]" :
+                avgLossRatio > 55 ? "text-[hsl(45,90%,50%)]" :
+                "text-[hsl(152,60%,40%)]"
+              )}>
+                {avgLossRatio.toFixed(1)}%
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-150 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.totalPremiums")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.totalPremiumsTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="text-2xl font-bold font-mono mt-1 text-[hsl(152,60%,40%)] animate-count-up">
+                {formatCurrency(totalPremiums)}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-200 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.totalClaims")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.totalClaimsTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="text-2xl font-bold font-mono mt-1 text-[hsl(0,72%,51%)] animate-count-up">
+                {formatCurrency(totalClaims)}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-300 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.claimsCount")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.claimsCountTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="text-2xl font-bold font-mono mt-1 animate-count-up">
+                {totalClaimsCount.toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-400 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.avgClaimSize")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.avgClaimSizeTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="text-2xl font-bold font-mono mt-1 animate-count-up">
+                ₫{avgClaimSize.toFixed(1)}M
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="metric-card animate-stagger animate-slide-in-up delay-500 hover-lift">
+            <CardContent className="p-4">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                {t("analysis.metrics.policyCount")}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground/50 hover:text-muted-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">{t("analysis.metrics.policyCountTooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="text-2xl font-bold font-mono mt-1 animate-count-up">
+                {totalPolicies.toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </TooltipProvider>
 
       {/* Tabs for different views */}
       <Tabs defaultValue="overview" className="space-y-6">
@@ -233,7 +415,7 @@ export default function AnalysisPage() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Product Performance */}
-            <Card>
+            <Card className="animate-stagger animate-slide-in-up delay-100">
               <CardHeader>
                 <CardTitle className="text-lg">
                   {t("analysis.charts.productPerformance")}
@@ -241,49 +423,60 @@ export default function AnalysisPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {productMetrics.map((product) => (
-                    <div key={product.name} className="flex items-center gap-4">
+                  {productMetrics.map((product, index) => {
+                    const ProductIcon = productIconMap[product.name] || TrendingUp;
+                    return (
                       <div
-                        className="p-2 rounded-lg"
-                        style={{ backgroundColor: `${product.color}15` }}
+                        key={product.name}
+                        className={cn(
+                          "flex items-center gap-4 p-2 -m-2 rounded-lg transition-all duration-200",
+                          "hover:bg-muted/30 cursor-default"
+                        )}
                       >
-                        <product.icon className="h-4 w-4" style={{ color: product.color }} />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium">
-                            {t(`dashboard.products.${product.name}`)}
-                          </span>
-                          <span
-                            className={`text-sm font-mono ${
-                              product.lossRatio > 65
-                                ? "text-[hsl(0,72%,51%)]"
-                                : product.lossRatio > 55
-                                ? "text-[hsl(45,90%,50%)]"
-                                : "text-[hsl(152,60%,40%)]"
-                            }`}
-                          >
-                            {product.lossRatio}%
-                          </span>
+                        <div
+                          className="p-2 rounded-lg transition-transform duration-200 hover:scale-110"
+                          style={{ backgroundColor: `${product.color}15` }}
+                        >
+                          <ProductIcon className="h-4 w-4" style={{ color: product.color }} />
                         </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div
-                            className="h-2 rounded-full"
-                            style={{
-                              width: `${Math.min(product.lossRatio, 100)}%`,
-                              backgroundColor: product.color,
-                            }}
-                          />
+                        <div className="flex-1">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm font-medium">
+                              {t(`dashboard.products.${product.name}`)}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-sm font-mono font-semibold transition-colors duration-300",
+                                product.lossRatio > 65
+                                  ? "text-[hsl(0,72%,51%)]"
+                                  : product.lossRatio > 55
+                                  ? "text-[hsl(45,90%,50%)]"
+                                  : "text-[hsl(152,60%,40%)]"
+                              )}
+                            >
+                              {product.lossRatio}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                            <div
+                              className="h-2 rounded-full transition-all duration-700 ease-out"
+                              style={{
+                                width: `${Math.min(product.lossRatio, 100)}%`,
+                                backgroundColor: product.color,
+                                animationDelay: `${index * 100}ms`,
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
 
             {/* Regional Breakdown */}
-            <Card>
+            <Card className="animate-stagger animate-slide-in-up delay-200">
               <CardHeader>
                 <CardTitle className="text-lg">
                   {t("analysis.charts.regionBreakdown")}
@@ -294,10 +487,16 @@ export default function AnalysisPage() {
                   {regionMetrics.map((region, idx) => (
                     <div
                       key={region.region}
-                      className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/30 transition-colors"
+                      className={cn(
+                        "flex items-center justify-between p-3 rounded-lg border transition-all duration-200",
+                        "hover:bg-muted/30 hover:border-primary/30 hover:-translate-y-0.5 hover:shadow-sm cursor-default"
+                      )}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="text-lg font-bold text-muted-foreground w-6">
+                        <div className={cn(
+                          "text-lg font-bold w-6 transition-colors duration-200",
+                          idx === 0 ? "text-[hsl(45,90%,50%)]" : "text-muted-foreground"
+                        )}>
                           {idx + 1}
                         </div>
                         <div>
@@ -312,11 +511,12 @@ export default function AnalysisPage() {
                           {formatCurrency(region.premiums)}
                         </div>
                         <div
-                          className={`text-xs font-mono ${
+                          className={cn(
+                            "text-xs font-mono font-medium",
                             region.lossRatio > 62
                               ? "text-[hsl(0,72%,51%)]"
                               : "text-[hsl(152,60%,40%)]"
-                          }`}
+                          )}
                         >
                           LR: {region.lossRatio}%
                         </div>
@@ -414,73 +614,87 @@ export default function AnalysisPage() {
         {/* Breakdown Tab */}
         <TabsContent value="breakdown" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {productMetrics.map((product) => (
-              <Card key={product.name} className="metric-card">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="p-2.5 rounded-lg"
-                      style={{ backgroundColor: `${product.color}15` }}
-                    >
-                      <product.icon className="h-5 w-5" style={{ color: product.color }} />
-                    </div>
-                    <CardTitle className="text-base">
-                      {t(`dashboard.products.${product.name}`)}
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("dashboard.metrics.lossRatio")}
-                      </span>
-                      <span
-                        className={`font-mono font-semibold ${
-                          product.lossRatio > 65
-                            ? "text-[hsl(0,72%,51%)]"
-                            : product.lossRatio > 55
-                            ? "text-[hsl(45,90%,50%)]"
-                            : "text-[hsl(152,60%,40%)]"
-                        }`}
+            {productMetrics.map((product, index) => {
+              const ProductIcon = productIconMap[product.name] || TrendingUp;
+              return (
+                <Card
+                  key={product.name}
+                  className={cn(
+                    "metric-card hover-lift animate-stagger animate-slide-in-up",
+                    index === 0 && "delay-100",
+                    index === 1 && "delay-150",
+                    index === 2 && "delay-200",
+                    index === 3 && "delay-300",
+                    index === 4 && "delay-400",
+                    index >= 5 && "delay-500"
+                  )}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="p-2.5 rounded-lg transition-transform duration-200 hover:scale-110"
+                        style={{ backgroundColor: `${product.color}15` }}
                       >
-                        {product.lossRatio}%
-                      </span>
+                        <ProductIcon className="h-5 w-5" style={{ color: product.color }} />
+                      </div>
+                      <CardTitle className="text-base">
+                        {t(`dashboard.products.${product.name}`)}
+                      </CardTitle>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("dashboard.metrics.premiums")}
-                      </span>
-                      <span className="font-mono">{formatCurrency(product.premiums)}</span>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("dashboard.metrics.lossRatio")}
+                        </span>
+                        <span
+                          className={`font-mono font-semibold ${
+                            product.lossRatio > 65
+                              ? "text-[hsl(0,72%,51%)]"
+                              : product.lossRatio > 55
+                              ? "text-[hsl(45,90%,50%)]"
+                              : "text-[hsl(152,60%,40%)]"
+                          }`}
+                        >
+                          {product.lossRatio}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("dashboard.metrics.premiums")}
+                        </span>
+                        <span className="font-mono">{formatCurrency(product.premiums)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("dashboard.metrics.claims")}
+                        </span>
+                        <span className="font-mono">{formatCurrency(product.claims)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("analysis.metrics.claimsCount")}
+                        </span>
+                        <span className="font-mono">{product.claimsCount.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("analysis.metrics.avgClaimSize")}
+                        </span>
+                        <span className="font-mono">₫{product.avgClaimSize.toFixed(1)}M</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {t("analysis.metrics.policyCount")}
+                        </span>
+                        <span className="font-mono">{product.policies.toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("dashboard.metrics.claims")}
-                      </span>
-                      <span className="font-mono">{formatCurrency(product.claims)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("analysis.metrics.claimsCount")}
-                      </span>
-                      <span className="font-mono">{product.claimsCount.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("analysis.metrics.avgClaimSize")}
-                      </span>
-                      <span className="font-mono">₫{product.avgClaimSize.toFixed(1)}M</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t("analysis.metrics.policyCount")}
-                      </span>
-                      <span className="font-mono">{product.policies.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
       </Tabs>

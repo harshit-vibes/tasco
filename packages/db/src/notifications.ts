@@ -28,6 +28,8 @@ export type NotificationCategory =
   | "customer"     // Customer-related notifications
   | "campaign"     // Campaign-related notifications
   | "interaction"  // Interaction-related notifications
+  | "inventory"    // Vehicle inventory notifications
+  | "order"        // Import order notifications
   | "system"       // System notifications
   | "sync";        // Data sync notifications
 

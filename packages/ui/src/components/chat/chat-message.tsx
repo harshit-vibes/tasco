@@ -97,10 +97,15 @@ export function ChatMessage({
             "rounded-2xl px-3.5 py-2.5",
             isUser
               ? "bg-primary text-primary-foreground rounded-tr-sm"
-              : "bg-muted rounded-tl-sm"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-sm"
           )}
         >
-          <div className="prose prose-sm dark:prose-invert max-w-none text-[13px] leading-relaxed">
+          <div className={cn(
+            "prose prose-sm max-w-none text-[13px] leading-relaxed",
+            isUser
+              ? "prose-invert"
+              : "prose-slate dark:prose-invert"
+          )}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{

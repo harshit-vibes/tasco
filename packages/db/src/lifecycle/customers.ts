@@ -201,6 +201,31 @@ export async function updateCustomer(
     ":updatedAt": new Date().toISOString(),
   };
 
+  if (updates.profile) {
+    if (updates.profile.name !== undefined) {
+      updateExpressions.push("profile.#name = :profileName");
+      expressionAttributeNames["#name"] = "name";
+      expressionAttributeValues[":profileName"] = updates.profile.name;
+    }
+    if (updates.profile.email !== undefined) {
+      updateExpressions.push("profile.email = :profileEmail");
+      expressionAttributeValues[":profileEmail"] = updates.profile.email;
+    }
+    if (updates.profile.phone !== undefined) {
+      updateExpressions.push("profile.phone = :profilePhone");
+      expressionAttributeValues[":profilePhone"] = updates.profile.phone;
+    }
+    if (updates.profile.location !== undefined) {
+      updateExpressions.push("profile.#location = :profileLocation");
+      expressionAttributeNames["#location"] = "location";
+      expressionAttributeValues[":profileLocation"] = updates.profile.location;
+    }
+    if (updates.profile.dateOfBirth !== undefined) {
+      updateExpressions.push("profile.dateOfBirth = :profileDob");
+      expressionAttributeValues[":profileDob"] = updates.profile.dateOfBirth;
+    }
+  }
+
   if (updates.lifecycle) {
     if (updates.lifecycle.stage !== undefined) {
       updateExpressions.push("lifecycle.stage = :stage");

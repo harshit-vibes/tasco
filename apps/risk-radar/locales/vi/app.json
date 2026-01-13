@@ -170,11 +170,17 @@
 
     "metrics": {
       "averageLossRatio": "Tỷ Lệ Tổn Thất TB",
+      "averageLossRatioTooltip": "Trung bình có trọng số của tỷ lệ tổn thất trên tất cả dòng sản phẩm. Thấp hơn cho thấy hiệu suất bảo lãnh phát hành tốt hơn",
       "totalPremiums": "Tổng Phí",
+      "totalPremiumsTooltip": "Tổng tất cả phí bảo hiểm thu được trên tất cả sản phẩm và khu vực",
       "totalClaims": "Tổng Bồi Thường",
+      "totalClaimsTooltip": "Tổng số tiền chi trả cho tất cả các vụ bồi thường đã giải quyết",
       "claimsCount": "Số Vụ Bồi Thường",
+      "claimsCountTooltip": "Tổng số vụ bồi thường đã nộp. Theo dõi so với mức trung bình lịch sử để phát hiện bất thường",
       "avgClaimSize": "Bồi Thường TB",
-      "policyCount": "Số Hợp Đồng"
+      "avgClaimSizeTooltip": "Số tiền chi trả trung bình mỗi vụ. Sai lệch lớn có thể cho thấy gian lận hoặc sự kiện thảm họa",
+      "policyCount": "Số Hợp Đồng",
+      "policyCountTooltip": "Tổng số hợp đồng bảo hiểm đang có hiệu lực trên tất cả dòng sản phẩm"
     }
   },
 

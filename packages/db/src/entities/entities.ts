@@ -11,6 +11,7 @@ import { TABLES, ENTITY_ALL_PK } from "../tables";
 import type {
   Entity,
   EntityItem,
+  EntityCategory,
   CreateEntityInput,
   UpdateEntityInput,
   PaginatedResult,
@@ -34,6 +35,7 @@ const itemToEntity = (item: EntityItem): Entity => ({
   name: item.name,
   shortName: item.shortName,
   type: item.type,
+  category: item.category,
   parentId: item.parentId,
   metadata: item.metadata,
   createdAt: item.createdAt,
@@ -54,6 +56,7 @@ export async function createEntity(input: CreateEntityInput): Promise<Entity> {
     name: input.name,
     shortName: input.shortName,
     type: input.type,
+    category: input.category,
     parentId: input.parentId,
     metadata: input.metadata,
     createdAt: now,
@@ -167,6 +170,43 @@ export async function listEntitiesByParent(
 }
 
 /**
+ * List entities by category (single or multiple)
+ * Used for app-level filtering (e.g., automotive entities for customer-lifecycle)
+ */
+export async function listEntitiesByCategory(
+  categories: EntityCategory | EntityCategory[]
+): Promise<Entity[]> {
+  const categoryList = Array.isArray(categories) ? categories : [categories];
+
+  // Build filter expression for multiple categories using OR
+  const filterParts: string[] = [];
+  const expressionAttributeValues: Record<string, unknown> = {
+    ":pk": ENTITY_ALL_PK,
+  };
+
+  categoryList.forEach((cat, index) => {
+    const placeholder = `:cat${index}`;
+    filterParts.push(`#category = ${placeholder}`);
+    expressionAttributeValues[placeholder] = cat;
+  });
+
+  const result = await docClient.send(
+    new QueryCommand({
+      TableName: TABLES.ENTITIES,
+      KeyConditionExpression: "pk = :pk",
+      FilterExpression: filterParts.join(" OR "),
+      ExpressionAttributeNames: {
+        "#category": "category",
+      },
+      ExpressionAttributeValues: expressionAttributeValues,
+    })
+  );
+
+  const items = (result.Items || []) as EntityItem[];
+  return items.map(itemToEntity);
+}
+
+/**
  * Update an entity
  */
 export async function updateEntity(
@@ -209,6 +249,12 @@ export async function updateEntity(
     updateExpressions.push("#metadata = :metadata");
     expressionAttributeNames["#metadata"] = "metadata";
     expressionAttributeValues[":metadata"] = updates.metadata;
+  }
+
+  if (updates.category !== undefined) {
+    updateExpressions.push("#category = :category");
+    expressionAttributeNames["#category"] = "category";
+    expressionAttributeValues[":category"] = updates.category;
   }
 
   const result = await docClient.send(

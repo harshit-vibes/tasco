@@ -350,6 +350,45 @@ const TABLE_DEFINITIONS = [
     ],
     BillingMode: "PAY_PER_REQUEST" as const,
   },
+  // Vehicle Inventory table (customer-lifecycle app)
+  {
+    TableName: TABLES.VEHICLES,
+    KeySchema: [
+      { AttributeName: "pk", KeyType: "HASH" as const },
+      { AttributeName: "sk", KeyType: "RANGE" as const },
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "pk", AttributeType: "S" as const },
+      { AttributeName: "sk", AttributeType: "S" as const },
+    ],
+    BillingMode: "PAY_PER_REQUEST" as const,
+  },
+  // Import Orders table (customer-lifecycle app)
+  {
+    TableName: TABLES.IMPORT_ORDERS,
+    KeySchema: [
+      { AttributeName: "pk", KeyType: "HASH" as const },
+      { AttributeName: "sk", KeyType: "RANGE" as const },
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "pk", AttributeType: "S" as const },
+      { AttributeName: "sk", AttributeType: "S" as const },
+    ],
+    BillingMode: "PAY_PER_REQUEST" as const,
+  },
+  // Agents table (stores agent metadata + suggestions per app)
+  {
+    TableName: TABLES.AGENTS,
+    KeySchema: [
+      { AttributeName: "pk", KeyType: "HASH" as const },
+      { AttributeName: "sk", KeyType: "RANGE" as const },
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "pk", AttributeType: "S" as const },
+      { AttributeName: "sk", AttributeType: "S" as const },
+    ],
+    BillingMode: "PAY_PER_REQUEST" as const,
+  },
 ];
 
 async function tableExists(tableName: string): Promise<boolean> {

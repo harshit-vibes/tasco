@@ -180,6 +180,34 @@ export async function updateLead(
     ":updatedAt": new Date().toISOString(),
   };
 
+  // Customer info updates
+  if (updates.customer) {
+    if (updates.customer.name !== undefined) {
+      updateExpressions.push("customer.#name = :customerName");
+      expressionAttributeNames["#name"] = "name";
+      expressionAttributeValues[":customerName"] = updates.customer.name;
+    }
+    if (updates.customer.email !== undefined) {
+      updateExpressions.push("customer.email = :customerEmail");
+      expressionAttributeValues[":customerEmail"] = updates.customer.email;
+    }
+    if (updates.customer.phone !== undefined) {
+      updateExpressions.push("customer.phone = :customerPhone");
+      expressionAttributeValues[":customerPhone"] = updates.customer.phone;
+    }
+    if (updates.customer.location !== undefined) {
+      updateExpressions.push("customer.#location = :customerLocation");
+      expressionAttributeNames["#location"] = "location";
+      expressionAttributeValues[":customerLocation"] = updates.customer.location;
+    }
+  }
+
+  if (updates.source !== undefined) {
+    updateExpressions.push("#source = :source");
+    expressionAttributeNames["#source"] = "source";
+    expressionAttributeValues[":source"] = updates.source;
+  }
+
   if (updates.status !== undefined) {
     updateExpressions.push("#status = :status");
     expressionAttributeNames["#status"] = "status";
@@ -204,6 +232,31 @@ export async function updateLead(
   if (updates.lastContactedAt !== undefined) {
     updateExpressions.push("lastContactedAt = :lastContactedAt");
     expressionAttributeValues[":lastContactedAt"] = updates.lastContactedAt;
+  }
+
+  if (updates.aiScore !== undefined) {
+    updateExpressions.push("aiScore = :aiScore");
+    expressionAttributeValues[":aiScore"] = updates.aiScore;
+  }
+
+  // Interest updates
+  if (updates.interest) {
+    if (updates.interest.brands !== undefined) {
+      updateExpressions.push("interest.brands = :interestBrands");
+      expressionAttributeValues[":interestBrands"] = updates.interest.brands;
+    }
+    if (updates.interest.vehicleTypes !== undefined) {
+      updateExpressions.push("interest.vehicleTypes = :interestVehicleTypes");
+      expressionAttributeValues[":interestVehicleTypes"] = updates.interest.vehicleTypes;
+    }
+    if (updates.interest.budget !== undefined) {
+      updateExpressions.push("interest.budget = :interestBudget");
+      expressionAttributeValues[":interestBudget"] = updates.interest.budget;
+    }
+    if (updates.interest.timeline !== undefined) {
+      updateExpressions.push("interest.timeline = :interestTimeline");
+      expressionAttributeValues[":interestTimeline"] = updates.interest.timeline;
+    }
   }
 
   const result = await docClient.send(

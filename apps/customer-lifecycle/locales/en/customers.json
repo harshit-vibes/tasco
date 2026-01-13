@@ -1,8 +1,9 @@
 {
   "title": "Customer 360",
   "description": "Complete lifecycle tracking and customer insights",
+  "subtitle": "{{count}} customers • {{value}} VND total lifetime value",
   "segment": {
-    "all": "All Segments",
+    "all": "All Customers",
     "vip": "VIP",
     "regular": "Regular",
     "at-risk": "At Risk",
@@ -15,6 +16,28 @@
     "loyal": "Loyal",
     "at-risk": "At Risk",
     "churned": "Churned"
+  },
+  "stats": {
+    "total": "Total",
+    "vip": "VIP",
+    "at_risk": "At Risk",
+    "avg_ltv": "Avg LTV",
+    "satisfaction": "Satisfaction"
+  },
+  "filters": {
+    "segment": "Segment"
+  },
+  "columns": {
+    "customer": "Customer",
+    "segment": "Segment",
+    "lifetime_value": "Lifetime Value",
+    "purchases": "Purchases",
+    "churn_risk": "Churn Risk",
+    "last_active": "Last Active"
+  },
+  "empty": {
+    "no_customers": "No customers found",
+    "no_customers_hint": "Try adjusting your filters or search query"
   },
   "sort": {
     "lifetimeValue": "Lifetime Value",
@@ -38,6 +61,7 @@
     "service_interests": "Service Interests"
   },
   "actions": {
+    "add_customer": "Add Customer",
     "view_profile": "View Profile",
     "contact": "Contact",
     "add_interaction": "Add Interaction",

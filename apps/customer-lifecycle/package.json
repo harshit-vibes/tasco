@@ -7,13 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed-guide": "bun run scripts/seed-guide.ts"
+    "seed-guide": "bun run scripts/seed-guide.ts",
+    "setup-agents": "bun run scripts/setup-agents.ts",
+    "setup-multi-agents": "bun run scripts/setup-multi-agents.ts",
+    "connect-kb-to-experts": "bun run scripts/connect-kb-to-experts.ts",
+    "sync-business-data": "bun run scripts/sync-business-data.ts"
   },
   "dependencies": {
+    "@tasco/agents": "workspace:*",
     "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
     "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",
+    "@tasco/rag": "workspace:*",
     "@tasco/ui": "workspace:*",
     "sonner": "^1.7.1"
   },

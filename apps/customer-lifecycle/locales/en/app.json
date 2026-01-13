@@ -38,7 +38,9 @@
   },
   "entity": {
     "placeholder_single": "Select showroom...",
-    "placeholder_multi": "Select showrooms..."
+    "placeholder_multi": "Select companies...",
+    "all_companies": "All Companies",
+    "companies_selected": "companies selected"
   },
   "common": {
     "all": "All",

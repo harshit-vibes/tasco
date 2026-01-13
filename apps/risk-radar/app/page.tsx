@@ -1,7 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslation } from "@tasco/i18n";
-import { Card, CardContent, CardHeader, CardTitle, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@tasco/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Skeleton,
+} from "@tasco/ui";
 import {
   TrendingUp,
   TrendingDown,
@@ -16,123 +27,78 @@ import {
   Home,
   Users,
   Info,
+  Anchor,
 } from "@tasco/ui/icons";
 import Link from "next/link";
 import { useDemoContext } from "@/components/demo-controls";
 import { cn } from "@tasco/ui/lib/utils";
 
-// Demo data - In production, this would come from the API
-const heroMetrics = [
-  {
-    key: "lossRatio",
-    value: "62.4%",
-    target: "< 65%",
-    trend: "down",
-    change: "-2.3%",
-    status: "healthy" as const,
-    icon: Activity,
-  },
-  {
-    key: "combinedRatio",
-    value: "95.2%",
-    target: "< 100%",
-    trend: "up",
-    change: "+1.8%",
-    status: "warning" as const,
-    icon: TrendingUp,
-  },
-  {
-    key: "premiums",
-    value: "₫48.2B",
-    target: "₫45B",
-    trend: "up",
-    change: "+12.5%",
-    status: "healthy" as const,
-    icon: DollarSign,
-  },
-  {
-    key: "claims",
-    value: "₫30.1B",
-    target: "< ₫32B",
-    trend: "up",
-    change: "+8.2%",
-    status: "warning" as const,
-    icon: FileText,
-  },
-];
+// Icon mapping for products
+const productIcons: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  motor: Car,
+  health: Heart,
+  property: Home,
+  life: Users,
+  liability: Shield,
+  marine: Anchor,
+};
 
-const productPerformance = [
-  {
-    name: "motor",
-    icon: Car,
-    lossRatio: 68.5,
-    premiums: "₫18.2B",
-    claims: "₫12.5B",
-    policies: 45230,
-    trend: "up",
-    color: "hsl(215, 70%, 50%)",
-  },
-  {
-    name: "health",
-    icon: Heart,
-    lossRatio: 58.2,
-    premiums: "₫15.8B",
-    claims: "₫9.2B",
-    policies: 32150,
-    trend: "down",
-    color: "hsl(152, 60%, 40%)",
-  },
-  {
-    name: "property",
-    icon: Home,
-    lossRatio: 42.1,
-    premiums: "₫8.5B",
-    claims: "₫3.6B",
-    policies: 12890,
-    trend: "stable",
-    color: "hsl(25, 80%, 50%)",
-  },
-  {
-    name: "life",
-    icon: Users,
-    lossRatio: 71.8,
-    premiums: "₫5.7B",
-    claims: "₫4.1B",
-    policies: 8920,
-    trend: "up",
-    color: "hsl(270, 60%, 50%)",
-  },
-];
+// Hero metric icon mapping
+const heroMetricIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  lossRatio: Activity,
+  combinedRatio: TrendingUp,
+  premiums: DollarSign,
+  claims: FileText,
+};
 
-const recentAlerts = [
-  {
-    id: 1,
-    type: "loss_ratio_spike",
-    severity: "critical" as const,
-    title: "Loss Ratio Spike - Motor Insurance",
-    description: "Ho Chi Minh region showing 15% increase in claims",
-    time: "15m ago",
-    metric: "78.5%",
-  },
-  {
-    id: 2,
-    type: "claim_surge",
-    severity: "warning" as const,
-    title: "Claims Surge - Health Insurance",
-    description: "Unusual volume detected in Hanoi district",
-    time: "1h ago",
-    metric: "+45%",
-  },
-  {
-    id: 3,
-    type: "profitability_decline",
-    severity: "warning" as const,
-    title: "Profitability Decline - Life Insurance",
-    description: "Q4 margins below target threshold",
-    time: "3h ago",
-    metric: "-8.2%",
-  },
-];
+// Types for API response
+interface HeroMetric {
+  key: string;
+  value: string;
+  target: string;
+  trend: "up" | "down" | "stable";
+  change: string;
+  status: "healthy" | "warning" | "critical";
+}
+
+interface ProductPerformance {
+  name: string;
+  icon: string;
+  lossRatio: number;
+  premiums: string;
+  claims: string;
+  policies: number;
+  trend: "up" | "down" | "stable";
+  color: string;
+}
+
+interface RecentAlert {
+  id: string;
+  type: string;
+  severity: "critical" | "warning" | "info";
+  title: string;
+  description: string;
+  detectedAt: string;
+  currentValue: string;
+}
+
+interface BottomStats {
+  policies: number;
+  profitMargin: string;
+  riskExposure: string;
+  openAlerts: number;
+}
+
+interface DashboardData {
+  heroMetrics: HeroMetric[];
+  productPerformance: ProductPerformance[];
+  bottomStats: BottomStats;
+  alertStats: {
+    total: number;
+    bySeverity: { critical: number; warning: number; info: number };
+    byStatus: { new: number };
+  };
+}
 
 // Delay classes for staggered animations
 const delayClasses = ["delay-100", "delay-200", "delay-300", "delay-400"];
@@ -140,6 +106,45 @@ const delayClasses = ["delay-100", "delay-200", "delay-300", "delay-400"];
 export default function DashboardPage() {
   const { t } = useTranslation("app");
   const demoContext = useDemoContext();
+
+  // State for API data
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [alerts, setAlerts] = useState<RecentAlert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data on mount
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch metrics and alerts in parallel
+        const [metricsRes, alertsRes] = await Promise.all([
+          fetch("/api/metrics?entityId=risk-radar&type=all"),
+          fetch("/api/alerts?entityId=risk-radar&limit=3"),
+        ]);
+
+        if (!metricsRes.ok || !alertsRes.ok) {
+          throw new Error("Failed to fetch dashboard data");
+        }
+
+        const metricsData = await metricsRes.json();
+        const alertsData = await alertsRes.json();
+
+        setData(metricsData);
+        setAlerts(alertsData.alerts || []);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   // Get live data from demo context if available
   const getLiveMetricValue = (key: string) => {
@@ -192,6 +197,42 @@ export default function DashboardPage() {
     }
   };
 
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div>
+          <Skeleton className="h-8 w-48 mb-2" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-32 rounded-xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Skeleton className="lg:col-span-2 h-80 rounded-xl" />
+          <Skeleton className="h-80 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 gap-4">
+        <AlertTriangle className="h-12 w-12 text-destructive" />
+        <p className="text-lg font-medium">Failed to load dashboard</p>
+        <p className="text-muted-foreground">{error}</p>
+      </div>
+    );
+  }
+
+  const heroMetrics = data?.heroMetrics || [];
+  const productPerformance = data?.productPerformance || [];
+  const bottomStats = data?.bottomStats || { policies: 0, profitMargin: "N/A", riskExposure: "N/A", openAlerts: 0 };
+
   return (
     <div className="flex flex-col gap-6 p-6">
       {/* Page Header */}
@@ -204,12 +245,13 @@ export default function DashboardPage() {
       <TooltipProvider>
         <div className="hero-metrics">
           {heroMetrics.map((metric, index) => {
-            // Get live data if available
+            // Get live data if available (demo override)
             const liveData = getLiveMetricValue(metric.key);
             const displayValue = liveData?.value || metric.value;
             const displayChange = liveData?.change || metric.change;
             const displayTrend = liveData?.trend || metric.trend;
             const displayStatus = liveData?.status || metric.status;
+            const MetricIcon = heroMetricIcons[metric.key] || Activity;
 
             return (
               <div
@@ -240,7 +282,7 @@ export default function DashboardPage() {
                         getStatusBg(displayStatus)
                       )}
                     >
-                      <metric.icon
+                      <MetricIcon
                         className={cn("h-4 w-4 transition-colors duration-300", getStatusColor(displayStatus))}
                       />
                     </div>
@@ -328,70 +370,73 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {productPerformance.map((product) => (
-                  <div
-                    key={product.name}
-                    className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/30 transition-colors"
-                  >
+                {productPerformance.slice(0, 4).map((product) => {
+                  const ProductIcon = productIcons[product.name] || Activity;
+                  return (
                     <div
-                      className="p-2.5 rounded-lg"
-                      style={{ backgroundColor: `${product.color}15` }}
+                      key={product.name}
+                      className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/30 transition-colors"
                     >
-                      <product.icon
-                        className="h-5 w-5"
-                        style={{ color: product.color }}
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium">
-                          {t(`dashboard.products.${product.name}`)}
-                        </span>
-                        <span
-                          className={`text-sm font-mono ${
-                            product.lossRatio > 65
-                              ? "text-[hsl(0,72%,51%)]"
-                              : product.lossRatio > 55
-                              ? "text-[hsl(45,90%,50%)]"
-                              : "text-[hsl(152,60%,40%)]"
-                          }`}
-                        >
-                          {product.lossRatio}%
-                        </span>
-                      </div>
-
-                      {/* Loss Ratio Progress Bar */}
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(product.lossRatio, 100)}%`,
-                            backgroundColor:
-                              product.lossRatio > 65
-                                ? "hsl(0, 72%, 51%)"
-                                : product.lossRatio > 55
-                                ? "hsl(45, 90%, 55%)"
-                                : "hsl(152, 60%, 40%)",
-                          }}
+                      <div
+                        className="p-2.5 rounded-lg"
+                        style={{ backgroundColor: `${product.color}15` }}
+                      >
+                        <ProductIcon
+                          className="h-5 w-5"
+                          style={{ color: product.color }}
                         />
                       </div>
 
-                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                        <span>
-                          {t("dashboard.metrics.premiums")}: {product.premiums}
-                        </span>
-                        <span>
-                          {t("dashboard.metrics.claims")}: {product.claims}
-                        </span>
-                        <span>
-                          {t("dashboard.metrics.policies")}:{" "}
-                          {product.policies.toLocaleString()}
-                        </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium">
+                            {t(`dashboard.products.${product.name}`)}
+                          </span>
+                          <span
+                            className={`text-sm font-mono ${
+                              product.lossRatio > 65
+                                ? "text-[hsl(0,72%,51%)]"
+                                : product.lossRatio > 55
+                                ? "text-[hsl(45,90%,50%)]"
+                                : "text-[hsl(152,60%,40%)]"
+                            }`}
+                          >
+                            {product.lossRatio}%
+                          </span>
+                        </div>
+
+                        {/* Loss Ratio Progress Bar */}
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div
+                            className="h-2 rounded-full transition-all duration-500"
+                            style={{
+                              width: `${Math.min(product.lossRatio, 100)}%`,
+                              backgroundColor:
+                                product.lossRatio > 65
+                                  ? "hsl(0, 72%, 51%)"
+                                  : product.lossRatio > 55
+                                  ? "hsl(45, 90%, 55%)"
+                                  : "hsl(152, 60%, 40%)",
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                          <span>
+                            {t("dashboard.metrics.premiums")}: {product.premiums}
+                          </span>
+                          <span>
+                            {t("dashboard.metrics.claims")}: {product.claims}
+                          </span>
+                          <span>
+                            {t("dashboard.metrics.policies")}:{" "}
+                            {product.policies.toLocaleString()}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
@@ -420,7 +465,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {recentAlerts.map((alert) => (
+                {alerts.map((alert) => (
                   <div
                     key={alert.id}
                     className={`alert-card ${getSeverityClass(alert.severity)}`}
@@ -438,7 +483,7 @@ export default function DashboardPage() {
                             {t(`dashboard.alerts.${alert.severity}`)}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {alert.time}
+                            {alert.detectedAt}
                           </span>
                         </div>
                         <p className="text-sm font-medium">{alert.title}</p>
@@ -454,7 +499,7 @@ export default function DashboardPage() {
                               : "text-[hsl(45,90%,50%)]"
                           }`}
                         >
-                          {alert.metric}
+                          {alert.currentValue}
                         </span>
                       </div>
                     </div>
@@ -475,7 +520,9 @@ export default function DashboardPage() {
                 <Shield className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <div className="metric-value text-xl">124,190</div>
+                <div className="metric-value text-xl">
+                  {bottomStats.policies.toLocaleString()}
+                </div>
                 <div className="metric-label text-xs">
                   {t("dashboard.metrics.policies")}
                 </div>
@@ -491,7 +538,7 @@ export default function DashboardPage() {
                 <DollarSign className="h-4 w-4 text-[hsl(152,60%,40%)]" />
               </div>
               <div>
-                <div className="metric-value text-xl">18.1B</div>
+                <div className="metric-value text-xl">{bottomStats.profitMargin}</div>
                 <div className="metric-label text-xs">
                   {t("dashboard.metrics.profitMargin")}
                 </div>
@@ -507,7 +554,7 @@ export default function DashboardPage() {
                 <Activity className="h-4 w-4 text-[hsl(45,90%,50%)]" />
               </div>
               <div>
-                <div className="metric-value text-xl">₫285B</div>
+                <div className="metric-value text-xl">{bottomStats.riskExposure}</div>
                 <div className="metric-label text-xs">
                   {t("dashboard.metrics.riskExposure")}
                 </div>
@@ -523,7 +570,7 @@ export default function DashboardPage() {
                 <AlertTriangle className="h-4 w-4 text-[hsl(0,72%,51%)]" />
               </div>
               <div>
-                <div className="metric-value text-xl">12</div>
+                <div className="metric-value text-xl">{bottomStats.openAlerts}</div>
                 <div className="metric-label text-xs">
                   {t("alerts.openAlerts")}
                 </div>

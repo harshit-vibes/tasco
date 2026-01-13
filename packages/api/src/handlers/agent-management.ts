@@ -44,13 +44,80 @@ export interface AgentConfig {
   };
 }
 
+// RAG Service URL
+const RAG_BASE_URL = "https://rag-prod.studio.lyzr.ai";
+
 export interface RAGFeature {
+  type: "KNOWLEDGE_BASE";
+  config: {
+    lyzr_rag: {
+      base_url: string;
+      rag_id: string;
+      rag_name?: string;
+      params: {
+        top_k: number;
+        retrieval_type: "basic" | "mmr" | "hyde";
+        score_threshold: number;
+      };
+    };
+    agentic_rag: Array<{
+      rag_id: string;
+      top_k: number;
+      retrieval_type: string;
+      score_threshold: number;
+    }>;
+  };
+  priority?: number;
+}
+
+// Legacy RAG feature type (for reading old configs)
+interface LegacyRAGFeature {
   type: "rag";
   config: {
     knowledge_base_id: string;
     top_k?: number;
   };
   priority?: number;
+}
+
+// Helper to check if feature is RAG type (handles both old and new formats)
+function isRAGFeature(feature: AgentFeature): boolean {
+  return feature.type === "KNOWLEDGE_BASE" || feature.type === "rag";
+}
+
+// Helper to extract KB ID from RAG feature (handles both formats)
+function getKBIdFromFeature(feature: AgentFeature): string | null {
+  if (feature.type === "KNOWLEDGE_BASE") {
+    return (feature as RAGFeature).config?.lyzr_rag?.rag_id ?? null;
+  }
+  if (feature.type === "rag") {
+    return (feature as unknown as LegacyRAGFeature).config?.knowledge_base_id ?? null;
+  }
+  return null;
+}
+
+// Helper to create a new RAG feature with correct format
+function createRAGFeatureConfig(
+  knowledgeBaseId: string,
+  options: { top_k?: number; priority?: number; retrieval_type?: "basic" | "mmr" | "hyde"; score_threshold?: number } = {}
+): RAGFeature {
+  const { top_k = 5, priority = 0, retrieval_type = "basic", score_threshold = 0 } = options;
+  return {
+    type: "KNOWLEDGE_BASE",
+    config: {
+      lyzr_rag: {
+        base_url: RAG_BASE_URL,
+        rag_id: knowledgeBaseId,
+        params: {
+          top_k,
+          retrieval_type,
+          score_threshold,
+        },
+      },
+      agentic_rag: [],
+    },
+    priority,
+  };
 }
 
 export interface AgentFeature {
@@ -125,6 +192,7 @@ export async function createAgent(
       name: config.name,
       agent_instructions: config.system_prompt,
       provider_id: "openai",
+      llm_credential_id: "lyzr_openai", // Required for inference API
       model: model,
       temperature: temperature,
       top_p: config.llm_params?.top_p ?? 0.9,
@@ -345,6 +413,7 @@ export async function updateAgentFull(
   const fullPayload = {
     name: options.name ?? currentAgent.name,
     provider_id: currentAgent.provider_id || "openai",
+    llm_credential_id: "lyzr_openai", // Required for inference API
     model: options.model ?? currentAgent.model ?? "gpt-4o-mini",
     top_p: options.top_p ?? currentAgent.top_p ?? 0.9,
     temperature: options.temperature ?? currentAgent.temperature ?? 0.3,
@@ -388,28 +457,19 @@ export async function connectKnowledgeBase(
   agentId: string,
   knowledgeBaseId: string,
   managementConfig: AgentManagementConfig,
-  options: { top_k?: number; priority?: number } = {}
+  options: { top_k?: number; priority?: number; retrieval_type?: "basic" | "mmr" | "hyde"; score_threshold?: number } = {}
 ): Promise<Agent> {
-  const { top_k = 5, priority = 0 } = options;
-
   // Get current agent to preserve other features
   const currentAgent = await getAgent(agentId, managementConfig);
   const existingFeatures = currentAgent.features || [];
 
-  // Remove any existing RAG features (replace with new KB)
-  const nonRagFeatures = existingFeatures.filter((f) => f.type !== "rag");
+  // Remove any existing RAG features (replace with new KB) - handle both old and new format
+  const nonRagFeatures = existingFeatures.filter((f) => !isRAGFeature(f));
 
-  // Add the new RAG feature
+  // Add the new RAG feature with correct format
   const newFeatures: AgentFeature[] = [
     ...nonRagFeatures,
-    {
-      type: "rag",
-      config: {
-        knowledge_base_id: knowledgeBaseId,
-        top_k,
-      },
-      priority,
-    },
+    createRAGFeatureConfig(knowledgeBaseId, options),
   ];
 
   return updateAgentFull(
@@ -435,8 +495,8 @@ export async function disconnectKnowledgeBase(
   const currentAgent = await getAgent(agentId, managementConfig);
   const existingFeatures = currentAgent.features || [];
 
-  // Remove all RAG features
-  const nonRagFeatures = existingFeatures.filter((f) => f.type !== "rag");
+  // Remove all RAG features (handles both old and new format)
+  const nonRagFeatures = existingFeatures.filter((f) => !isRAGFeature(f));
 
   return updateAgentFull(
     agentId,
@@ -481,11 +541,10 @@ export async function getAgentKnowledgeBase(
   managementConfig: AgentManagementConfig
 ): Promise<string | null> {
   const agent = await getAgent(agentId, managementConfig);
-  const ragFeature = agent.features?.find((f) => f.type === "rag") as
-    | RAGFeature
-    | undefined;
+  const ragFeature = agent.features?.find((f) => isRAGFeature(f));
 
-  return ragFeature?.config?.knowledge_base_id ?? null;
+  if (!ragFeature) return null;
+  return getKBIdFromFeature(ragFeature);
 }
 
 /**
@@ -517,36 +576,25 @@ export async function addKnowledgeBase(
   agentId: string,
   knowledgeBaseId: string,
   managementConfig: AgentManagementConfig,
-  options: { top_k?: number; priority?: number } = {}
+  options: { top_k?: number; priority?: number; retrieval_type?: "basic" | "mmr" | "hyde"; score_threshold?: number } = {}
 ): Promise<Agent> {
-  const { top_k = 5, priority = 0 } = options;
-
   // Get current agent to preserve existing features
   const currentAgent = await getAgent(agentId, managementConfig);
   const existingFeatures = currentAgent.features || [];
 
-  // Check if this KB is already connected
+  // Check if this KB is already connected (handles both old and new format)
   const alreadyConnected = existingFeatures.some(
-    (f) =>
-      f.type === "rag" &&
-      (f as RAGFeature).config?.knowledge_base_id === knowledgeBaseId
+    (f) => isRAGFeature(f) && getKBIdFromFeature(f) === knowledgeBaseId
   );
 
   if (alreadyConnected) {
     return currentAgent; // Already connected, no-op
   }
 
-  // Add the new RAG feature
+  // Add the new RAG feature with correct format
   const newFeatures: AgentFeature[] = [
     ...existingFeatures,
-    {
-      type: "rag",
-      config: {
-        knowledge_base_id: knowledgeBaseId,
-        top_k,
-      },
-      priority,
-    },
+    createRAGFeatureConfig(knowledgeBaseId, options),
   ];
 
   return updateAgentFull(
@@ -573,11 +621,9 @@ export async function removeKnowledgeBase(
   const currentAgent = await getAgent(agentId, managementConfig);
   const existingFeatures = currentAgent.features || [];
 
-  // Remove only the specified KB
+  // Remove only the specified KB (handles both old and new format)
   const filteredFeatures = existingFeatures.filter(
-    (f) =>
-      f.type !== "rag" ||
-      (f as RAGFeature).config?.knowledge_base_id !== knowledgeBaseId
+    (f) => !isRAGFeature(f) || getKBIdFromFeature(f) !== knowledgeBaseId
   );
 
   return updateAgentFull(
@@ -601,11 +647,9 @@ export async function getAgentKnowledgeBases(
   managementConfig: AgentManagementConfig
 ): Promise<string[]> {
   const agent = await getAgent(agentId, managementConfig);
-  const ragFeatures = (agent.features || []).filter(
-    (f) => f.type === "rag"
-  ) as RAGFeature[];
+  const ragFeatures = (agent.features || []).filter((f) => isRAGFeature(f));
 
   return ragFeatures
-    .map((f) => f.config?.knowledge_base_id)
+    .map((f) => getKBIdFromFeature(f))
     .filter((id): id is string => !!id);
 }

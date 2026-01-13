@@ -53,6 +53,7 @@ export {
 
   // Status
   Check,
+  CheckCheck,
   CheckCircle,
   CheckCircle2,
   AlertCircle,
@@ -99,8 +100,11 @@ export {
   Wallet,
   ArrowUpRight,
 
-  // Vehicles
+  // Vehicles & Transport
   Car,
+  Ship,
+  Factory,
+  Warehouse,
 
   // Insurance/Health
   Heart,
@@ -136,6 +140,7 @@ export {
   TrendingUp,
   TrendingDown,
   Link,
+  Link2,
   ExternalLink,
   Paperclip,
   Database,
@@ -170,4 +175,16 @@ export {
   // Creator/Celebration
   Lightbulb,
   PartyPopper,
+
+  // Customer Lifecycle
+  Crown,
+  PauseCircle,
+  Pause,
+  Wrench,
+  BarChart,
+  MousePointer,
+  UserPlus,
+
+  // AI/Command
+  Command,
 } from "lucide-react";

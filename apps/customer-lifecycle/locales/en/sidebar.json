@@ -1,0 +1,31 @@
+{
+  "brand": {
+    "name": "Customer Lifecycle",
+    "company": "Tasco Auto"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "customer_ops": "Customer Ops",
+    "leads": "Leads",
+    "customers": "Customers",
+    "campaigns": "Campaigns",
+    "inventory_ops": "Inventory Ops",
+    "organisations": "Portfolio",
+    "vehicles": "Vehicles",
+    "orders": "Orders"
+  },
+  "ai": {
+    "title": "AI Assistant",
+    "ask_placeholder": "Ask AI anything...",
+    "empty_state": "Ask a question above to start",
+    "delete_title": "Delete conversation?",
+    "delete_description": "This will permanently delete this conversation and all its messages.",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "footer": {
+    "title": "Innovation Day",
+    "version": "Demo v1.0",
+    "description": "AI-powered customer lifecycle management for Tasco Auto dealerships."
+  }
+}

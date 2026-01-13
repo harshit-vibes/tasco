@@ -6,9 +6,14 @@
     "dev": "next dev --port 3005",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed-guide": "bun run scripts/seed-guide.ts",
+    "seed-risk": "bun run scripts/seed-risk-data.ts",
+    "setup-agent": "bun run scripts/setup-agent.ts"
   },
   "dependencies": {
+    "@tasco/agents": "workspace:*",
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
     "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",

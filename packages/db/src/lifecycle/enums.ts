@@ -1,9 +1,6 @@
-/**
- * Enum Utilities for Customer Lifecycle
- *
- * Provides helper functions to work with lifecycle enums
- */
+// Customer Lifecycle Enums
 
+// Re-export enums from types for backward compatibility
 import {
   LeadSource,
   LeadStatus,
@@ -22,157 +19,140 @@ import {
   RecommendationStatus,
 } from "./types";
 
-/**
- * Get all values from an enum
- */
-export function getEnumValues<T extends Record<string, string>>(
-  enumObj: T
-): string[] {
-  return Object.values(enumObj);
-}
+// Re-export all enums
+export {
+  LeadSource,
+  LeadStatus,
+  LeadPriority,
+  CustomerStage,
+  CustomerSegment,
+  InteractionType,
+  InteractionChannel,
+  Sentiment,
+  PaymentMethod,
+  CampaignType,
+  CampaignStatus,
+  TargetType,
+  RecommendationType,
+  RecommendationPriority,
+  RecommendationStatus,
+};
 
-/**
- * Get all keys from an enum
- */
-export function getEnumKeys<T extends Record<string, string>>(
-  enumObj: T
-): string[] {
-  return Object.keys(enumObj);
-}
+// Helper arrays for validation and dropdowns (Lead)
+export const LEAD_SOURCES = Object.values(LeadSource);
+export const LEAD_STATUSES = Object.values(LeadStatus);
+export const LEAD_PRIORITIES = Object.values(LeadPriority);
 
-/**
- * Check if value is valid for enum
- */
-export function isValidEnumValue<T extends Record<string, string>>(
-  enumObj: T,
-  value: string
-): boolean {
-  return Object.values(enumObj).includes(value);
-}
+// Helper arrays for validation and dropdowns (Customer)
+export const CUSTOMER_STAGES = Object.values(CustomerStage);
+export const CUSTOMER_SEGMENTS = Object.values(CustomerSegment);
 
-/**
- * Format enum value for display (replace underscores and capitalize)
- */
-export function formatEnumValue(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+// Helper arrays for validation and dropdowns (Interaction)
+export const INTERACTION_TYPES = Object.values(InteractionType);
+export const INTERACTION_CHANNELS = Object.values(InteractionChannel);
+export const SENTIMENTS = Object.values(Sentiment);
 
-// ============================================
-// Lead Enum Helpers
-// ============================================
+// Helper arrays for validation and dropdowns (Purchase)
+export const PAYMENT_METHODS = Object.values(PaymentMethod);
 
-export const LEAD_SOURCES = getEnumValues(LeadSource);
-export const LEAD_STATUSES = getEnumValues(LeadStatus);
-export const LEAD_PRIORITIES = getEnumValues(LeadPriority);
+// Helper arrays for validation and dropdowns (Campaign)
+export const CAMPAIGN_TYPES = Object.values(CampaignType);
+export const CAMPAIGN_STATUSES = Object.values(CampaignStatus);
 
-export function isValidLeadSource(value: string): value is LeadSource {
-  return isValidEnumValue(LeadSource, value);
-}
-
-export function isValidLeadStatus(value: string): value is LeadStatus {
-  return isValidEnumValue(LeadStatus, value);
-}
-
-export function isValidLeadPriority(value: string): value is LeadPriority {
-  return isValidEnumValue(LeadPriority, value);
-}
+// Helper arrays for validation and dropdowns (Recommendation)
+export const TARGET_TYPES = Object.values(TargetType);
+export const RECOMMENDATION_TYPES = Object.values(RecommendationType);
+export const RECOMMENDATION_PRIORITIES = Object.values(RecommendationPriority);
+export const RECOMMENDATION_STATUSES = Object.values(RecommendationStatus);
 
 // ============================================
-// Customer Enum Helpers
+// Vehicle Enums (Inventory Module)
 // ============================================
 
-export const CUSTOMER_STAGES = getEnumValues(CustomerStage);
-export const CUSTOMER_SEGMENTS = getEnumValues(CustomerSegment);
-
-export function isValidCustomerStage(value: string): value is CustomerStage {
-  return isValidEnumValue(CustomerStage, value);
+export enum VehicleStatusEnum {
+  ORDERED = "ordered",
+  IN_PRODUCTION = "in_production",
+  SHIPPED = "shipped",
+  AT_PORT = "at_port",
+  CUSTOMS = "customs",
+  INSPECTION = "inspection",
+  IN_WAREHOUSE = "in_warehouse",
+  IN_TRANSIT = "in_transit",
+  AT_SHOWROOM = "at_showroom",
+  RESERVED = "reserved",
+  SOLD = "sold",
+  DELIVERED = "delivered",
 }
 
-export function isValidCustomerSegment(
-  value: string
-): value is CustomerSegment {
-  return isValidEnumValue(CustomerSegment, value);
+export enum VehicleBrandEnum {
+  GWM = "GWM",
+  GAC = "GAC",
+  LOTUS = "Lotus",
 }
+
+export enum AgeAlertEnum {
+  NONE = "none",
+  WARNING = "warning",
+  CRITICAL = "critical",
+}
+
+// Helper arrays for validation and dropdowns
+export const VEHICLE_STATUSES = Object.values(VehicleStatusEnum);
+export const VEHICLE_BRANDS = Object.values(VehicleBrandEnum);
+export const AGE_ALERTS = Object.values(AgeAlertEnum);
+
+// Status display labels (for UI)
+export const VEHICLE_STATUS_LABELS: Record<VehicleStatusEnum, string> = {
+  [VehicleStatusEnum.ORDERED]: "Ordered",
+  [VehicleStatusEnum.IN_PRODUCTION]: "In Production",
+  [VehicleStatusEnum.SHIPPED]: "Shipped",
+  [VehicleStatusEnum.AT_PORT]: "At Port",
+  [VehicleStatusEnum.CUSTOMS]: "Customs",
+  [VehicleStatusEnum.INSPECTION]: "Inspection",
+  [VehicleStatusEnum.IN_WAREHOUSE]: "In Warehouse",
+  [VehicleStatusEnum.IN_TRANSIT]: "In Transit",
+  [VehicleStatusEnum.AT_SHOWROOM]: "At Showroom",
+  [VehicleStatusEnum.RESERVED]: "Reserved",
+  [VehicleStatusEnum.SOLD]: "Sold",
+  [VehicleStatusEnum.DELIVERED]: "Delivered",
+};
+
+// Status categories for filtering
+export const VEHICLE_STATUS_GROUPS = {
+  preArrival: [
+    "ordered",
+    "in_production",
+    "shipped",
+    "at_port",
+    "customs",
+    "inspection",
+  ],
+  inStock: ["in_warehouse", "in_transit", "at_showroom", "reserved"],
+  sold: ["sold", "delivered"],
+};
 
 // ============================================
-// Interaction Enum Helpers
+// Import Order Enums (Inventory Module)
 // ============================================
 
-export const INTERACTION_TYPES = getEnumValues(InteractionType);
-export const INTERACTION_CHANNELS = getEnumValues(InteractionChannel);
-export const SENTIMENTS = getEnumValues(Sentiment);
-
-export function isValidInteractionType(
-  value: string
-): value is InteractionType {
-  return isValidEnumValue(InteractionType, value);
+export enum OrderStatusEnum {
+  DRAFT = "draft",
+  SUBMITTED = "submitted",
+  CONFIRMED = "confirmed",
+  IN_PRODUCTION = "in_production",
+  SHIPPED = "shipped",
+  ARRIVED = "arrived",
+  COMPLETED = "completed",
 }
 
-export function isValidInteractionChannel(
-  value: string
-): value is InteractionChannel {
-  return isValidEnumValue(InteractionChannel, value);
-}
+export const ORDER_STATUSES = Object.values(OrderStatusEnum);
 
-export function isValidSentiment(value: string): value is Sentiment {
-  return isValidEnumValue(Sentiment, value);
-}
-
-// ============================================
-// Purchase Enum Helpers
-// ============================================
-
-export const PAYMENT_METHODS = getEnumValues(PaymentMethod);
-
-export function isValidPaymentMethod(value: string): value is PaymentMethod {
-  return isValidEnumValue(PaymentMethod, value);
-}
-
-// ============================================
-// Campaign Enum Helpers
-// ============================================
-
-export const CAMPAIGN_TYPES = getEnumValues(CampaignType);
-export const CAMPAIGN_STATUSES = getEnumValues(CampaignStatus);
-
-export function isValidCampaignType(value: string): value is CampaignType {
-  return isValidEnumValue(CampaignType, value);
-}
-
-export function isValidCampaignStatus(value: string): value is CampaignStatus {
-  return isValidEnumValue(CampaignStatus, value);
-}
-
-// ============================================
-// AI Recommendation Enum Helpers
-// ============================================
-
-export const TARGET_TYPES = getEnumValues(TargetType);
-export const RECOMMENDATION_TYPES = getEnumValues(RecommendationType);
-export const RECOMMENDATION_PRIORITIES = getEnumValues(RecommendationPriority);
-export const RECOMMENDATION_STATUSES = getEnumValues(RecommendationStatus);
-
-export function isValidTargetType(value: string): value is TargetType {
-  return isValidEnumValue(TargetType, value);
-}
-
-export function isValidRecommendationType(
-  value: string
-): value is RecommendationType {
-  return isValidEnumValue(RecommendationType, value);
-}
-
-export function isValidRecommendationPriority(
-  value: string
-): value is RecommendationPriority {
-  return isValidEnumValue(RecommendationPriority, value);
-}
-
-export function isValidRecommendationStatus(
-  value: string
-): value is RecommendationStatus {
-  return isValidEnumValue(RecommendationStatus, value);
-}
+export const ORDER_STATUS_LABELS: Record<OrderStatusEnum, string> = {
+  [OrderStatusEnum.DRAFT]: "Draft",
+  [OrderStatusEnum.SUBMITTED]: "Submitted",
+  [OrderStatusEnum.CONFIRMED]: "Confirmed",
+  [OrderStatusEnum.IN_PRODUCTION]: "In Production",
+  [OrderStatusEnum.SHIPPED]: "Shipped",
+  [OrderStatusEnum.ARRIVED]: "Arrived",
+  [OrderStatusEnum.COMPLETED]: "Completed",
+};

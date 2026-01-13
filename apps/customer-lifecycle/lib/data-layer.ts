@@ -44,20 +44,26 @@ import {
   getActiveUsers,
   type User,
   // Customer Lifecycle
+  createLead as dbCreateLead,
   getAllLeads as dbGetAllLeads,
   getLeadById as dbGetLeadById,
   getLeadsByEntity,
   getLeadsByPriority,
   getLeadsByStatus,
   getLeadStats as dbGetLeadStats,
+  updateLead as dbUpdateLead,
   type Lead,
+  type CreateLeadInput,
+  type UpdateLeadInput,
   getAllCustomers as dbGetAllCustomers,
   getCustomerById as dbGetCustomerById,
   getCustomersByEntity,
   getCustomersBySegment,
   getAtRiskCustomers as dbGetAtRiskCustomers,
   getCustomerStats as dbGetCustomerStats,
+  updateCustomer as dbUpdateCustomer,
   type Customer,
+  type UpdateCustomerInput,
   getInteractionsByLeadId as dbGetInteractionsByLeadId,
   getInteractionsByCustomerId as dbGetInteractionsByCustomerId,
   getInteractionsBySentiment,
@@ -300,6 +306,23 @@ export async function getLeadStats() {
   return await dbGetLeadStats();
 }
 
+/**
+ * Create a new lead
+ */
+export async function createLead(input: CreateLeadInput): Promise<Lead> {
+  return await dbCreateLead(input);
+}
+
+/**
+ * Update an existing lead
+ */
+export async function updateLead(
+  leadId: string,
+  updates: UpdateLeadInput
+): Promise<Lead | null> {
+  return await dbUpdateLead(leadId, updates);
+}
+
 // ============================================
 // CUSTOMERS (from DynamoDB)
 // ============================================
@@ -358,6 +381,16 @@ export async function getVIPCustomers(): Promise<Customer[]> {
  */
 export async function getCustomerStats() {
   return await dbGetCustomerStats();
+}
+
+/**
+ * Update an existing customer
+ */
+export async function updateCustomer(
+  customerId: string,
+  updates: UpdateCustomerInput
+): Promise<Customer | null> {
+  return await dbUpdateCustomer(customerId, updates);
 }
 
 // ============================================
@@ -542,6 +575,10 @@ export type {
   Purchase,
   Campaign,
   AIRecommendation,
+  // Input types
+  CreateLeadInput,
+  UpdateLeadInput,
+  UpdateCustomerInput,
 };
 
 // ============================================

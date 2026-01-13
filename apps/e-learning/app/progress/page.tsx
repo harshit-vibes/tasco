@@ -19,6 +19,7 @@ import {
   AlertCircle,
 } from "@tasco/ui/icons";
 import { useCourses, Course } from "../../lib/course-context";
+import { useProgress, CourseProgress } from "../../lib/progress-context";
 import { categories } from "../../lib/courses-data";
 
 type CourseStatus = "not-started" | "in-progress" | "completed";
@@ -71,9 +72,14 @@ function ProgressPageSkeleton() {
 
 export default function ProgressPage() {
   const { courses, isLoading, error, refreshCourses } = useCourses();
+  const {
+    courseProgress: apiCourseProgress,
+    isLoadingProgress,
+    quizAttempts,
+  } = useProgress();
 
   // Loading state
-  if (isLoading) {
+  if (isLoading || isLoadingProgress) {
     return <ProgressPageSkeleton />;
   }
 
@@ -100,31 +106,49 @@ export default function ProgressPage() {
   const totalModules = courses.reduce((sum, c) => sum + c.moduleCount, 0);
   const totalQuizzes = totalModules; // 1 quiz per module
 
-  // Create mock progress for each course (in production, this would come from user progress API)
-  const courseProgress = courses.map((course) => ({
-    courseId: course.id,
-    status: "not-started" as CourseStatus,
-    moduleProgress: Array(course.moduleCount).fill(null).map((_, index) => ({
-      moduleId: `module-${index}`,
-      lessonsCompleted: 0,
-      totalLessons: 3, // Default estimate
-      quizPassed: false,
-      quizScore: null as number | null,
-    })),
-  }));
+  // Build course progress from API data
+  const courseProgressList = courses.map((course) => {
+    const apiProgress = apiCourseProgress[course.id];
 
-  // Mock progress stats - in production, these would come from the user progress API
-  const mockProgress = {
-    coursesCompleted: 0,
-    modulesCompleted: 0,
-    quizzesPassed: 0,
-    averageScore: 0,
-  };
+    // Determine status from API data
+    let status: CourseStatus = "not-started";
+    if (apiProgress) {
+      if (apiProgress.status === "completed") {
+        status = "completed";
+      } else if (apiProgress.status === "in_progress") {
+        status = "in-progress";
+      }
+    }
+
+    return {
+      courseId: course.id,
+      status,
+      completedModules: apiProgress?.completedModules || 0,
+      totalModules: apiProgress?.totalModules || course.moduleCount,
+      completedLessons: apiProgress?.completedLessons || 0,
+      totalLessons: apiProgress?.totalLessons || 0,
+      overallProgress: apiProgress?.overallProgress || 0,
+    };
+  });
+
+  // Calculate real progress stats from API data
+  const progressValues = Object.values(apiCourseProgress);
+  const completedCourses = progressValues.filter(p => p.status === "completed").length;
+  const completedModulesTotal = progressValues.reduce((sum, p) => sum + (p.completedModules || 0), 0);
+  const quizzesPassed = Object.keys(quizAttempts).filter(
+    qId => quizAttempts[qId]?.passed
+  ).length;
+
+  // Calculate average score from quiz attempts
+  const passedQuizzes = Object.values(quizAttempts).filter(q => q?.passed);
+  const averageScore = passedQuizzes.length > 0
+    ? Math.round(passedQuizzes.reduce((sum, q) => sum + (q.score || 0), 0) / passedQuizzes.length)
+    : 0;
 
   const stats = [
     {
       label: "Courses Completed",
-      value: mockProgress.coursesCompleted,
+      value: completedCourses,
       total: courses.length,
       icon: BookOpen,
       color: "text-primary",
@@ -132,7 +156,7 @@ export default function ProgressPage() {
     },
     {
       label: "Modules Completed",
-      value: mockProgress.modulesCompleted,
+      value: completedModulesTotal,
       total: totalModules,
       icon: FileText,
       color: "text-sky-600",
@@ -140,7 +164,7 @@ export default function ProgressPage() {
     },
     {
       label: "Quizzes Passed",
-      value: mockProgress.quizzesPassed,
+      value: quizzesPassed,
       total: totalQuizzes,
       icon: Trophy,
       color: "text-amber-600",
@@ -148,8 +172,8 @@ export default function ProgressPage() {
     },
     {
       label: "Average Score",
-      value: mockProgress.averageScore || "-",
-      suffix: mockProgress.averageScore ? "%" : "",
+      value: averageScore || "-",
+      suffix: averageScore ? "%" : "",
       icon: Target,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-950/50",
@@ -261,18 +285,12 @@ export default function ProgressPage() {
           </div>
 
           <div className="space-y-4">
-            {courseProgress.map((progress, courseIndex) => {
+            {courseProgressList.map((progress, courseIndex) => {
               const course = courses.find((c) => c.id === progress.courseId);
               if (!course) return null;
 
-              // Calculate course-level stats from modules
-              const totalModulesInCourse = course.moduleCount;
-              const completedModules = progress.moduleProgress.filter(
-                (mp) => mp.lessonsCompleted === mp.totalLessons && mp.quizPassed
-              ).length;
-              const coursePercentComplete = totalModulesInCourse > 0
-                ? (completedModules / totalModulesInCourse) * 100
-                : 0;
+              // Use progress data from API
+              const coursePercentComplete = progress.overallProgress || 0;
 
               return (
                 <Card
@@ -325,7 +343,7 @@ export default function ProgressPage() {
                             />
                           </div>
                           <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                            {completedModules}/{totalModulesInCourse}
+                            {progress.completedModules}/{progress.totalModules}
                           </span>
                         </div>
                       </div>

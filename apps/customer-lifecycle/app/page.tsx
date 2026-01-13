@@ -1,486 +1,978 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@tasco/ui";
+import { useEffect, useState, useMemo } from "react";
+import { Card, CardContent, Button, Badge, cn } from "@tasco/ui";
 import {
   Users,
   UserCircle,
   TrendingUp,
-  TrendingDown,
-  Megaphone,
   ArrowRight,
   AlertTriangle,
   Sparkles,
   Target,
-  DollarSign,
   Activity,
-  Phone,
-  Mail,
-  Calendar,
   Zap,
   ChevronRight,
   Clock,
   Car,
   ArrowUpRight,
+  MessageSquare,
+  Package,
+  Ship,
+  Warehouse,
+  Calendar,
+  DollarSign,
+  Truck,
+  Factory,
+  Flame,
+  Eye,
+  CheckCircle,
+  XCircle,
+  BarChart3,
+  RefreshCw,
 } from "@tasco/ui/icons";
-import {
-  getDashboardStats,
-  getAllLeads,
-  getAtRiskCustomers,
-  getHighConfidenceRecommendations,
-  getActiveCampaigns,
-  type Lead,
-  type Customer,
-  type AIRecommendation,
-  type Campaign,
-} from "../lib/data-layer";
+import type { Lead, Customer, AIRecommendation } from "../lib/data-layer";
 import { useTranslation } from "@tasco/i18n";
+import { useEntityFilter, buildEntityFilterParams } from "../lib/entity-filter-context";
+import { getBrandStyleStatic } from "../lib/brands-context";
+
+// ============================================
+// TYPE DEFINITIONS
+// ============================================
+
+interface VehicleStats {
+  total: number;
+  byStatus: Record<string, number>;
+  byBrand: Record<string, number>;
+  atShowroom: number;
+  inTransit: number;
+  reserved: number;
+  sold: number;
+  agingWarning: number;
+  agingCritical: number;
+  totalValue: number;
+}
+
+interface OrderStats {
+  total: number;
+  byStatus: Record<string, number>;
+  byBrand: Record<string, number>;
+  totalUnits: number;
+  totalValue: number;
+  pendingArrival: number;
+  arrivedThisMonth: number;
+}
+
+interface LeadStats {
+  total: number;
+  hot: number;
+  warm: number;
+  cold: number;
+  new: number;
+  contacted: number;
+  qualified: number;
+  conversionRate: number;
+}
+
+interface CustomerStats {
+  total: number;
+  vip: number;
+  regular: number;
+  atRisk: number;
+  new: number;
+  totalLifetimeValue: number;
+  averageLifetimeValue: number;
+}
+
+interface DashboardStats {
+  leads: LeadStats;
+  customers: CustomerStats;
+  campaigns: {
+    total: number;
+    active: number;
+    completed: number;
+  };
+}
+
+interface Vehicle {
+  id: string;
+  brand: string;
+  model: string;
+  variant: string;
+  vin: string;
+  status: string;
+  daysInInventory: number;
+  ageAlert: string;
+  listPrice: number;
+  assignedShowroom: string;
+}
+
+interface ImportOrder {
+  id: string;
+  orderNumber: string;
+  brand: string;
+  status: string;
+  totalUnits: number;
+  totalValue: number;
+  expectedArrivalDate: string;
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+function formatCurrency(value: number, currency: "VND" | "USD" = "VND"): string {
+  if (!value || isNaN(value)) return "0";
+
+  if (currency === "USD") {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  if (value >= 1_000_000_000) {
+    return `${(value / 1_000_000_000).toFixed(1)}B`;
+  }
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(0)}M`;
+  }
+  return value.toLocaleString();
+}
+
+// ============================================
+// SKELETON COMPONENTS
+// ============================================
+
+function MetricSkeleton() {
+  return (
+    <div className="hero-metric animate-pulse">
+      <div className="flex items-center justify-between mb-3">
+        <div className="h-4 w-24 bg-muted rounded" />
+        <div className="h-10 w-10 bg-muted rounded-xl" />
+      </div>
+      <div className="h-12 w-32 bg-muted rounded mt-2" />
+      <div className="h-4 w-20 bg-muted rounded mt-3" />
+    </div>
+  );
+}
+
+function WidgetSkeleton() {
+  return (
+    <div className="dashboard-widget animate-pulse">
+      <div className="flex items-center justify-between mb-4">
+        <div className="h-5 w-32 bg-muted rounded" />
+        <div className="h-8 w-16 bg-muted rounded" />
+      </div>
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-16 bg-muted/50 rounded-xl" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// DASHBOARD PAGE COMPONENT
+// ============================================
 
 export default function DashboardPage() {
-  const { t } = useTranslation("app");
-  const [stats, setStats] = useState<any>(null);
+  const { t } = useTranslation("dashboard");
+  const { t: tApp } = useTranslation("app");
+
+  // Entity filter
+  const { selectedEntityIds, isLoading: isEntitiesLoading } = useEntityFilter();
+
+  // State
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentLeads, setRecentLeads] = useState<Lead[]>([]);
   const [atRiskCustomers, setAtRiskCustomers] = useState<Customer[]>([]);
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
-  const [activeCampaigns, setActiveCampaigns] = useState<Campaign[]>([]);
+  const [vehicleStats, setVehicleStats] = useState<VehicleStats | null>(null);
+  const [orderStats, setOrderStats] = useState<OrderStats | null>(null);
+  const [agingVehicles, setAgingVehicles] = useState<Vehicle[]>([]);
+  const [recentOrders, setRecentOrders] = useState<ImportOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Fetch data
+  const fetchDashboardData = async (showRefreshState = false) => {
+    if (showRefreshState) setIsRefreshing(true);
+    else setIsLoading(true);
+
+    try {
+      const entityParam = buildEntityFilterParams(selectedEntityIds);
+      const separator = entityParam ? "&" : "";
+      const prefix = entityParam ? `?${entityParam}` : "";
+
+      const endpoints = [
+        `/api/dashboard${prefix}`,
+        `/api/dashboard?section=leads${separator}${entityParam}`,
+        `/api/dashboard?section=atRisk${separator}${entityParam}`,
+        `/api/dashboard?section=recommendations${separator}${entityParam}`,
+        `/api/inventory/stats${prefix}`,
+        `/api/orders?stats=true${separator}${entityParam}`,
+        `/api/inventory?aging=true&minDays=60${separator}${entityParam}`,
+        `/api/orders?active=true${separator}${entityParam}`,
+      ];
+
+      const responses = await Promise.all(endpoints.map((url) => fetch(url)));
+      const data = await Promise.all(responses.map((res) => res.json()));
+
+      const [
+        statsData,
+        leadsData,
+        atRiskData,
+        recsData,
+        vehicleStatsData,
+        orderStatsData,
+        agingData,
+        ordersData,
+      ] = data;
+
+      if (statsData?.success) setStats(statsData.stats);
+      if (leadsData?.success && Array.isArray(leadsData.leads)) {
+        setRecentLeads(leadsData.leads.slice(0, 5));
+      }
+      if (atRiskData?.success && Array.isArray(atRiskData.customers)) {
+        setAtRiskCustomers(atRiskData.customers.slice(0, 3));
+      }
+      if (recsData?.success && Array.isArray(recsData.recommendations)) {
+        setRecommendations(recsData.recommendations.slice(0, 4));
+      }
+      if (vehicleStatsData?.success) setVehicleStats(vehicleStatsData.stats);
+      if (orderStatsData?.success) setOrderStats(orderStatsData.stats);
+      if (agingData?.success && Array.isArray(agingData.vehicles)) {
+        setAgingVehicles(agingData.vehicles.slice(0, 5));
+      }
+      if (ordersData?.success && Array.isArray(ordersData.orders)) {
+        setRecentOrders(ordersData.orders.slice(0, 4));
+      }
+    } catch (error) {
+      console.error("Error loading dashboard:", error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadDashboardData() {
-      try {
-        const dashboardStats = await getDashboardStats();
-        const leads = await getAllLeads();
-        const atRisk = await getAtRiskCustomers();
-        const recs = await getHighConfidenceRecommendations();
-        const campaigns = await getActiveCampaigns();
-
-        setStats(dashboardStats);
-        setRecentLeads(leads.slice(0, 5));
-        setAtRiskCustomers(atRisk.slice(0, 3));
-        setRecommendations(recs.slice(0, 4));
-        setActiveCampaigns(campaigns);
-      } catch (error) {
-        console.error("Error loading dashboard:", error);
-      } finally {
-        setIsLoading(false);
-      }
+    if (!isEntitiesLoading) {
+      fetchDashboardData();
     }
+  }, [selectedEntityIds, isEntitiesLoading]);
 
-    loadDashboardData();
-  }, []);
+  // Open command bar
+  const openCommandBar = () => {
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+    );
+  };
+
+  // Computed values
+  const totalAgingIssues = (vehicleStats?.agingWarning || 0) + (vehicleStats?.agingCritical || 0);
+
+  // Sample queries for AI
+  const sampleQueries = [
+    "Show aging vehicles over 60 days",
+    "Which leads are interested in GWM?",
+    "List import orders arriving this month",
+    "Match customers to available inventory",
+  ];
+
+  // ============================================
+  // LOADING STATE
+  // ============================================
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="h-16 w-16 rounded-2xl bg-gradient-brand animate-pulse" />
-            <Car className="absolute inset-0 m-auto h-8 w-8 text-white" />
+      <div className="flex h-full flex-col bg-mesh">
+        <div className="flex-1 overflow-auto">
+          {/* Hero skeleton */}
+          <div className="relative border-b">
+            <div className="mx-auto max-w-7xl px-6 py-10 md:px-8">
+              <div className="flex flex-col items-center text-center mb-8">
+                <div className="h-16 w-16 bg-muted rounded-2xl animate-pulse mb-5" />
+                <div className="h-8 w-64 bg-muted rounded animate-pulse mb-3" />
+                <div className="h-4 w-96 bg-muted rounded animate-pulse" />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <MetricSkeleton key={i} />
+                ))}
+              </div>
+            </div>
           </div>
-          <p className="mt-6 text-sm font-medium text-muted-foreground">Loading dashboard...</p>
+
+          {/* Content skeleton */}
+          <div className="mx-auto max-w-7xl px-6 py-8 md:px-8">
+            <div className="grid gap-6 lg:grid-cols-3 mb-8">
+              <WidgetSkeleton />
+              <div className="lg:col-span-2">
+                <div className="h-64 bg-muted/30 rounded-2xl animate-pulse" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Pipeline data for visualization
-  const pipelineStages = [
-    { name: "New", count: stats?.leads.new || 0, color: "from-blue-500 to-blue-600" },
-    { name: "Contacted", count: stats?.leads.contacted || 0, color: "from-cyan-500 to-cyan-600" },
-    { name: "Qualified", count: stats?.leads.qualified || 0, color: "from-violet-500 to-violet-600" },
-    { name: "Converted", count: stats?.leads.converted || 0, color: "from-emerald-500 to-emerald-600" },
-  ];
-
-  const totalPipeline = pipelineStages.reduce((sum, stage) => sum + stage.count, 0);
+  // ============================================
+  // MAIN RENDER
+  // ============================================
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-mesh">
       <div className="flex-1 overflow-auto">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden border-b bg-gradient-to-br from-violet-600 via-violet-700 to-indigo-800 px-6 py-10 md:px-8">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+        {/* ============================================
+           HERO SECTION
+           ============================================ */}
+        <div className="relative overflow-hidden border-b">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-cyan-500/5" />
+          <div className="absolute inset-0 bg-grid opacity-40" />
 
-          <div className="relative mx-auto max-w-7xl">
-            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <div className="animate-fade-in-up">
-                <div className="flex items-center gap-2 text-white/70">
-                  <Clock className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    {new Date().toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "long" })}
-                  </span>
-                </div>
-                <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-white md:text-4xl">
-                  Customer Lifecycle Dashboard
-                </h1>
-                <p className="mt-2 max-w-xl text-white/80">
-                  AI-powered insights for your sales pipeline. Track leads, nurture customers, and maximize conversions.
-                </p>
-              </div>
-
-              {/* Quick Stats Pills */}
-              <div className="flex flex-wrap gap-3 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-                <div className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-2 text-white">
-                  <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-sm font-medium">{stats?.leads.hot || 0} Hot Leads</span>
-                </div>
-                <div className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-2 text-white">
-                  <Sparkles className="h-4 w-4 text-amber-400" />
-                  <span className="text-sm font-medium">{recommendations.length} AI Insights</span>
+          <div className="relative mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-10">
+            {/* Header */}
+            <div className="flex items-start justify-between mb-8">
+              <div className="flex flex-col items-start">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-brand shadow-xl">
+                    <Car className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+                      Tasco Auto Command Center
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Real-time inventory, leads, and supply chain overview
+                    </p>
+                  </div>
                 </div>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fetchDashboardData(true)}
+                disabled={isRefreshing}
+                className="gap-2"
+              >
+                <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+                Refresh
+              </Button>
             </div>
 
-            {/* KPI Cards */}
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "Total Leads",
-                  value: stats?.leads.total || 0,
-                  change: `${stats?.leads.conversionRate?.toFixed(1) || 0}%`,
-                  changeLabel: "conversion",
-                  icon: Users,
-                  gradient: "from-blue-500/20 to-cyan-500/20",
-                  iconBg: "bg-blue-500",
-                  trending: "up",
-                },
-                {
-                  title: "Hot Prospects",
-                  value: stats?.leads.hot || 0,
-                  change: `${stats?.leads.new || 0} new`,
-                  changeLabel: "today",
-                  icon: Target,
-                  gradient: "from-orange-500/20 to-amber-500/20",
-                  iconBg: "bg-gradient-to-br from-orange-500 to-amber-500",
-                  trending: "up",
-                },
-                {
-                  title: "Active Customers",
-                  value: stats?.customers.total || 0,
-                  change: `${stats?.customers.vip || 0} VIP`,
-                  changeLabel: "members",
-                  icon: UserCircle,
-                  gradient: "from-emerald-500/20 to-teal-500/20",
-                  iconBg: "bg-gradient-to-br from-emerald-500 to-teal-500",
-                  trending: "up",
-                },
-                {
-                  title: "At-Risk",
-                  value: stats?.customers.atRisk || 0,
-                  change: "Needs attention",
-                  changeLabel: "",
-                  icon: AlertTriangle,
-                  gradient: "from-rose-500/20 to-pink-500/20",
-                  iconBg: "bg-gradient-to-br from-rose-500 to-pink-500",
-                  trending: "down",
-                },
-              ].map((card, index) => {
-                const Icon = card.icon;
-                return (
-                  <div
-                    key={card.title}
-                    className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 transition-all hover:bg-white/15 hover:scale-[1.02] animate-fade-in-up"
-                    style={{ animationDelay: `${(index + 2) * 100}ms` }}
-                  >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 transition-opacity group-hover:opacity-100`} />
-                    <div className="relative">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-white/70">{card.title}</p>
-                          <p className="mt-2 font-display text-4xl font-bold text-white">{card.value}</p>
-                        </div>
-                        <div className={`rounded-xl ${card.iconBg} p-2.5 shadow-lg`}>
-                          <Icon className="h-5 w-5 text-white" />
-                        </div>
-                      </div>
-                      <div className="mt-3 flex items-center gap-2">
-                        {card.trending === "up" ? (
-                          <TrendingUp className="h-4 w-4 text-emerald-400" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4 text-rose-400" />
-                        )}
-                        <span className="text-sm font-medium text-white">{card.change}</span>
-                        {card.changeLabel && (
-                          <span className="text-sm text-white/60">{card.changeLabel}</span>
-                        )}
-                      </div>
+            {/* AI Command Bar */}
+            <div className="flex justify-center mb-6">
+              <button
+                onClick={openCommandBar}
+                className="search-input-fancy w-full max-w-2xl"
+              >
+                <Sparkles className="h-5 w-5 text-violet-500" />
+                <span className="flex-1 text-left text-muted-foreground">
+                  Ask AI about inventory, leads, or customers...
+                </span>
+                <kbd>⌘K</kbd>
+              </button>
+            </div>
+
+            {/* Sample Queries */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {sampleQueries.map((query) => (
+                <button
+                  key={query}
+                  onClick={openCommandBar}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/50 border border-border/50 text-xs text-muted-foreground hover:bg-card hover:border-violet-500/30 hover:text-foreground transition-all"
+                >
+                  <Sparkles className="h-3 w-3 text-violet-500" />
+                  <span>{query}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* ============================================
+               HERO KPI CARDS
+               ============================================ */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {/* Inventory Value */}
+              <div className="hero-metric group">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Inventory Value
+                    </span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform">
+                      <DollarSign className="h-5 w-5 text-white" />
                     </div>
                   </div>
-                );
-              })}
+                  <div className="hero-metric-value gradient">
+                    {formatCurrency(vehicleStats?.totalValue || 0)}
+                    <span className="text-lg text-muted-foreground ml-1">₫</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-3">
+                    <Badge variant="secondary" className="gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                      <Car className="h-3 w-3" />
+                      {vehicleStats?.total || 0} vehicles
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Available Stock */}
+              <div className="hero-metric group">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      At Showroom
+                    </span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg group-hover:scale-110 transition-transform">
+                      <Warehouse className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="hero-metric-value">
+                    {vehicleStats?.atShowroom || 0}
+                  </div>
+                  <div className="flex items-center gap-3 mt-3">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span className="font-semibold text-foreground">{vehicleStats?.reserved || 0}</span> reserved
+                    </span>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />
+                      <span className="font-semibold text-foreground">{vehicleStats?.inTransit || 0}</span> transit
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Import Orders */}
+              <div className="hero-metric group">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Pending Arrivals
+                    </span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform">
+                      <Ship className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="hero-metric-value">
+                    {orderStats?.pendingArrival || 0}
+                  </div>
+                  <div className="flex items-center gap-2 mt-3">
+                    <Badge variant="secondary" className="gap-1 bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                      <Package className="h-3 w-3" />
+                      {orderStats?.totalUnits || 0} units expected
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hot Leads */}
+              <div className="hero-metric group">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Hot Leads
+                    </span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500 shadow-lg group-hover:scale-110 transition-transform">
+                      <Flame className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="hero-metric-value">
+                    {stats?.leads?.hot || 0}
+                  </div>
+                  <div className="flex items-center gap-2 mt-3">
+                    <Badge variant="secondary" className="gap-1 bg-orange-500/10 text-orange-600 dark:text-orange-400">
+                      <TrendingUp className="h-3 w-3" />
+                      {(stats?.leads?.conversionRate || 0).toFixed(1)}% conversion
+                    </Badge>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* ============================================
+           MAIN CONTENT
+           ============================================ */}
         <div className="mx-auto max-w-7xl px-6 py-8 md:px-8">
-          {/* Pipeline Visualization */}
-          <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="font-display text-xl font-semibold">Sales Pipeline</h2>
-                <p className="text-sm text-muted-foreground">Track leads through your conversion funnel</p>
+          {/* ============================================
+             BRAND DISTRIBUTION & SUPPLY CHAIN
+             ============================================ */}
+          <div className="grid gap-6 lg:grid-cols-3 mb-8">
+            {/* Brand Distribution */}
+            <div className="dashboard-widget">
+              <div className="dashboard-widget-header">
+                <div className="flex items-center gap-2">
+                  <div className="dashboard-widget-icon">
+                    <BarChart3 className="h-4 w-4 text-violet-500" />
+                  </div>
+                  <h3 className="dashboard-widget-title">Inventory by Brand</h3>
+                </div>
+                <Link href="/inventory">
+                  <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                    View All <ArrowRight className="h-3 w-3" />
+                  </Button>
+                </Link>
               </div>
-              <Link href="/leads">
-                <Button variant="outline" size="sm" className="gap-2">
-                  View All Leads
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="space-y-4">
+                {Object.entries(vehicleStats?.byBrand || {}).length > 0 ? (
+                  Object.entries(vehicleStats?.byBrand || {}).map(([brand, count]) => {
+                    const brandStyle = getBrandStyleStatic(brand);
+                    const percentage = ((count as number) / (vehicleStats?.total || 1)) * 100;
+                    return (
+                      <div key={brand} className="flex items-center gap-3">
+                        <div className={cn("brand-pill", brand.toLowerCase())}>
+                          {brand}
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-2 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className={cn("h-full rounded-full transition-all duration-700", brandStyle.accent)}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="font-display text-lg font-bold w-10 text-right">
+                          {count as number}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Car className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">No vehicles in inventory</p>
+                    <Link href="/inventory">
+                      <Button variant="link" size="sm" className="mt-2">
+                        Add vehicles
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="card-glass p-6">
-              <div className="flex items-center gap-2 mb-6">
-                {pipelineStages.map((stage, index) => (
-                  <div key={stage.name} className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 flex-1 rounded-full bg-gradient-to-r ${stage.color}`} />
-                      {index < pipelineStages.length - 1 && (
-                        <ChevronRight className="h-4 w-4 text-muted-foreground/50 flex-shrink-0" />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                {pipelineStages.map((stage, index) => (
-                  <div
-                    key={stage.name}
-                    className="text-center p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
-                  >
-                    <p className="text-3xl font-bold font-display">{stage.count}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{stage.name}</p>
-                    <p className="text-xs text-muted-foreground/70 mt-0.5">
-                      {totalPipeline > 0 ? ((stage.count / totalPipeline) * 100).toFixed(0) : 0}%
+            {/* Supply Chain Tracker */}
+            <div className="lg:col-span-2 supply-chain-tracker">
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="font-display text-lg font-semibold">
+                      Supply Chain Pipeline
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Track vehicles from factory to showroom
                     </p>
                   </div>
-                ))}
+                  <Link href="/inventory/orders">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                    >
+                      View Orders <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-5 gap-2">
+                  {[
+                    { label: "Ordered", icon: Package, count: vehicleStats?.byStatus?.ordered || 0, color: "from-slate-500 to-slate-600" },
+                    { label: "Production", icon: Factory, count: vehicleStats?.byStatus?.in_production || 0, color: "from-violet-500 to-purple-600" },
+                    { label: "Shipped", icon: Ship, count: vehicleStats?.byStatus?.shipped || 0, color: "from-cyan-500 to-blue-600" },
+                    { label: "In Transit", icon: Truck, count: vehicleStats?.byStatus?.in_transit || 0, color: "from-blue-500 to-indigo-600" },
+                    { label: "Showroom", icon: Warehouse, count: vehicleStats?.atShowroom || 0, color: "from-emerald-500 to-teal-600" },
+                  ].map((stage, index) => {
+                    const Icon = stage.icon;
+                    return (
+                      <div key={stage.label} className="relative">
+                        <div className={cn(
+                          "supply-chain-node flex-col text-center",
+                          stage.count > 0 && "active"
+                        )}>
+                          <div className={cn(
+                            "flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg mb-2",
+                            stage.color
+                          )}>
+                            <Icon className="h-5 w-5 text-white" />
+                          </div>
+                          <span className="font-display text-xl font-bold">
+                            {stage.count}
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {stage.label}
+                          </span>
+                        </div>
+                        {index < 4 && (
+                          <ChevronRight className="absolute -right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid gap-4 md:grid-cols-3 mb-8">
+          {/* ============================================
+             AGING INVENTORY ALERT
+             ============================================ */}
+          {totalAgingIssues > 0 && (
+            <div className="mb-8">
+              <div className="rounded-2xl border-2 border-amber-200 dark:border-amber-900/50 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg">
+                      <AlertTriangle className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-lg font-semibold text-amber-900 dark:text-amber-400">
+                        Aging Inventory Alert
+                      </h3>
+                      <p className="text-sm text-amber-700/80 dark:text-amber-400/80">
+                        <span className="font-semibold">{vehicleStats?.agingCritical || 0}</span> critical (&gt;90 days)
+                        <span className="mx-2">•</span>
+                        <span className="font-semibold">{vehicleStats?.agingWarning || 0}</span> warning (&gt;60 days)
+                      </p>
+                    </div>
+                  </div>
+                  <Link href="/inventory?filter=aging">
+                    <Button
+                      variant="outline"
+                      className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-400"
+                    >
+                      View All Aging
+                    </Button>
+                  </Link>
+                </div>
+
+                {agingVehicles.length > 0 && (
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                    {agingVehicles.slice(0, 3).map((vehicle) => {
+                      const brandStyle = getBrandStyleStatic(vehicle.brand);
+                      return (
+                        <Link
+                          key={vehicle.id}
+                          href={`/inventory/${vehicle.id}`}
+                          className="flex items-center gap-3 p-4 rounded-xl bg-card border border-amber-200 dark:border-amber-800/50 hover:shadow-lg transition-all group"
+                        >
+                          <div className={cn(
+                            "flex h-10 w-10 items-center justify-center rounded-lg",
+                            brandStyle.bg, brandStyle.text
+                          )}>
+                            <Car className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium truncate group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                              {vehicle.brand} {vehicle.model}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {vehicle.variant}
+                            </p>
+                          </div>
+                          <div className={cn(
+                            "days-counter",
+                            vehicle.ageAlert === "critical" ? "critical" : "warning"
+                          )}>
+                            <Clock className="h-3.5 w-3.5" />
+                            {vehicle.daysInInventory}d
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================
+             ACTIVE IMPORT ORDERS
+             ============================================ */}
+          {recentOrders.length > 0 && (
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="font-display text-xl font-semibold">Active Import Orders</h2>
+                  <p className="text-sm text-muted-foreground">Track incoming shipments from OEM</p>
+                </div>
+                <Link href="/inventory/orders">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    View All Orders
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {recentOrders.map((order) => {
+                  return (
+                    <Link
+                      key={order.id}
+                      href={`/inventory/orders/${order.id}`}
+                      className="dashboard-widget group cursor-pointer hover:shadow-lg hover:border-violet-500/30 transition-all"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={cn("brand-pill", order.brand.toLowerCase())}>
+                          {order.brand}
+                        </span>
+                        <span className="text-xs font-mono text-muted-foreground">
+                          {order.orderNumber}
+                        </span>
+                      </div>
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <span className="font-display text-2xl font-bold">
+                          {order.totalUnits}
+                        </span>
+                        <span className="text-sm text-muted-foreground">units</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="h-3.5 w-3.5" />
+                        <span>
+                          ETA: {new Date(order.expectedArrivalDate).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                          })}
+                        </span>
+                      </div>
+                      <div className="mt-3 pt-3 border-t flex items-center justify-between">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          {order.status.replace("_", " ")}
+                        </span>
+                        <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================
+             QUICK ACTIONS
+             ============================================ */}
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5 mb-8">
             {[
-              {
-                href: "/leads",
-                title: "Lead Inbox",
-                value: `${stats?.leads.new || 0} new`,
-                subtitle: `${stats?.leads.hot || 0} hot leads awaiting contact`,
-                icon: Users,
-                gradient: "from-blue-500 to-cyan-500",
-              },
-              {
-                href: "/customers",
-                title: "Customer 360",
-                value: `${stats?.customers.total || 0} profiles`,
-                subtitle: "Complete lifecycle tracking",
-                icon: UserCircle,
-                gradient: "from-emerald-500 to-teal-500",
-              },
-              {
-                href: "/marketing",
-                title: "Campaigns",
-                value: `${activeCampaigns.length} active`,
-                subtitle: `${stats?.campaigns?.avgROI?.toFixed(1) || 0}x avg ROI`,
-                icon: Megaphone,
-                gradient: "from-violet-500 to-purple-500",
-              },
-            ].map((item, index) => {
+              { href: "/inventory", title: "Vehicle Inventory", count: vehicleStats?.total || 0, icon: Car, gradient: "from-emerald-500 to-teal-500" },
+              { href: "/inventory/orders", title: "Import Orders", count: orderStats?.total || 0, icon: Package, gradient: "from-violet-500 to-purple-500" },
+              { href: "/leads", title: "Lead Inbox", count: stats?.leads?.total || 0, icon: Users, gradient: "from-blue-500 to-cyan-500" },
+              { href: "/customers", title: "Customers", count: stats?.customers?.total || 0, icon: UserCircle, gradient: "from-pink-500 to-rose-500" },
+              { href: "/chat", title: "AI Assistant", count: null, icon: MessageSquare, gradient: "from-amber-500 to-orange-500" },
+            ].map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.href} href={item.href}>
-                  <Card className="card-elevated group cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 animate-fade-in-up" style={{ animationDelay: `${(index + 3) * 100}ms` }}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className={`inline-flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br ${item.gradient} shadow-lg mb-4`}>
-                            <Icon className="h-5 w-5 text-white" />
-                          </div>
-                          <p className="text-sm font-medium text-muted-foreground">{item.title}</p>
-                          <p className="mt-1 font-display text-2xl font-bold">{item.value}</p>
-                          <p className="mt-1 text-sm text-muted-foreground">{item.subtitle}</p>
-                        </div>
-                        <ArrowUpRight className="h-5 w-5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="quick-stat-item group cursor-pointer">
+                    <div className={cn(
+                      "flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg transition-transform group-hover:scale-105",
+                      item.gradient
+                    )}>
+                      <Icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      {item.count !== null && (
+                        <p className="quick-stat-value">{item.count}</p>
+                      )}
+                      <p className={cn("text-sm", item.count === null && "font-medium")}>
+                        {item.title}
+                      </p>
+                    </div>
+                  </div>
                 </Link>
               );
             })}
           </div>
 
-          {/* Two Column Layout */}
+          {/* ============================================
+             AI INSIGHTS & HOT LEADS
+             ============================================ */}
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Recent Leads */}
-            <Card className="card-glass animate-fade-in-up" style={{ animationDelay: "400ms" }}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <div>
-                  <CardTitle className="font-display">Recent Leads</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">Latest prospects in your pipeline</p>
+            {/* AI Recommendations */}
+            <div className="dashboard-widget">
+              <div className="dashboard-widget-header">
+                <div className="flex items-center gap-3">
+                  <div className="dashboard-widget-icon">
+                    <Sparkles className="h-5 w-5 text-violet-500" />
+                  </div>
+                  <div>
+                    <h3 className="dashboard-widget-title">AI Insights</h3>
+                    <p className="text-xs text-muted-foreground">Powered by Lyzr AI</p>
+                  </div>
+                </div>
+                <Link href="/chat">
+                  <Button variant="ghost" size="sm">Chat</Button>
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {recommendations.length > 0 ? (
+                  recommendations.slice(0, 3).map((rec) => (
+                    <div
+                      key={rec.id}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
+                    >
+                      <div className={cn(
+                        "flex h-8 w-8 items-center justify-center rounded-lg flex-shrink-0",
+                        rec.priority === "urgent"
+                          ? "bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400"
+                          : rec.priority === "high"
+                          ? "bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400"
+                          : "bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400"
+                      )}>
+                        <Activity className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium leading-tight">{rec.title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                          {rec.description}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="flex-shrink-0 text-[10px]">
+                        {(rec.confidence * 100).toFixed(0)}%
+                      </Badge>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">No recommendations yet</p>
+                    <p className="text-xs mt-1">AI insights will appear as data grows</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Hot Leads */}
+            <div className="dashboard-widget">
+              <div className="dashboard-widget-header">
+                <div className="flex items-center gap-3">
+                  <div className="dashboard-widget-icon">
+                    <Target className="h-5 w-5 text-orange-500" />
+                  </div>
+                  <div>
+                    <h3 className="dashboard-widget-title">Hot Leads</h3>
+                    <p className="text-xs text-muted-foreground">Awaiting follow-up</p>
+                  </div>
                 </div>
                 <Link href="/leads">
-                  <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-                    View All
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
+                  <Button variant="ghost" size="sm">View All</Button>
                 </Link>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {recentLeads.map((lead, index) => (
+              </div>
+
+              <div className="space-y-3">
+                {recentLeads.length > 0 ? (
+                  recentLeads.slice(0, 4).map((lead) => (
                     <Link
                       key={lead.id}
                       href={`/leads/${lead.id}`}
-                      className="flex items-center gap-4 rounded-xl border p-4 transition-all hover:bg-muted/50 hover:shadow-md hover:-translate-x-1 animate-fade-in-up"
-                      style={{ animationDelay: `${(index + 5) * 50}ms` }}
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors group"
                     >
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-full font-semibold text-white ${
+                      <div className={cn(
+                        "flex h-10 w-10 items-center justify-center rounded-full font-semibold text-white text-sm",
                         lead.priority === "hot"
                           ? "bg-gradient-to-br from-red-500 to-orange-500"
                           : lead.priority === "warm"
-                            ? "bg-gradient-to-br from-amber-500 to-yellow-500"
-                            : "bg-gradient-to-br from-blue-500 to-cyan-500"
-                      }`}>
-                        {lead.customer.name.charAt(0)}
+                          ? "bg-gradient-to-br from-amber-500 to-yellow-500"
+                          : "bg-gradient-to-br from-blue-500 to-cyan-500"
+                      )}>
+                        {lead.customer?.name?.charAt(0) || "?"}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium truncate">{lead.customer.name}</p>
-                          <span className={`priority-badge ${lead.priority}`}>
+                          <p className="text-sm font-medium truncate group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                            {lead.customer?.name || "Unknown"}
+                          </p>
+                          <span className={cn("priority-badge", lead.priority)}>
                             {lead.priority}
                           </span>
                         </div>
-                        <p className="mt-0.5 text-sm text-muted-foreground truncate">
-                          {lead.interest.brands.join(", ")} • {lead.source}
+                        <p className="text-xs text-muted-foreground truncate">
+                          {lead.interest?.brands?.join(", ") || "No brand preference"}
                         </p>
                       </div>
-                      <div className="text-right flex-shrink-0">
-                        <div className="flex items-center gap-1 text-sm font-medium">
-                          <Zap className="h-3.5 w-3.5 text-amber-500" />
-                          {lead.score}
-                        </div>
-                        <p className="text-xs text-muted-foreground capitalize">{lead.status}</p>
+                      <div className="flex items-center gap-1 text-sm">
+                        <Zap className="h-3.5 w-3.5 text-amber-500" />
+                        <span className="font-semibold">{lead.score || 0}</span>
                       </div>
                     </Link>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* AI Recommendations */}
-            <Card className="ai-insight-card animate-fade-in-up" style={{ animationDelay: "450ms" }}>
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand shadow-lg">
-                      <Sparkles className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="font-display">AI Recommendations</CardTitle>
-                      <p className="text-sm text-muted-foreground">Powered by Lyzr AI</p>
-                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">No leads yet</p>
+                    <Link href="/leads">
+                      <Button variant="link" size="sm" className="mt-2">
+                        Add your first lead
+                      </Button>
+                    </Link>
                   </div>
-                  <span className="rounded-full bg-violet-100 dark:bg-violet-900/30 px-3 py-1 text-xs font-semibold text-violet-700 dark:text-violet-400">
-                    {recommendations.length} active
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {recommendations.map((rec, index) => (
-                    <div
-                      key={rec.id}
-                      className="group rounded-xl border border-violet-200/50 dark:border-violet-800/30 bg-gradient-to-r from-violet-50/50 to-transparent dark:from-violet-950/20 p-4 transition-all hover:shadow-md hover:border-violet-300 dark:hover:border-violet-700 animate-fade-in-up"
-                      style={{ animationDelay: `${(index + 6) * 50}ms` }}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 flex-shrink-0">
-                          <Activity className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium leading-tight">{rec.title}</p>
-                          <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                            {rec.description}
-                          </p>
-                          <div className="mt-2 flex items-center gap-3">
-                            <div className="flex items-center gap-1.5">
-                              <div className="h-1.5 w-16 rounded-full bg-muted overflow-hidden">
-                                <div
-                                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
-                                  style={{ width: `${rec.confidence * 100}%` }}
-                                />
-                              </div>
-                              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                                {(rec.confidence * 100).toFixed(0)}%
-                              </span>
-                            </div>
-                            <span className="text-xs text-muted-foreground px-2 py-0.5 rounded-full bg-muted">
-                              {rec.type.replace(/_/g, " ")}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* At-Risk Customers Alert */}
+          {/* ============================================
+             AT-RISK CUSTOMERS
+             ============================================ */}
           {atRiskCustomers.length > 0 && (
-            <Card className="mt-6 border-2 border-orange-200 dark:border-orange-900/50 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 overflow-hidden animate-fade-in-up" style={{ animationDelay: "500ms" }}>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-3 text-orange-900 dark:text-orange-400">
+            <div className="mt-8">
+              <div className="rounded-2xl border-2 border-orange-200 dark:border-orange-900/50 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 p-6">
+                <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg">
                     <AlertTriangle className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <span className="font-display">At-Risk Customers</span>
-                    <p className="text-sm font-normal text-orange-700/80 dark:text-orange-400/80">
-                      {atRiskCustomers.length} customers need immediate attention
+                    <h3 className="font-display font-semibold text-orange-900 dark:text-orange-400">
+                      Customers at Risk
+                    </h3>
+                    <p className="text-sm text-orange-700/80 dark:text-orange-400/80">
+                      High churn probability - immediate attention needed
                     </p>
                   </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </div>
+
                 <div className="grid gap-3 md:grid-cols-3">
-                  {atRiskCustomers.map((customer, index) => (
+                  {atRiskCustomers.map((customer) => (
                     <Link
                       key={customer.id}
                       href={`/customers/${customer.id}`}
-                      className="flex items-center justify-between rounded-xl border-2 border-orange-200 dark:border-orange-800/50 bg-card p-4 transition-all hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-700 hover:-translate-y-1 animate-fade-in-up"
-                      style={{ animationDelay: `${(index + 7) * 50}ms` }}
+                      className="flex items-center justify-between p-4 rounded-xl bg-card border border-orange-200 dark:border-orange-800/50 hover:shadow-lg transition-all group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400 font-semibold">
-                          {customer.profile.name.charAt(0)}
+                          {customer.profile?.name?.charAt(0) || "?"}
                         </div>
                         <div>
-                          <p className="font-medium">{customer.profile.name}</p>
+                          <p className="font-medium group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                            {customer.profile?.name || "Unknown"}
+                          </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <div className="churn-bar">
+                            <div className="w-16 h-1.5 rounded-full bg-orange-200 dark:bg-orange-800 overflow-hidden">
                               <div
-                                className="churn-bar-fill"
-                                style={{ width: `${customer.insights.churnRisk * 100}%` }}
+                                className="h-full rounded-full bg-orange-500"
+                                style={{ width: `${(customer.insights?.churnRisk || 0) * 100}%` }}
                               />
                             </div>
                             <span className="text-xs font-medium text-orange-600 dark:text-orange-400">
-                              {(customer.insights.churnRisk * 100).toFixed(0)}% risk
+                              {((customer.insights?.churnRisk || 0) * 100).toFixed(0)}%
                             </span>
                           </div>
                         </div>
                       </div>
-                      <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white shadow-md">
+                      <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
                         Engage
                       </Button>
                     </Link>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       </div>

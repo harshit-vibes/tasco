@@ -10,6 +10,7 @@
     "db:seed": "bun run scripts/seed-data.ts"
   },
   "dependencies": {
+    "@tasco/api": "workspace:*",
     "@tasco/db": "workspace:*",
     "@tasco/i18n": "workspace:*",
     "@tasco/lyzr": "workspace:*",

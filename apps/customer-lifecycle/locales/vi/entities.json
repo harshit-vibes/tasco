@@ -1,0 +1,55 @@
+{
+  "title": "Danh Mục Thương Hiệu",
+  "subtitle": "Quản lý showroom, khách hàng B2B và thương hiệu",
+  "search_placeholder": "Tìm kiếm...",
+  "refresh": "Làm mới",
+  "filter": {
+    "all_categories": "Tất cả Danh mục"
+  },
+  "stats": {
+    "total": "Tổng",
+    "showrooms": "Showroom",
+    "b2b_clients": "Khách B2B",
+    "brands": "Thương Hiệu"
+  },
+  "type": {
+    "parent": "Mẹ",
+    "holding": "Tập đoàn",
+    "subsidiary": "Con"
+  },
+  "category": {
+    "tasco-group": "Tasco Group",
+    "automotive-showroom": "Showroom",
+    "automotive-b2b": "Khách hàng B2B",
+    "automotive-brand": "Thương hiệu"
+  },
+  "columns": {
+    "name": "Tên",
+    "category": "Danh mục",
+    "location": "Vị trí",
+    "employees": "Nhân viên"
+  },
+  "detail": {
+    "overview": "Tổng quan",
+    "metadata": "Siêu dữ liệu",
+    "basic_info": "Thông tin Cơ bản",
+    "hierarchy": "Cấu trúc",
+    "name": "Tên",
+    "short_name": "Tên ngắn",
+    "location": "Vị trí",
+    "employees": "Nhân viên",
+    "industry": "Ngành nghề",
+    "comments": "Ghi chú",
+    "parent_entity": "Công ty Mẹ",
+    "created": "Ngày tạo",
+    "updated": "Cập nhật lần cuối",
+    "no_parent": "Không có công ty mẹ",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu thay đổi",
+    "cancel": "Hủy"
+  },
+  "empty": {
+    "title": "Không tìm thấy thực thể",
+    "description": "Thử điều chỉnh tìm kiếm hoặc bộ lọc"
+  }
+}

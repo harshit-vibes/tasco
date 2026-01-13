@@ -150,7 +150,15 @@ class LyzrClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Lyzr API error: ${response.statusText}`);
+      let errorMessage = `Lyzr API error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = `Lyzr API error: ${response.status} - ${errorData.message || errorData.detail || JSON.stringify(errorData)}`;
+      } catch {
+        // Response body wasn't JSON
+      }
+      console.error("[Lyzr Client] Chat error:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -186,33 +194,41 @@ class LyzrClient {
     validationAgentId: string,
     query: string,
     response: string,
-    hasCitations: boolean,
+    citations: EnhancedCitation[] | undefined,
     sessionId?: string
   ): Promise<ValidationResult> {
+    const hasCitations = (citations?.length || 0) > 0;
+
+    // Format citations for the validator
+    const citationSummary = citations?.length
+      ? citations.map((c, i) => `[${i + 1}] ${c.documentName} (relevance: ${(c.metadata?.relevanceScore || 0).toFixed(2)})`).join("\n")
+      : "None";
+
     const validationPrompt = `Validate the following AI response for a compliance Q&A system.
 
 QUERY: ${query}
 
 RESPONSE: ${response}
 
-HAS_CITATIONS: ${hasCitations}
+CITATIONS PROVIDED: ${hasCitations ? "Yes" : "No"}
+${hasCitations ? `\nSOURCE DOCUMENTS:\n${citationSummary}` : ""}
 
 Evaluate the response and return ONLY a valid JSON object (no markdown, no explanation) with these fields:
 {
   "score": <number 0-100, overall quality score>,
   "rationale": "<string, 1-2 sentence explanation of the score>",
-  "hasCitations": <boolean, whether response has document citations>,
-  "citationQuality": <number 0-100, quality of citations if present>,
+  "hasCitations": <boolean, whether response references source documents>,
+  "citationQuality": <number 0-100, quality and relevance of citations>,
   "responseCompleteness": <number 0-100, how complete is the answer>,
-  "isGrounded": <boolean, is the response grounded in documents>,
+  "isGrounded": <boolean, is the response grounded in the provided documents>,
   "confidence": "<'high'|'medium'|'low', confidence in the answer>"
 }
 
 Scoring guidelines:
-- 90-100: Excellent - Complete answer with proper citations
-- 70-89: Good - Mostly complete, minor issues
-- 50-69: Fair - Partial answer or missing citations
-- 0-49: Poor - Incomplete, no citations, or potentially incorrect`;
+- 90-100: Excellent - Complete answer grounded in source documents
+- 70-89: Good - Mostly complete, well-supported by sources
+- 50-69: Fair - Partial answer or weak source support
+- 0-49: Poor - Incomplete or not grounded in sources`;
 
     try {
       const response = await fetch(`${this.baseUrl}/v3/inference/chat/`, {
@@ -230,7 +246,15 @@ Scoring guidelines:
       });
 
       if (!response.ok) {
-        throw new Error(`Validation API error: ${response.statusText}`);
+        let errorMessage = `Validation API error: ${response.status} ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = `Validation API error: ${response.status} - ${errorData.message || errorData.detail || JSON.stringify(errorData)}`;
+        } catch {
+          // Response body wasn't JSON
+        }
+        console.error("[Lyzr Client] Validation error:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -293,7 +317,15 @@ Scoring guidelines:
     });
 
     if (!response.ok) {
-      throw new Error(`Lyzr API error: ${response.statusText}`);
+      let errorMessage = `Lyzr API error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = `Lyzr API error: ${response.status} - ${errorData.message || errorData.detail || JSON.stringify(errorData)}`;
+      } catch {
+        // Response body wasn't JSON
+      }
+      console.error("[Lyzr Client] Stream error:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     const reader = response.body?.getReader();

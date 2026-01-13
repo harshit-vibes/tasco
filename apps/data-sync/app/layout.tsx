@@ -3,7 +3,7 @@
 import "./globals.css";
 import { I18nProvider } from "@tasco/i18n";
 import { ChatProvider } from "@tasco/lyzr";
-import { OnboardingGuide, useOnboarding } from "../components/onboarding-guide";
+import { GuideCarousel, useAppGuide } from "@tasco/ui";
 
 import enApp from "../locales/en/app.json";
 import viApp from "../locales/vi/app.json";
@@ -19,12 +19,23 @@ const LYZR_AGENT_ID = process.env.NEXT_PUBLIC_LYZR_AGENT_ID;
 const LYZR_API_KEY = process.env.NEXT_PUBLIC_LYZR_API_KEY;
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const { isOpen, closeGuide, openGuide } = useOnboarding();
+  const {
+    guide,
+    isOpen: isGuideOpen,
+    setIsOpen: setIsGuideOpen,
+    openGuide,
+  } = useAppGuide("data-sync");
 
   return (
     <>
       <AppShell onOpenGuide={openGuide}>{children}</AppShell>
-      <OnboardingGuide isOpen={isOpen} onClose={closeGuide} />
+      {guide && (
+        <GuideCarousel
+          guide={guide}
+          open={isGuideOpen}
+          onOpenChange={setIsGuideOpen}
+        />
+      )}
     </>
   );
 }

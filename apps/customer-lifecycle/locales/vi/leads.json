@@ -31,6 +31,33 @@
     "name": "Tên",
     "lastContactedAt": "Liên Hệ Cuối"
   },
+  "stats": {
+    "total_leads": "Tổng Số Lead",
+    "hot_prospects": "Lead Nóng",
+    "new_today": "Mới Hôm Nay",
+    "avg_score": "Điểm TB"
+  },
+  "view": {
+    "list": "Danh Sách",
+    "kanban": "Kanban"
+  },
+  "filters": {
+    "priority": "Mức Độ"
+  },
+  "columns": {
+    "lead": "Khách Hàng",
+    "priority": "Mức Độ",
+    "status": "Trạng Thái",
+    "score": "Điểm",
+    "interest": "Quan Tâm",
+    "source": "Nguồn",
+    "date": "Ngày"
+  },
+  "empty": {
+    "no_leads": "Không tìm thấy khách hàng tiềm năng",
+    "no_leads_hint": "Thử điều chỉnh bộ lọc hoặc tìm kiếm",
+    "no_leads_column": "Không có lead"
+  },
   "labels": {
     "score": "Điểm",
     "priority": "Mức Độ",

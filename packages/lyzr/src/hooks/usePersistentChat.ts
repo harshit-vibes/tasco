@@ -453,13 +453,13 @@ export function usePersistentChat(
             // Run validation if enabled and validation agent is configured
             let validationResult: ValidationResult | undefined;
             if (enableValidation && validationAgentId) {
-              console.log("[usePersistentChat] Running validation...");
+              console.log("[usePersistentChat] Running validation with", response.citations?.length || 0, "citations");
               try {
                 validationResult = await client.validateResponse(
                   validationAgentId,
                   content,
                   response.message,
-                  (response.citations?.length || 0) > 0,
+                  response.citations, // Pass actual citations, not just boolean
                   userId
                 );
                 console.log("[usePersistentChat] Validation result:", validationResult);

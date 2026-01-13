@@ -31,6 +31,33 @@
     "name": "Name",
     "lastContactedAt": "Last Contacted"
   },
+  "stats": {
+    "total_leads": "Total Leads",
+    "hot_prospects": "Hot Prospects",
+    "new_today": "New Today",
+    "avg_score": "Avg Score"
+  },
+  "view": {
+    "list": "List",
+    "kanban": "Kanban"
+  },
+  "filters": {
+    "priority": "Priority"
+  },
+  "columns": {
+    "lead": "Lead",
+    "priority": "Priority",
+    "status": "Status",
+    "score": "Score",
+    "interest": "Interest",
+    "source": "Source",
+    "date": "Date"
+  },
+  "empty": {
+    "no_leads": "No leads found",
+    "no_leads_hint": "Try adjusting your filters or search query",
+    "no_leads_column": "No leads"
+  },
   "labels": {
     "score": "Score",
     "priority": "Priority",
