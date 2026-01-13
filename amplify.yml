@@ -1,12 +1,6 @@
-# AWS Amplify Build Configuration for Tasco Monorepo
-# ===================================================
-#
-# For deploying a single app from this Turborepo monorepo:
-# 1. Create Amplify app in AWS Console
-# 2. Connect to GitHub repo: harshit-vibes/tasco
-# 3. Set environment variable: APP_PATH=compliance-qa (or desired app)
-# 4. Set all required environment variables (LYZR_API_KEY, etc.)
-# 5. Push to prod branch to trigger build
+# AWS Amplify Build Configuration for Tasco Compliance-QA
+# ========================================================
+# This configuration deploys the compliance-qa app from the monorepo
 
 version: 1
 
@@ -26,10 +20,10 @@ frontend:
       commands:
         - export BUN_INSTALL="$HOME/.bun"
         - export PATH="$BUN_INSTALL/bin:$PATH"
-        # Build the specific app using Turborepo filter
-        - bun run build --filter=@tasco/${APP_PATH:-compliance-qa}
+        # Build compliance-qa app using Turborepo filter
+        - bun run build --filter=@tasco/compliance-qa
   artifacts:
-    baseDirectory: apps/${APP_PATH:-compliance-qa}/.next
+    baseDirectory: apps/compliance-qa/.next
     files:
       - '**/*'
   cache:
