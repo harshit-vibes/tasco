@@ -20,7 +20,8 @@ export type AgentRole =
   | "orchestrator"   // Routes to sub-agents
   | "expert"         // Specialized knowledge agent
   | "validator"      // Response quality validator
-  | "generator";     // Content generation agent
+  | "generator"      // Content generation agent
+  | "analyzer";      // Data analysis agent (e.g., lead scoring)
 
 // Agent status
 export type AgentStatus =

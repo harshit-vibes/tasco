@@ -150,30 +150,31 @@ export const KNOWLEDGE_BASES: Record<string, KnowledgeBaseConfig> = {
   },
 
   // ============================================
-  // CUSTOMER-LIFECYCLE APP - Customer Data
+  // CUSTOMER-LIFECYCLE APP - Business Data (Leads, Customers, Campaigns)
   // ============================================
 
-  "customer-lifecycle:customers-kb": {
-    key: "customer-lifecycle:customers-kb",
-    id: null,
-    name: "customer-lifecycle-customers",
-    description: "Customer profiles, interaction history, and lifecycle data",
+  "customer-lifecycle:business-data-kb": {
+    key: "customer-lifecycle:business-data-kb",
+    id: "6963e00cee18986913061152",
+    name: "customer-lifecycle-business-data",
+    description: "Customer lifecycle business data - leads, customers, campaigns from DynamoDB",
     appId: "customer-lifecycle",
     vectorStoreProvider: "Qdrant [Lyzr]",
-    embeddingModel: "text-embedding-3-small",
-    connectedAgents: ["customer-lifecycle:main"],
+    embeddingModel: "text-embedding-ada-002",
+    connectedAgents: ["customer-lifecycle:assistant"],
     documentCount: 0,
-    s3Path: "customer-lifecycle/customers/",
+    s3Path: "customer-lifecycle/business-data/",
     retrievalConfig: {
-      topK: 5,
+      topK: 10,
       similarityThreshold: 0.5,
       retrievalType: "basic",
       includeMetadata: true,
       chunkSize: 500,
       chunkOverlap: 100,
     },
-    envVar: "LYZR_CUSTOMERS_KB_ID",
-    status: "pending",
+    envVar: "LYZR_BUSINESS_DATA_KB_ID",
+    status: "active",
+    collectionName: "customer_lifecycle_business_data_test",
   },
 
   // ============================================
