@@ -26,3 +26,9 @@ export {
   handlePutGuide,
   handleDeleteGuide,
 } from "./guides";
+
+// Entity handlers
+export {
+  handleListEntities,
+  handleGetEntity,
+} from "./entities";
