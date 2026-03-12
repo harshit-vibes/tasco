@@ -164,13 +164,13 @@ export function AICommandBar({ isOpen, onClose, onSubmit }: AICommandBarProps) {
                           : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                       )}
                       style={isSelected ? {
-                        ringColor: agent.colorClass.includes('violet') ? '#8b5cf6' :
+                        '--tw-ring-color': agent.colorClass.includes('violet') ? '#8b5cf6' :
                                    agent.colorClass.includes('amber') ? '#f59e0b' :
                                    agent.colorClass.includes('emerald') ? '#10b981' :
                                    agent.colorClass.includes('blue') ? '#3b82f6' :
                                    agent.colorClass.includes('pink') ? '#ec4899' :
                                    agent.colorClass.includes('red') ? '#ef4444' : '#8b5cf6'
-                      } : undefined}
+                      } as React.CSSProperties : undefined}
                     >
                       <Icon className="w-4 h-4" />
                       <span>{agent.shortName}</span>

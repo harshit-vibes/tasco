@@ -3,6 +3,5 @@
   "installCommand": "bun install",
   "buildCommand": "bun run build --filter=@tasco/e-learning",
   "outputDirectory": "apps/e-learning/.next",
-  "framework": "nextjs",
-  "public": true
+  "framework": "nextjs"
 }

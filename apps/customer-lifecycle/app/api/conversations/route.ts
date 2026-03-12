@@ -4,8 +4,11 @@ import {
   createConversation,
   deleteConversation,
   updateConversation,
-  createNotification,
-} from "@tasco/db";
+} from "@tasco/db/mongodb";
+
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const APP_ID = "customer-lifecycle";
 
@@ -23,7 +26,7 @@ export async function GET(request: Request): Promise<Response> {
     }
 
     const result = await listConversations(appId, entityId);
-    return NextResponse.json({ success: true, conversations: result.items });
+    return NextResponse.json({ success: true, conversations: result.items, source: "mongodb" });
   } catch (error) {
     console.error("Error listing conversations:", error);
     return NextResponse.json(
@@ -52,19 +55,9 @@ export async function POST(request: Request): Promise<Response> {
       userId,
     });
 
-    // Create notification (async, don't block response)
-    createNotification({
-      type: "created",
-      category: "conversation",
-      title: `New conversation: ${title || "Untitled"}`,
-      message: `AI conversation started`,
-      appId: APP_ID,
-      priority: "low",
-      actionUrl: `/`,
-      metadata: { conversationId: conversation.id },
-    }).catch((err) => console.error("[Notification] Failed to create:", err));
+    console.log("[conversations] Created conversation:", conversation.id);
 
-    return NextResponse.json({ success: true, conversation }, { status: 201 });
+    return NextResponse.json({ success: true, conversation, source: "mongodb" }, { status: 201 });
   } catch (error) {
     console.error("Error creating conversation:", error);
     return NextResponse.json(
@@ -88,21 +81,11 @@ export async function DELETE(request: Request): Promise<Response> {
       );
     }
 
-    await deleteConversation(appId, entityId, conversationId);
+    await deleteConversation(conversationId);
 
-    // Create notification (async, don't block response)
-    createNotification({
-      type: "deleted",
-      category: "conversation",
-      title: `Conversation deleted`,
-      message: `AI conversation has been removed`,
-      appId: APP_ID,
-      priority: "low",
-      actionUrl: `/`,
-      metadata: { conversationId },
-    }).catch((err) => console.error("[Notification] Failed to create:", err));
+    console.log("[conversations] Deleted conversation:", conversationId);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, source: "mongodb" });
   } catch (error) {
     console.error("Error deleting conversation:", error);
     return NextResponse.json(
@@ -124,8 +107,8 @@ export async function PATCH(request: Request): Promise<Response> {
       );
     }
 
-    const conversation = await updateConversation(appId, entityId, conversationId, updates);
-    return NextResponse.json({ success: true, conversation });
+    const conversation = await updateConversation(conversationId, updates);
+    return NextResponse.json({ success: true, conversation, source: "mongodb" });
   } catch (error) {
     console.error("Error updating conversation:", error);
     return NextResponse.json(

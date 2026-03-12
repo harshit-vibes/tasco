@@ -7,25 +7,21 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getAllImportOrders,
   getImportOrderById,
-  getImportOrderByNumber,
   getImportOrdersByEntity,
+  getImportOrdersByEntities,
   getImportOrdersByStatus,
-  getImportOrdersByBrand,
-  getActiveImportOrders,
-  getImportOrderStats,
   createImportOrder,
   updateImportOrder,
   deleteImportOrder,
-  createNotification,
   type ImportOrder,
-  type ImportOrderStatus,
-  type VehicleBrand,
+  type OrderStatus,
   type CreateImportOrderInput,
   type UpdateImportOrderInput,
-} from "@tasco/db";
+} from "@tasco/db/mongodb/lifecycle";
 import { syncImportOrderToRAG } from "../../../lib/rag-sync";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const APP_ID = "customer-lifecycle";
 
@@ -55,13 +51,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const orderNumber = searchParams.get("orderNumber");
     const entityId = searchParams.get("entityId");
     const entityIds = searchParams.get("entityIds");
-    const status = searchParams.get("status") as ImportOrderStatus | null;
-    const brand = searchParams.get("brand") as VehicleBrand | null;
-    const active = searchParams.get("active");
-    const stats = searchParams.get("stats");
+    const status = searchParams.get("status") as OrderStatus | null;
+
+    console.log("[orders] GET request", { id, entityId, entityIds, status });
 
     // Single order by ID
     if (id) {
@@ -75,50 +69,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         order: toFrontendOrder(order),
-      });
-    }
-
-    // Single order by PO number
-    if (orderNumber) {
-      const order = await getImportOrderByNumber(orderNumber);
-      if (!order) {
-        return NextResponse.json(
-          { success: false, error: "Import order not found" },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json({
-        success: true,
-        order: toFrontendOrder(order),
-      });
-    }
-
-    // Statistics
-    if (stats === "true") {
-      let entityIdList: string[] | undefined;
-      if (entityIds) {
-        entityIdList = entityIds.split(",").filter(Boolean);
-      } else if (entityId) {
-        entityIdList = [entityId];
-      }
-
-      const orderStats = await getImportOrderStats(entityIdList);
-      return NextResponse.json({
-        success: true,
-        stats: {
-          ...orderStats,
-          totalValueFormatted: formatCurrency(orderStats.totalValue),
-        },
-      });
-    }
-
-    // Active orders (not completed)
-    if (active === "true") {
-      const orders = await getActiveImportOrders();
-      return NextResponse.json({
-        success: true,
-        orders: orders.map(toFrontendOrder),
-        count: orders.length,
+        source: "mongodb",
       });
     }
 
@@ -127,10 +78,11 @@ export async function GET(request: NextRequest) {
     // Filter by status
     if (status) {
       orders = await getImportOrdersByStatus(status);
-    }
-    // Filter by brand
-    else if (brand) {
-      orders = await getImportOrdersByBrand(brand);
+      // Apply entity filter if provided
+      if (entityIds) {
+        const entityIdList = entityIds.split(",").filter(Boolean);
+        orders = orders.filter((o) => entityIdList.includes(o.entityId));
+      }
     }
     // Filter by single entity
     else if (entityId) {
@@ -139,9 +91,7 @@ export async function GET(request: NextRequest) {
     // Filter by multiple entities
     else if (entityIds) {
       const entityIdList = entityIds.split(",").filter(Boolean);
-      const promises = entityIdList.map((eid) => getImportOrdersByEntity(eid));
-      const results = await Promise.all(promises);
-      orders = results.flat();
+      orders = await getImportOrdersByEntities(entityIdList);
     }
     // All orders
     else {
@@ -149,21 +99,16 @@ export async function GET(request: NextRequest) {
       orders = result.items;
     }
 
-    // Apply additional filters if combined with status/brand
-    if (entityIds && (status || brand)) {
-      const entityIdList = entityIds.split(",").filter(Boolean);
-      orders = orders.filter((o) => entityIdList.includes(o.entityId));
-    }
-
     return NextResponse.json({
       success: true,
       orders: orders.map(toFrontendOrder),
       count: orders.length,
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /orders GET] Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch import orders" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to fetch import orders" },
       { status: 500 }
     );
   }
@@ -203,15 +148,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check for duplicate order number
-    const existing = await getImportOrderByNumber(orderNumber);
-    if (existing) {
-      return NextResponse.json(
-        { success: false, error: "Order with this number already exists" },
-        { status: 400 }
-      );
-    }
-
     const input: CreateImportOrderInput = {
       orderNumber,
       brand,
@@ -235,23 +171,14 @@ export async function POST(request: NextRequest) {
       console.error("[RAG Sync] Background sync failed:", err)
     );
 
-    // Create notification
-    createNotification({
-      type: "created",
-      category: "order",
-      title: `Import order created: ${order.orderNumber}`,
-      message: `${order.brand} - ${order.totalUnits} units, ${formatCurrency(order.totalValue)}`,
-      appId: APP_ID,
-      priority: "high",
-      actionUrl: `/inventory/orders?id=${order.id}`,
-      metadata: { orderId: order.id },
-    }).catch((err) => console.error("[Notification] Failed:", err));
+    console.log("[orders] Created import order:", order.id);
 
     return NextResponse.json(
       {
         success: true,
         order: toFrontendOrder(order),
         message: "Import order created successfully",
+        source: "mongodb",
       },
       { status: 201 }
     );
@@ -316,24 +243,12 @@ export async function PUT(request: NextRequest) {
       console.error("[RAG Sync] Background sync failed:", err)
     );
 
-    // Status change notification
-    const statusChanged = body.status && body.status !== existingOrder.status;
-    if (statusChanged) {
-      createNotification({
-        type: "updated",
-        category: "order",
-        title: `Order ${order.status}: ${order.orderNumber}`,
-        message: `Status changed from "${existingOrder.status}" to "${order.status}"`,
-        appId: APP_ID,
-        priority: order.status === "arrived" ? "high" : "medium",
-        actionUrl: `/inventory/orders?id=${order.id}`,
-        metadata: { orderId: order.id },
-      }).catch((err) => console.error("[Notification] Failed:", err));
-    }
+    console.log("[orders] Updated import order:", order.id);
 
     return NextResponse.json({
       success: true,
       order: toFrontendOrder(order),
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /orders PUT] Error:", error);
@@ -366,21 +281,12 @@ export async function DELETE(request: NextRequest) {
 
     await deleteImportOrder(id);
 
-    // Create notification
-    createNotification({
-      type: "deleted",
-      category: "order",
-      title: `Import order removed: ${order.orderNumber}`,
-      message: `${order.brand} - ${order.totalUnits} units`,
-      appId: APP_ID,
-      priority: "low",
-      actionUrl: `/inventory/orders`,
-      metadata: { orderId: id },
-    }).catch((err) => console.error("[Notification] Failed:", err));
+    console.log("[orders] Deleted import order:", id);
 
     return NextResponse.json({
       success: true,
       message: "Import order deleted successfully",
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /orders DELETE] Error:", error);

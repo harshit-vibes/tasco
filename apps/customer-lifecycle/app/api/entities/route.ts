@@ -4,8 +4,12 @@ import {
   listEntitiesByCategory,
   batchCreateEntities,
   isEntitiesEmpty,
-} from "@tasco/db/entities";
-import type { CreateEntityInput } from "@tasco/db/entities";
+  type CreateEntityInput,
+} from "@tasco/db/mongodb/lifecycle";
+
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // Track if entities have been checked for seeding
 let hasCheckedSeed = false;
@@ -173,12 +177,14 @@ const AUTOMOTIVE_SEED_DATA: CreateEntityInput[] = [
 ];
 
 /**
- * GET handler - returns entities
+ * GET handler - returns entities from MongoDB
  * Use ?all=true to get all entities, otherwise returns automotive entities only
  * Auto-seeds if collection is empty
  */
 export async function GET(request: NextRequest): Promise<Response> {
   try {
+    console.log("[entities] Fetching entities from MongoDB...");
+
     // Seed automotive entities if collection is empty
     if (!hasCheckedSeed) {
       const isEmpty = await isEntitiesEmpty();
@@ -209,11 +215,14 @@ export async function GET(request: NextRequest): Promise<Response> {
       ]);
     }
 
+    console.log(`[entities] Found ${entities.length} entities`);
+
     return NextResponse.json(
       {
         success: true,
         entities,
         count: entities.length,
+        source: "mongodb",
       },
       {
         headers: {
@@ -224,7 +233,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   } catch (error) {
     console.error("[entities] Error fetching entities:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch entities" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to fetch entities" },
       { status: 500 }
     );
   }

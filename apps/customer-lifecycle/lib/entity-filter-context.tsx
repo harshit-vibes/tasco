@@ -17,7 +17,7 @@ export interface Entity {
   name: string;
   shortName?: string;
   type: "parent" | "holding" | "subsidiary";
-  category?: "tasco-group" | "automotive-showroom" | "automotive-b2b";
+  category?: "tasco-group" | "automotive-showroom" | "automotive-b2b" | "automotive-brand";
   parentId?: string;
   metadata?: {
     location?: string;

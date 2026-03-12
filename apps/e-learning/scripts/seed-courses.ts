@@ -15,7 +15,7 @@ import {
   createQuiz,
   createQuizQuestion,
   incrementQuestionCount,
-} from "@tasco/db";
+} from "@tasco/db/mongodb/elearning";
 
 const APP_ID = "e-learning";
 const ENTITY_ID = "e-learning";
@@ -3213,7 +3213,7 @@ async function seedCourse(definition: CourseDefinition): Promise<void> {
     console.log(`   📖 Module ${moduleOrder}: ${module.title}`);
 
     // Increment course module count
-    await incrementModuleCount(APP_ID, ENTITY_ID, course.id);
+    await incrementModuleCount(course.id);
 
     // Create lessons
     for (let lessonIndex = 0; lessonIndex < moduleDef.lessons.length; lessonIndex++) {
@@ -3229,7 +3229,7 @@ async function seedCourse(definition: CourseDefinition): Promise<void> {
       });
 
       // Increment module lesson count
-      await incrementLessonCount(course.id, moduleOrder, module.id);
+      await incrementLessonCount(module.id);
 
       console.log(`      📄 Lesson ${lessonOrder}: ${lessonDef.title}`);
     }
@@ -3258,7 +3258,7 @@ async function seedCourse(definition: CourseDefinition): Promise<void> {
       });
 
       // Increment quiz question count
-      await incrementQuestionCount(module.id, quiz.id);
+      await incrementQuestionCount(quiz.id);
     }
 
     console.log(`         ✓ ${moduleDef.quiz.questions.length} questions added`);

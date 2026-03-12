@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getAllMessages, createMessage } from "@tasco/db";
+import { getAllMessages, createMessage } from "@tasco/db/mongodb";
+
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(request: Request): Promise<Response> {
   try {
@@ -14,7 +18,7 @@ export async function GET(request: Request): Promise<Response> {
     }
 
     const messages = await getAllMessages(conversationId);
-    return NextResponse.json({ success: true, messages });
+    return NextResponse.json({ success: true, messages, source: "mongodb" });
   } catch (error) {
     console.error("Error fetching messages:", error);
     return NextResponse.json(
@@ -44,7 +48,7 @@ export async function POST(request: Request): Promise<Response> {
       metadata,
     });
 
-    return NextResponse.json({ success: true, message }, { status: 201 });
+    return NextResponse.json({ success: true, message, source: "mongodb" }, { status: 201 });
   } catch (error) {
     console.error("Error creating message:", error);
     return NextResponse.json(

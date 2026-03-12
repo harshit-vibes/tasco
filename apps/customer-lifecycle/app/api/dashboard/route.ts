@@ -1,18 +1,21 @@
 import { NextResponse } from "next/server";
 import {
   getAllLeads,
-  getLeadsByEntity,
+  getLeadsByEntities,
   getLeadStats,
   getAllCustomers,
-  getCustomersByEntity,
+  getCustomersByEntities,
   getCustomerStats,
   getAtRiskCustomers,
   getAllCampaigns,
-  getCampaignsByEntity,
+  getCampaignsByEntities,
   getActiveCampaigns,
   getCampaignStats,
-  getHighConfidenceRecommendations,
-} from "@tasco/db";
+} from "@tasco/db/mongodb/lifecycle";
+
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // Helper function to compute lead stats from a list of leads
 function computeLeadStats(leads: any[]) {
@@ -83,12 +86,10 @@ export async function GET(request: Request): Promise<Response> {
     const entityIdList = entityIds ? entityIds.split(",").filter(Boolean) : [];
     const hasEntityFilter = entityIdList.length > 0;
 
-    // Helper to get data filtered by entities
+    // Helper to get data filtered by entities (using MongoDB batch functions)
     const getFilteredLeads = async () => {
       if (hasEntityFilter) {
-        const promises = entityIdList.map(id => getLeadsByEntity(id));
-        const results = await Promise.all(promises);
-        return results.flat();
+        return getLeadsByEntities(entityIdList);
       }
       const result = await getAllLeads();
       return result.items;
@@ -96,9 +97,7 @@ export async function GET(request: Request): Promise<Response> {
 
     const getFilteredCustomers = async () => {
       if (hasEntityFilter) {
-        const promises = entityIdList.map(id => getCustomersByEntity(id));
-        const results = await Promise.all(promises);
-        return results.flat();
+        return getCustomersByEntities(entityIdList);
       }
       const result = await getAllCustomers();
       return result.items;
@@ -106,44 +105,32 @@ export async function GET(request: Request): Promise<Response> {
 
     const getFilteredCampaigns = async () => {
       if (hasEntityFilter) {
-        const promises = entityIdList.map(id => getCampaignsByEntity(id));
-        const results = await Promise.all(promises);
-        return results.flat();
+        return getCampaignsByEntities(entityIdList);
       }
-      return getAllCampaigns();
+      const result = await getAllCampaigns();
+      return result.items;
     };
 
     // Get specific section data
     if (section === "leads") {
       const leads = await getFilteredLeads();
-      return NextResponse.json({ success: true, leads });
+      return NextResponse.json({ success: true, leads, source: "mongodb" });
     }
 
     if (section === "atRisk") {
-      const customers = await getAtRiskCustomers();
-      // Filter by entity if provided
-      const filtered = hasEntityFilter
-        ? customers.filter(c => entityIdList.includes(c.entityId))
-        : customers;
-      return NextResponse.json({ success: true, customers: filtered });
+      const customers = await getAtRiskCustomers(hasEntityFilter ? entityIdList : undefined);
+      return NextResponse.json({ success: true, customers, source: "mongodb" });
     }
 
     if (section === "recommendations") {
-      const recommendations = await getHighConfidenceRecommendations();
-      // Filter by entity if provided
-      const filtered = hasEntityFilter
-        ? recommendations.filter((r: any) => entityIdList.includes(r.entityId))
-        : recommendations;
-      return NextResponse.json({ success: true, recommendations: filtered });
+      // TODO: Implement recommendations in MongoDB
+      // For now, return empty array - recommendations feature to be migrated
+      return NextResponse.json({ success: true, recommendations: [], source: "mongodb" });
     }
 
     if (section === "campaigns") {
-      const campaigns = await getActiveCampaigns();
-      // Filter by entity if provided
-      const filtered = hasEntityFilter
-        ? campaigns.filter(c => entityIdList.includes(c.entityId))
-        : campaigns;
-      return NextResponse.json({ success: true, campaigns: filtered });
+      const campaigns = await getActiveCampaigns(hasEntityFilter ? entityIdList : undefined);
+      return NextResponse.json({ success: true, campaigns, source: "mongodb" });
     }
 
     // Get full dashboard stats
@@ -161,6 +148,7 @@ export async function GET(request: Request): Promise<Response> {
           customers: computeCustomerStats(customers),
           campaigns: computeCampaignStats(campaigns),
         },
+        source: "mongodb",
       });
     }
 
@@ -178,6 +166,7 @@ export async function GET(request: Request): Promise<Response> {
         customers: customerStats,
         campaigns: campaignStats,
       },
+      source: "mongodb",
     });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);

@@ -26,11 +26,13 @@ export interface Entity {
  */
 export async function handleListEntities() {
   try {
-    console.log("[Entities] Getting database connection...");
+    console.log("[Entities] Starting entity list request - v2");
+    console.log("[Entities] MONGODB_URI exists:", !!process.env.MONGODB_URI);
+    console.log("[Entities] MONGODB_DATABASE:", process.env.MONGODB_DATABASE || "(default: compliance-qa)");
     const db = await getDb();
     console.log("[Entities] Database name:", db.databaseName);
     const collection = db.collection("entities");
-    console.log("[Entities] Fetching entities from collection...");
+    console.log("[Entities] Collection name: entities");
 
     const docs = await collection.find({}).sort({ name: 1 }).toArray();
     console.log("[Entities] Found", docs.length, "entities");

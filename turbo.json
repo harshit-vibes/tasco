@@ -12,7 +12,9 @@
     "NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY",
     "NEXT_PUBLIC_APP_URL",
     "APP_NAME",
-    "APP_PATH"
+    "APP_PATH",
+    "MONGODB_URI",
+    "MONGODB_DATABASE"
   ],
   "tasks": {
     "build": {

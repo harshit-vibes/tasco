@@ -31,7 +31,7 @@ import {
   Circle,
 } from "@tasco/ui/icons";
 import { useCourses, type FullCourse, type Module, type Lesson, type Quiz, type QuizQuestion } from "../../../lib/course-context";
-import { useProgress } from "../../../lib/progress-context";
+import { useProgress, type QuizAttempt } from "../../../lib/progress-context";
 import { categories } from "../../../lib/courses-data";
 import { QuizContainer } from "../../../components/quiz/quiz-container";
 
@@ -485,7 +485,7 @@ function QuizContent({
     answers: Record<string, number>;
     timeSpent: number;
     passingScore: number;
-  }) => Promise<void>;
+  }) => Promise<QuizAttempt | null>;
 }) {
   const module = course.modules.find(m => m.id === moduleId);
   if (!module || !module.quiz || !module.quiz.questions) return null;

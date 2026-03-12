@@ -11,7 +11,8 @@
     "setup-agents": "bun run scripts/setup-agents.ts",
     "setup-multi-agents": "bun run scripts/setup-multi-agents.ts",
     "connect-kb-to-experts": "bun run scripts/connect-kb-to-experts.ts",
-    "sync-business-data": "bun run scripts/sync-business-data.ts"
+    "sync-business-data": "bun run scripts/sync-business-data.ts",
+    "migrate-to-mongodb": "bun run scripts/migrate-dynamodb-to-mongodb.ts"
   },
   "dependencies": {
     "@tasco/agents": "workspace:*",

@@ -16,17 +16,12 @@ import {
   // Quiz operations
   createQuiz,
   getQuizForModule,
-  createQuizQuestion,
   batchCreateQuizQuestions,
   listQuizQuestions,
-  getQuizWithQuestions,
   // Progress operations
   enrollInCourse,
   getCourseProgress,
   listUserCourseProgress,
-  updateCourseProgress,
-  startModule,
-  getModuleProgress,
   updateModuleProgress,
   updateLessonProgress,
   recordQuizAttempt,
@@ -34,11 +29,8 @@ import {
   getBestQuizAttempt,
   // Types
   type CreateCourseInput,
-  type CreateModuleInput,
-  type CreateLessonInput,
-  type CreateQuizInput,
   type CreateQuizQuestionInput,
-} from "@tasco/db";
+} from "@tasco/db/mongodb/elearning";
 
 // ============================================
 // Course Handlers

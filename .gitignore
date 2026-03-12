@@ -49,3 +49,4 @@ coverage/
 
 # Local DynamoDB data (if running without docker volume)
 dynamodb-data/
+.env*.local

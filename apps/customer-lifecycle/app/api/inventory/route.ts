@@ -1,6 +1,7 @@
 /**
  * Vehicle Inventory API Route
  * Manages vehicle inventory with filtering by status, brand, entity, and age alerts
+ * Migrated to MongoDB
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -9,24 +10,24 @@ import {
   getVehicleById,
   getVehicleByVin,
   getVehiclesByEntity,
+  getVehiclesByEntities,
   getVehiclesByStatus,
   getVehiclesByBrand,
-  getVehiclesByImportOrder,
   getAgingVehicles,
-  getAvailableVehicles,
+  getInStockVehicles,
   createVehicle,
   updateVehicle,
   deleteVehicle,
-  createNotification,
   type Vehicle,
   type VehicleStatus,
   type VehicleBrand,
   type CreateVehicleInput,
   type UpdateVehicleInput,
-} from "@tasco/db";
+} from "@tasco/db/mongodb/lifecycle";
 import { syncVehicleToRAG } from "../../../lib/rag-sync";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const APP_ID = "customer-lifecycle";
 
@@ -60,10 +61,10 @@ export async function GET(request: NextRequest) {
     const entityIds = searchParams.get("entityIds");
     const status = searchParams.get("status") as VehicleStatus | null;
     const brand = searchParams.get("brand") as VehicleBrand | null;
-    const importOrderId = searchParams.get("importOrderId");
     const aging = searchParams.get("aging");
     const available = searchParams.get("available");
-    const minDays = parseInt(searchParams.get("minDays") || "60", 10);
+
+    console.log("[inventory] GET request", { id, vin, entityId, entityIds, status, brand, aging, available });
 
     // Single vehicle by ID
     if (id) {
@@ -77,6 +78,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         vehicle: toFrontendVehicle(vehicle),
+        source: "mongodb",
       });
     }
 
@@ -92,38 +94,33 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         vehicle: toFrontendVehicle(vehicle),
-      });
-    }
-
-    // Vehicles by import order
-    if (importOrderId) {
-      const vehicles = await getVehiclesByImportOrder(importOrderId);
-      return NextResponse.json({
-        success: true,
-        vehicles: vehicles.map(toFrontendVehicle),
-        count: vehicles.length,
+        source: "mongodb",
       });
     }
 
     // Aging vehicles (>60 days by default)
     if (aging === "true") {
-      const vehicles = await getAgingVehicles(minDays);
+      const entityIdList = entityIds ? entityIds.split(",").filter(Boolean) : undefined;
+      const vehicles = await getAgingVehicles(entityIdList);
       return NextResponse.json({
         success: true,
         vehicles: vehicles.map(toFrontendVehicle),
         count: vehicles.length,
-        filter: { aging: true, minDays },
+        filter: { aging: true },
+        source: "mongodb",
       });
     }
 
-    // Available vehicles (at_showroom status)
+    // Available vehicles (in stock at showroom)
     if (available === "true") {
-      const vehicles = await getAvailableVehicles();
+      const entityIdList = entityIds ? entityIds.split(",").filter(Boolean) : undefined;
+      const vehicles = await getInStockVehicles(entityIdList);
       return NextResponse.json({
         success: true,
         vehicles: vehicles.map(toFrontendVehicle),
         count: vehicles.length,
         filter: { available: true },
+        source: "mongodb",
       });
     }
 
@@ -144,9 +141,7 @@ export async function GET(request: NextRequest) {
     // Filter by multiple entities
     else if (entityIds) {
       const entityIdList = entityIds.split(",").filter(Boolean);
-      const promises = entityIdList.map((eid) => getVehiclesByEntity(eid));
-      const results = await Promise.all(promises);
-      vehicles = results.flat();
+      vehicles = await getVehiclesByEntities(entityIdList);
     }
     // All vehicles
     else {
@@ -164,11 +159,12 @@ export async function GET(request: NextRequest) {
       success: true,
       vehicles: vehicles.map(toFrontendVehicle),
       count: vehicles.length,
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /inventory GET] Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch vehicles" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to fetch vehicles" },
       { status: 500 }
     );
   }
@@ -250,30 +246,21 @@ export async function POST(request: NextRequest) {
       console.error("[RAG Sync] Background sync failed:", err)
     );
 
-    // Create notification
-    createNotification({
-      type: "created",
-      category: "inventory",
-      title: `Vehicle added: ${vehicle.brand} ${vehicle.model}`,
-      message: `VIN: ${vehicle.vin}`,
-      appId: APP_ID,
-      priority: "medium",
-      actionUrl: `/inventory?id=${vehicle.id}`,
-      metadata: { vehicleId: vehicle.id },
-    }).catch((err) => console.error("[Notification] Failed:", err));
+    console.log("[inventory] Created vehicle:", vehicle.id);
 
     return NextResponse.json(
       {
         success: true,
         vehicle: toFrontendVehicle(vehicle),
         message: "Vehicle created successfully",
+        source: "mongodb",
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("[API /inventory POST] Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create vehicle" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to create vehicle" },
       { status: 500 }
     );
   }
@@ -333,31 +320,17 @@ export async function PUT(request: NextRequest) {
       console.error("[RAG Sync] Background sync failed:", err)
     );
 
-    // Notification for status changes
-    const statusChanged =
-      body.status && body.status !== existingVehicle.status;
-    if (statusChanged) {
-      const notifType = vehicle.status === "sold" ? "completed" : "updated";
-      createNotification({
-        type: notifType,
-        category: "inventory",
-        title: `Vehicle ${vehicle.status}: ${vehicle.brand} ${vehicle.model}`,
-        message: `Status changed from "${existingVehicle.status}" to "${vehicle.status}"`,
-        appId: APP_ID,
-        priority: vehicle.status === "sold" ? "high" : "medium",
-        actionUrl: `/inventory?id=${vehicle.id}`,
-        metadata: { vehicleId: vehicle.id },
-      }).catch((err) => console.error("[Notification] Failed:", err));
-    }
+    console.log("[inventory] Updated vehicle:", vehicle.id);
 
     return NextResponse.json({
       success: true,
       vehicle: toFrontendVehicle(vehicle),
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /inventory PUT] Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to update vehicle" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to update vehicle" },
       { status: 500 }
     );
   }
@@ -383,28 +356,26 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    await deleteVehicle(id);
+    const deleted = await deleteVehicle(id);
 
-    // Create notification
-    createNotification({
-      type: "deleted",
-      category: "inventory",
-      title: `Vehicle removed: ${vehicle.brand} ${vehicle.model}`,
-      message: `VIN: ${vehicle.vin}`,
-      appId: APP_ID,
-      priority: "low",
-      actionUrl: `/inventory`,
-      metadata: { vehicleId: id },
-    }).catch((err) => console.error("[Notification] Failed:", err));
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, error: "Failed to delete vehicle" },
+        { status: 500 }
+      );
+    }
+
+    console.log("[inventory] Deleted vehicle:", id);
 
     return NextResponse.json({
       success: true,
       message: "Vehicle deleted successfully",
+      source: "mongodb",
     });
   } catch (error) {
     console.error("[API /inventory DELETE] Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to delete vehicle" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to delete vehicle" },
       { status: 500 }
     );
   }

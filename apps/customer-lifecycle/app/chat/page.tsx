@@ -28,8 +28,8 @@ export default function ChatPage() {
 
   // Get suggested questions based on selected agent
   const suggestedQuestions = useMemo(() => {
-    if (selectedAgent?.suggestedQuestions?.length > 0) {
-      return selectedAgent.suggestedQuestions;
+    if (selectedAgent?.suggestions?.length > 0) {
+      return selectedAgent.suggestions.map((s) => s.query);
     }
     return DEFAULT_SUGGESTED_QUESTIONS;
   }, [selectedAgent]);

@@ -9,6 +9,9 @@
     "./entities": "./src/entities/index.ts",
     "./s3": "./src/s3/index.ts",
     "./mongodb": "./src/mongodb/index.ts",
+    "./mongodb/lifecycle": "./src/mongodb/lifecycle/index.ts",
+    "./mongodb/elearning": "./src/mongodb/elearning/index.ts",
+    "./mongodb/salesorder": "./src/mongodb/salesorder/index.ts",
     "./blob": "./src/blob/index.ts"
   },
   "scripts": {
